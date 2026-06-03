@@ -110,6 +110,16 @@
   .detail-row .dlabel { color: var(--dgrey); }
   .detail-row .dval   { font-weight: 600; color: var(--navy); }
 
+  .sal-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+  .sal-row label { font-size: 11px; color: #c8dff0; flex: 1; }
+  .sal-input-wrap { display: flex; align-items: center; gap: 2px; font-size: 11px; color: #7fb3d3; }
+  .sal-input-wrap input[type=number] {
+    width: 80px; background: rgba(255,255,255,0.1); border: 1px solid #4fc3f7;
+    border-radius: 4px; color: white; font-size: 11px; font-weight: 600;
+    text-align: right; padding: 2px 4px; outline: none;
+  }
+  .sal-input-wrap input[type=number]:focus { background: rgba(255,255,255,0.18); }
+
   .breakeven-badge {
     display: inline-block; background: var(--green); color: white;
     border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: 700; margin-left: 5px;
@@ -171,9 +181,6 @@
       <label>Consumer Sleeve (Vaulta keeps) <span id="lbl_sleeve">20%</span></label>
       <input type="range" id="i_sleeve" min="0.05" max="0.80" step="0.01" value="0.20" oninput="update()">
     </div>
-    <div class="slider-row">
-      <div class="hint" style="color:#f0c040;font-size:10px;">⚖️ GENIUS Act: 100% of customer balances held in T-bills (fixed by law)</div>
-    </div>
 
     <hr class="div">
     <h3>Secondary Levers</h3>
@@ -198,6 +205,39 @@
       <label>Seed Contingency Buffer <span id="lbl_seedbuf">20%</span></label>
       <div class="hint">Added on top of 18-month runway to cover unexpected costs</div>
       <input type="range" id="i_seedbuf" min="0.00" max="0.75" step="0.05" value="0.20" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>Headcount &amp; Salaries</h3>
+    <div class="hint" style="color:#7fb3d3;margin-bottom:8px;">Annual salary per role (excl. 25% benefits loading)</div>
+
+    <div class="sal-row">
+      <label>Engineering</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_eng" value="150000" min="50000" max="400000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Business Dev (Sales)</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_bd" value="120000" min="50000" max="300000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Customer Service</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_cs" value="57000" min="30000" max="120000" step="1000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Leadership / Mgmt</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_lead" value="112000" min="50000" max="300000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Legal</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_legal" value="135000" min="50000" max="300000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Cybersecurity</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_cyber" value="190000" min="80000" max="400000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Benefits Loading</label>
+      <div class="sal-input-wrap"><span>&nbsp;</span><input type="number" id="i_benefits" value="25" min="0" max="50" step="1" oninput="update()"><span>%</span></div>
     </div>
 
     <hr class="div">
@@ -358,7 +398,13 @@ function model() {
   const CPM=100, mSettle=5000, varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
   const kycCost=2.50, GA=180000, GAGrowth=0.10, FCC=6000000, seedBuf=18, serABuf=18;
   const csRatio=25000, chainPct=0.40, locsPerChain=50, bdDeals=8, benefits=0.25;
-  const engSal=150000, bdSal=120000, legalSal=135000, csSal=57000, leadSal=112000, cyberSal=190000;
+  const engSal   = +document.getElementById('i_sal_eng').value;
+  const bdSal    = +document.getElementById('i_sal_bd').value;
+  const csSal    = +document.getElementById('i_sal_cs').value;
+  const leadSal  = +document.getElementById('i_sal_lead').value;
+  const legalSal = +document.getElementById('i_sal_legal').value;
+  const cyberSal = +document.getElementById('i_sal_cyber').value;
+  const benefits = +document.getElementById('i_benefits').value / 100;
 
   const serAGrowth = Math.pow(serA_tgt/seed, 1/serA_yrs) - 1;
   const serBGrowth = Math.pow(serB_tgt/serA_tgt, 1/serB_yrs) - 1;
