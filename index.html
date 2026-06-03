@@ -155,6 +155,11 @@
       <input type="range" id="i_wallet" min="500" max="8000" step="100" value="2800" oninput="update()">
     </div>
     <div class="slider-row">
+      <label>Monthly Transaction Rate <span id="lbl_txnrate">20%</span></label>
+      <div class="hint">% of balance flowing through as transactions/month — interacts with wallet size to drive merchant fee revenue</div>
+      <input type="range" id="i_txnrate" min="0.00" max="1.00" step="0.01" value="0.20" oninput="update()">
+    </div>
+    <div class="slider-row">
       <label>Merchant Fee Rate <span id="lbl_mfee">0.80%</span></label>
       <input type="range" id="i_mfee" min="0.001" max="0.03" step="0.0005" value="0.008" oninput="update()">
     </div>
@@ -164,7 +169,7 @@
     </div>
     <div class="slider-row">
       <label>Consumer Sleeve (Vaulta keeps) <span id="lbl_sleeve">20%</span></label>
-      <input type="range" id="i_sleeve" min="0.05" max="0.50" step="0.01" value="0.20" oninput="update()">
+      <input type="range" id="i_sleeve" min="0.05" max="0.80" step="0.01" value="0.20" oninput="update()">
     </div>
     <div class="slider-row">
       <label>T-Bill Allocation % <span id="lbl_tbdeploy">80%</span></label>
@@ -178,10 +183,6 @@
     <div class="slider-row">
       <label>T-Bill Annual Rate <span id="lbl_tbrate">4.8%</span></label>
       <input type="range" id="i_tbrate" min="0.01" max="0.10" step="0.002" value="0.048" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Monthly Transaction Rate <span id="lbl_txnrate">20%</span></label>
-      <input type="range" id="i_txnrate" min="0.05" max="0.50" step="0.01" value="0.20" oninput="update()">
     </div>
     <div class="slider-row">
       <label>Merchant Sleeve % <span id="lbl_msleeve">25%</span></label>
