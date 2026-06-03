@@ -196,6 +196,11 @@
       <label>Series B Raise <span id="lbl_serBraise">$15M</span></label>
       <input type="range" id="i_serBraise" min="5000000" max="50000000" step="1000000" value="15000000" oninput="update()">
     </div>
+    <div class="slider-row">
+      <label>Seed Contingency Buffer <span id="lbl_seedbuf">20%</span></label>
+      <div class="hint">Added on top of 18-month runway to cover unexpected costs</div>
+      <input type="range" id="i_seedbuf" min="0.00" max="0.75" step="0.05" value="0.20" oninput="update()">
+    </div>
 
     <hr class="div">
     <h3>Valuation Parameters</h3>
@@ -349,7 +354,8 @@ function model() {
   const termG    = 0.04;
   const survival = +document.getElementById('i_survival').value;
   const stageDsc = 0.65;
-  const serBRaise= +document.getElementById('i_serBraise').value;
+  const serBRaise   = +document.getElementById('i_serBraise').value;
+  const seedContBuf = +document.getElementById('i_seedbuf').value;
 
   const CPM=100, mSettle=5000, varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
   const kycCost=2.50, GA=180000, GAGrowth=0.10, FCC=6000000, seedBuf=18, serABuf=18;
@@ -414,7 +420,7 @@ function model() {
 
   // Raises
   const eb1=ebitda(1), eb2=ebitda(2);
-  const seedRaise = Math.max(500000, Math.max(0,-eb1)*seedBuf/12);
+  const seedRaise = Math.max(500000, Math.max(0,-eb1)*seedBuf/12 * (1+seedContBuf));
   const serARaise = Math.max(1000000, Math.max(0,-(eb1+eb2)) + Math.max(0,-eb2)*serABuf/12);
   const totalRaised = seedRaise+serARaise+serBRaise;
 
@@ -448,6 +454,7 @@ function update() {
   document.getElementById('lbl_msleeve').textContent  = fmtP(+document.getElementById('i_msleeve').value);
   document.getElementById('lbl_ssgrowth').textContent = fmtP(+document.getElementById('i_ssgrowth').value);
   document.getElementById('lbl_serBraise').textContent= '$'+(+document.getElementById('i_serBraise').value/1e6).toFixed(0)+'M';
+  document.getElementById('lbl_seedbuf').textContent  = fmtP(+document.getElementById('i_seedbuf').value);
   document.getElementById('lbl_wacc').textContent     = fmtP(+document.getElementById('i_wacc').value);
   document.getElementById('lbl_exitm').textContent    = (+document.getElementById('i_exitm').value)+'x';
   document.getElementById('lbl_survival').textContent = fmtP(+document.getElementById('i_survival').value);
