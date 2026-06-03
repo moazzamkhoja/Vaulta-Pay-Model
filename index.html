@@ -765,10 +765,18 @@ function update() {
   });
 
   // Funding table
+  const serAOps = Math.max(0, m.serARaise - 6000000);
+  const serAFCC = 6000000;
   document.getElementById('tbl_raises').innerHTML = [
-    ['Seed', m.seedRaise], ['Series A', m.serARaise],
-    ['Series B', m.serBRaise], ['Total', m.totalRaised]
-  ].map(([r,a],i)=>`<tr><td class="${i===3?'bold':''}">${r}</td><td class="${i===3?'bold pos':'pos'}">${fmtD(a)}</td></tr>`).join('');
+    ['Seed', m.seedRaise, ''],
+    ['Series A — Operations', serAOps, ''],
+    ['Series A — Regulatory Capital', serAFCC, 'non-risk, balance sheet'],
+    ['Series B', m.serBRaise, ''],
+    ['Total', m.totalRaised, '']
+  ].map(([r,a,note],i)=>`<tr>
+    <td class="${i===4?'bold':''}">${r}${note?` <span style="font-size:9px;color:#999;font-weight:400">(${note})</span>`:''}</td>
+    <td class="${i===4?'bold pos':'pos'}">${fmtD(a)}</td>
+  </tr>`).join('');
 
   // EBITDA table
   let html='';
