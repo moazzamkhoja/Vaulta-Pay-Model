@@ -172,9 +172,7 @@
       <input type="range" id="i_sleeve" min="0.05" max="0.80" step="0.01" value="0.20" oninput="update()">
     </div>
     <div class="slider-row">
-      <label>T-Bill Allocation % <span id="lbl_tbdeploy">80%</span></label>
-      <div class="hint">% of consumer balance swept to earn T-bill interest</div>
-      <input type="range" id="i_tbdeploy" min="0.10" max="1.00" step="0.05" value="0.80" oninput="update()">
+      <div class="hint" style="color:#f0c040;font-size:10px;">⚖️ GENIUS Act: 100% of customer balances held in T-bills (fixed by law)</div>
     </div>
 
     <hr class="div">
@@ -342,7 +340,7 @@ function model() {
   const serA_yrs = 2, serB_yrs = 3;
   const steady_g = +document.getElementById('i_ssgrowth').value;
   const wallet   = +document.getElementById('i_wallet').value;
-  const tbDeploy = +document.getElementById('i_tbdeploy').value;
+  const tbDeploy = 1.0; // GENIUS Act: 100% of customer balances must be held in T-bills
   const tbRate   = +document.getElementById('i_tbrate').value;
   const cSleeve  = +document.getElementById('i_sleeve').value;
   const mFeeRate = +document.getElementById('i_mfee').value;
@@ -448,7 +446,6 @@ function update() {
   document.getElementById('lbl_mfee').textContent     = fmtP2(+document.getElementById('i_mfee').value);
   document.getElementById('lbl_cac').textContent      = '$'+(+document.getElementById('i_cac').value);
   document.getElementById('lbl_sleeve').textContent   = fmtP(+document.getElementById('i_sleeve').value);
-  document.getElementById('lbl_tbdeploy').textContent = fmtP(+document.getElementById('i_tbdeploy').value);
   document.getElementById('lbl_tbrate').textContent   = fmtP2(+document.getElementById('i_tbrate').value);
   document.getElementById('lbl_txnrate').textContent  = fmtP(+document.getElementById('i_txnrate').value);
   document.getElementById('lbl_msleeve').textContent  = fmtP(+document.getElementById('i_msleeve').value);
