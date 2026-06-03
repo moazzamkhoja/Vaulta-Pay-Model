@@ -124,6 +124,43 @@
     display: inline-block; background: var(--green); color: white;
     border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: 700; margin-left: 5px;
   }
+
+  /* ── TABS ── */
+  .tab-bar {
+    background: var(--navy); padding: 0 24px;
+    display: flex; gap: 4px; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .tab-btn {
+    padding: 8px 20px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55);
+    border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent;
+    letter-spacing: 0.4px; transition: color 0.15s;
+  }
+  .tab-btn.active { color: white; border-bottom-color: #4fc3f7; }
+  .tab-btn:hover  { color: rgba(255,255,255,0.85); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── BENCHMARKS TAB ── */
+  .bench-main { padding: 20px 24px; }
+  .bench-main h2 { font-size: 14px; color: var(--navy); font-weight: 700; margin-bottom: 4px; }
+  .bench-main .bench-sub { font-size: 11px; color: var(--dgrey); margin-bottom: 18px; }
+  .bench-section { margin-bottom: 28px; }
+  .bench-section h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 10px; border-bottom: 2px solid var(--ltblue); padding-bottom: 5px; }
+  .bench-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .bench-table th { background: var(--navy); color: white; padding: 7px 12px; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 0.4px; }
+  .bench-table th.metric-col { text-align: left; }
+  .bench-table th.vaulta-col { background: var(--blue); }
+  .bench-table td { padding: 8px 12px; border-bottom: 1px solid #eef0f4; text-align: center; }
+  .bench-table td.metric-col { text-align: left; font-weight: 600; color: var(--navy); }
+  .bench-table td.vaulta-col { background: #eef5fd; font-weight: 700; color: var(--blue); }
+  .bench-table tr:last-child td { border-bottom: none; }
+  .bench-table tr:hover td { background: #f7faff; }
+  .bench-table tr:hover td.vaulta-col { background: #ddeefa; }
+  .bench-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+  .pill-green  { background: #e6f4ea; color: #2e7d32; }
+  .pill-orange { background: #fff3e0; color: #e65100; }
+  .pill-grey   { background: #f0f0f0; color: #555; }
+  .source-note { font-size: 10px; color: #999; margin-top: 6px; font-style: italic; }
 </style>
 </head>
 <body>
@@ -133,6 +170,156 @@
   <span>Drag sliders — all outputs update instantly</span>
 </header>
 
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('model')">📊 Model</button>
+  <button class="tab-btn" onclick="switchTab('benchmarks')">📐 Benchmarks</button>
+</div>
+
+<!-- ══ BENCHMARKS TAB ══ -->
+<div id="tab-benchmarks" class="tab-panel">
+  <div class="bench-main">
+    <h2>Industry Benchmarks &amp; Comparable Companies</h2>
+    <p class="bench-sub">VaultaPay column updates live from the model. Comparable data sourced from public filings, investor reports, and industry research.</p>
+
+    <!-- Unit Economics -->
+    <div class="bench-section">
+      <h3>Unit Economics</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col">Metric</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(live model)</span></th>
+            <th>Chime</th>
+            <th>Revolut</th>
+            <th>Cash App</th>
+            <th>MoneyLion</th>
+            <th>Industry Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-col">LTV : CAC</td>
+            <td class="vaulta-col" id="bm_ltvcac">—</td>
+            <td>3–4x</td>
+            <td>2.5x</td>
+            <td>4x+</td>
+            <td>2–3x</td>
+            <td><span class="bench-pill pill-green">≥ 3x target</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">CAC (Seed / Blended)</td>
+            <td class="vaulta-col" id="bm_cac">—</td>
+            <td>~$40</td>
+            <td>~$30</td>
+            <td>~$20</td>
+            <td>~$50</td>
+            <td><span class="bench-pill pill-grey">$20 – $80</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">Annual Net ARPU</td>
+            <td class="vaulta-col" id="bm_arpu">—</td>
+            <td>~$40</td>
+            <td>~$55</td>
+            <td>~$60</td>
+            <td>~$80</td>
+            <td><span class="bench-pill pill-grey">$40 – $80</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">CAC Payback</td>
+            <td class="vaulta-col" id="bm_payback">—</td>
+            <td>12–18 mo</td>
+            <td>10–14 mo</td>
+            <td>6–10 mo</td>
+            <td>12–18 mo</td>
+            <td><span class="bench-pill pill-green">&lt; 18 mo target</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-note">Sources: Chime S-1 filings (2021), Revolut Annual Report (2023), Block Inc. 10-K (2023), MoneyLion 10-K (2023)</p>
+    </div>
+
+    <!-- Revenue Model -->
+    <div class="bench-section">
+      <h3>Revenue Model</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col">Metric</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(live model)</span></th>
+            <th>PayPal</th>
+            <th>Square / Block</th>
+            <th>Stripe</th>
+            <th>Interchange Avg</th>
+            <th>Industry Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-col">Merchant Fee Rate</td>
+            <td class="vaulta-col" id="bm_mfee">—</td>
+            <td>0.5 – 2.0%</td>
+            <td>0.8 – 1.5%</td>
+            <td>1.4 – 2.9%</td>
+            <td>1.5 – 2.0%</td>
+            <td><span class="bench-pill pill-grey">0.5 – 2.9%</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">Gross Margin</td>
+            <td class="vaulta-col" id="bm_gm">—</td>
+            <td>~45%</td>
+            <td>~35%</td>
+            <td>~70%</td>
+            <td>—</td>
+            <td><span class="bench-pill pill-green">50 – 70% target</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-note">Sources: PayPal 10-K (2023), Block Inc. 10-K (2023), Stripe Revenue Report (2023), Nilson Report interchange averages</p>
+    </div>
+
+    <!-- Growth & Scale -->
+    <div class="bench-section">
+      <h3>Growth &amp; Scale</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col">Metric</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(live model)</span></th>
+            <th>Chime</th>
+            <th>Revolut</th>
+            <th>Cash App</th>
+            <th>Robinhood</th>
+            <th>Benchmark</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-col">EBITDA Positive (Year)</td>
+            <td class="vaulta-col" id="bm_breakeven">—</td>
+            <td>Yr 6</td>
+            <td>Yr 7</td>
+            <td>Yr 5</td>
+            <td>Yr 6</td>
+            <td><span class="bench-pill pill-orange">Yr 4–7 typical</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">3-Year LTV</td>
+            <td class="vaulta-col" id="bm_ltv">—</td>
+            <td>~$120</td>
+            <td>~$165</td>
+            <td>~$180</td>
+            <td>~$150</td>
+            <td><span class="bench-pill pill-grey">$100 – $200</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-note">Sources: Crunchbase, PitchBook, public S-1 and IPO filings. EBITDA timelines are approximate based on reported profitability milestones.</p>
+    </div>
+
+  </div>
+</div>
+
+<div id="tab-model" class="tab-panel active">
 <div class="layout">
 
   <!-- ══ SIDEBAR ══ -->
@@ -362,6 +549,16 @@
     </div>
   </div>
 </div>
+</div> <!-- end tab-model -->
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => { if(b.textContent.toLowerCase().includes(name)) b.classList.add('active'); });
+}
+</script>
 
 <script>
 const fmtM  = v => Math.abs(v) >= 1e6 ? (v/1e6).toFixed(1)+'M' : (v/1e3).toFixed(0)+'K';
@@ -595,6 +792,17 @@ function update() {
   document.getElementById('det_mfee').textContent      = fmtDf(m.mFeeMo);
   document.getElementById('det_infra').textContent     = '-$'+m.varInfra.toFixed(2);
   document.getElementById('det_net').textContent       = fmtDf(m.netContrib);
+
+  // ── Benchmarks tab — live VaultaPay column ──
+  const gmYr5 = m.totalRev(5)>0 ? (m.grossProfit(5)/m.totalRev(5)) : 0;
+  document.getElementById('bm_ltvcac').innerHTML   = `<span class="bench-pill ${m.ltvCac>=3?'pill-green':m.ltvCac>=2?'pill-orange':'pill-grey'}">${fmtX(m.ltvCac)}</span>`;
+  document.getElementById('bm_cac').textContent    = '$'+m.baseCAC.toFixed(0)+' (seed)';
+  document.getElementById('bm_arpu').textContent   = '$'+m.netAnnual.toFixed(0)+'/yr';
+  document.getElementById('bm_payback').innerHTML  = `<span class="bench-pill ${m.cacPayback<=18?'pill-green':'pill-orange'}">${m.cacPayback<900?m.cacPayback.toFixed(1)+' mo':'N/A'}</span>`;
+  document.getElementById('bm_mfee').textContent   = fmtP2(+document.getElementById('i_mfee').value);
+  document.getElementById('bm_gm').innerHTML       = `<span class="bench-pill ${gmYr5>=0.5?'pill-green':gmYr5>=0.35?'pill-orange':'pill-grey'}">${fmtP(gmYr5)} (Yr5)</span>`;
+  document.getElementById('bm_breakeven').innerHTML= m.beYear ? `<span class="bench-pill ${m.beYear<=6?'pill-green':'pill-orange'}">Year ${m.beYear}</span>` : '<span class="bench-pill pill-grey">10yr+</span>';
+  document.getElementById('bm_ltv').textContent    = '$'+m.ltv3.toFixed(0);
 }
 
 update();
