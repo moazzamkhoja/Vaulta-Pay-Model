@@ -7,129 +7,112 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --navy:    #1F4E79;
-    --blue:    #2E75B6;
-    --ltblue:  #BDD7EE;
-    --green:   #70AD47;
-    --orange:  #ED7D31;
-    --grey:    #D9E1F2;
-    --dgrey:   #595959;
-    --white:   #ffffff;
-    --bg:      #f0f4f8;
-    --card:    #ffffff;
-    --red:     #C00000;
+    --navy:   #1F4E79;
+    --blue:   #2E75B6;
+    --ltblue: #BDD7EE;
+    --green:  #70AD47;
+    --orange: #ED7D31;
+    --grey:   #D9E1F2;
+    --dgrey:  #595959;
+    --bg:     #f0f4f8;
+    --card:   #ffffff;
+    --red:    #C00000;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: #222; font-size: 13px; }
 
   header {
-    background: var(--navy);
-    color: white;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    background: var(--navy); color: white;
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
   }
   header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
   header span { font-size: 11px; opacity: 0.7; }
 
-  .layout { display: grid; grid-template-columns: 320px 1fr; gap: 0; min-height: calc(100vh - 50px); }
+  .layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; min-height: calc(100vh - 50px); }
 
-  /* ── LEFT PANEL ── */
+  /* ── SIDEBAR ── */
   .sidebar {
-    background: #1a3a5c;
-    color: white;
-    padding: 16px 14px;
-    overflow-y: auto;
-    max-height: calc(100vh - 50px);
+    background: #1a3a5c; color: white;
+    padding: 14px 13px; overflow-y: auto; max-height: calc(100vh - 50px);
   }
-  .sidebar h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #7fb3d3; margin: 16px 0 8px; }
+  .sidebar h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #7fb3d3; margin: 14px 0 7px; }
   .sidebar h3:first-child { margin-top: 0; }
 
-  .slider-row { margin-bottom: 12px; }
+  .slider-row { margin-bottom: 10px; }
   .slider-row label { display: flex; justify-content: space-between; font-size: 11px; color: #c8dff0; margin-bottom: 3px; }
   .slider-row label span { color: white; font-weight: 600; font-size: 12px; }
-  input[type=range] {
-    width: 100%; accent-color: #4fc3f7; height: 4px;
-    cursor: pointer;
-  }
+  .slider-row .hint { font-size: 9px; color: #7fb3d3; margin-top: 1px; }
+  input[type=range] { width: 100%; accent-color: #4fc3f7; height: 4px; cursor: pointer; }
 
-  .targets-row {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 4px;
-  }
-  .target-box {
-    background: rgba(255,255,255,0.08);
-    border-radius: 6px; padding: 8px 6px; text-align: center;
-  }
+  .targets-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-bottom: 4px; }
+  .target-box { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 7px 5px; text-align: center; }
   .target-box .phase { font-size: 9px; text-transform: uppercase; color: #7fb3d3; margin-bottom: 2px; }
   .target-box input[type=number] {
     width: 100%; background: transparent; border: none; border-bottom: 1px solid #4fc3f7;
-    color: white; font-size: 13px; font-weight: 700; text-align: center;
-    outline: none; padding: 2px 0;
+    color: white; font-size: 13px; font-weight: 700; text-align: center; outline: none; padding: 2px 0;
   }
   .target-box .sub { font-size: 9px; color: #7fb3d3; margin-top: 2px; }
+  hr.div { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0; }
 
-  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 12px 0; }
+  /* ── MAIN ── */
+  .main { padding: 14px; overflow-y: auto; max-height: calc(100vh - 50px); }
 
-  /* ── RIGHT PANEL ── */
-  .main { padding: 16px; overflow-y: auto; max-height: calc(100vh - 50px); }
-
-  /* KPI row */
-  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+  /* KPI row — 6 boxes */
+  .kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
   .kpi {
-    background: var(--card); border-radius: 8px; padding: 12px 14px;
-    border-top: 3px solid var(--blue);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    background: var(--card); border-radius: 8px; padding: 11px 12px;
+    border-top: 3px solid var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,0.07);
   }
   .kpi.green  { border-top-color: var(--green); }
   .kpi.orange { border-top-color: var(--orange); }
   .kpi.navy   { border-top-color: var(--navy); background: var(--navy); color: white; }
   .kpi.red    { border-top-color: var(--red); }
-  .kpi-label { font-size: 10px; color: var(--dgrey); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .kpi-label { font-size: 9px; color: var(--dgrey); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
   .kpi.navy .kpi-label { color: #adc8e0; }
-  .kpi-value { font-size: 20px; font-weight: 700; color: var(--navy); line-height: 1; }
-  .kpi.navy .kpi-value { color: white; }
+  .kpi-value { font-size: 18px; font-weight: 700; color: var(--navy); line-height: 1; }
+  .kpi.navy  .kpi-value { color: white; }
   .kpi.green .kpi-value { color: var(--green); }
   .kpi.orange .kpi-value { color: var(--orange); }
-  .kpi.red .kpi-value { color: var(--red); }
-  .kpi-sub { font-size: 10px; color: var(--dgrey); margin-top: 3px; }
+  .kpi.red   .kpi-value { color: var(--red); }
+  .kpi-sub { font-size: 9px; color: var(--dgrey); margin-top: 3px; }
   .kpi.navy .kpi-sub { color: #adc8e0; }
 
-  /* Unit economics strip */
-  .ue-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 14px; }
-  .ue {
-    background: var(--ltblue); border-radius: 6px; padding: 10px 10px;
-    text-align: center;
-  }
+  /* Unit economics strip — 3 items */
+  .ue-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .ue { background: var(--ltblue); border-radius: 6px; padding: 10px 12px; text-align: center; }
   .ue-label { font-size: 9px; color: var(--navy); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
-  .ue-value { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .ue-value { font-size: 16px; font-weight: 700; color: var(--navy); }
   .ue-sub   { font-size: 9px; color: var(--dgrey); margin-top: 1px; }
 
   /* Charts */
-  .charts-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 12px; margin-bottom: 14px; }
-  .chart-card {
-    background: var(--card); border-radius: 8px; padding: 14px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
-  .chart-card h4 { font-size: 11px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-  .chart-card canvas { max-height: 220px; }
+  .charts-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .chart-card { background: var(--card); border-radius: 8px; padding: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .chart-card h4 { font-size: 10px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 9px; }
+  .chart-card canvas { max-height: 210px; }
 
-  /* Raise table */
-  .raise-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .table-card { background: var(--card); border-radius: 8px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .table-card h4 { font-size: 11px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  /* Bottom row */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .table-card { background: var(--card); border-radius: 8px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .table-card h4 { font-size: 10px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
   table { width: 100%; border-collapse: collapse; font-size: 11px; }
-  th { background: var(--grey); color: var(--navy); font-weight: 700; padding: 5px 8px; text-align: left; }
-  td { padding: 5px 8px; border-bottom: 1px solid #eef0f4; }
+  th { background: var(--grey); color: var(--navy); font-weight: 700; padding: 4px 7px; text-align: left; }
+  td { padding: 4px 7px; border-bottom: 1px solid #eef0f4; }
   tr:last-child td { border-bottom: none; }
-  .pos { color: var(--green); font-weight: 600; }
-  .neg { color: var(--red); }
+  .pos  { color: var(--green); font-weight: 600; }
+  .neg  { color: var(--red); }
   .bold { font-weight: 700; }
+
+  /* Detail box */
+  .detail-box { background: var(--grey); border-radius: 8px; padding: 12px; }
+  .detail-box h4 { font-size: 10px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .detail-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .dlabel { color: var(--dgrey); }
+  .detail-row .dval   { font-weight: 600; color: var(--navy); }
 
   .breakeven-badge {
     display: inline-block; background: var(--green); color: white;
-    border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 700;
-    margin-left: 6px;
+    border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: 700; margin-left: 5px;
   }
 </style>
 </head>
@@ -137,12 +120,12 @@
 
 <header>
   <h1>VaultaPay — Interactive Financial Model v5</h1>
-  <span>All inputs live. Drag sliders to update model in real time.</span>
+  <span>Drag sliders — all outputs update instantly</span>
 </header>
 
 <div class="layout">
 
-  <!-- ══ LEFT SIDEBAR ══ -->
+  <!-- ══ SIDEBAR ══ -->
   <div class="sidebar">
 
     <h3>Consumer Targets</h3>
@@ -164,7 +147,7 @@
       </div>
     </div>
 
-    <hr class="divider">
+    <hr class="div">
     <h3>Primary Levers</h3>
 
     <div class="slider-row">
@@ -184,15 +167,16 @@
       <input type="range" id="i_sleeve" min="0.05" max="0.50" step="0.01" value="0.20" oninput="update()">
     </div>
     <div class="slider-row">
-      <label>T-bill Deploy % <span id="lbl_tbdeploy">80%</span></label>
+      <label>T-Bill Allocation % <span id="lbl_tbdeploy">80%</span></label>
+      <div class="hint">% of consumer balance swept to earn T-bill interest</div>
       <input type="range" id="i_tbdeploy" min="0.10" max="1.00" step="0.05" value="0.80" oninput="update()">
     </div>
 
-    <hr class="divider">
+    <hr class="div">
     <h3>Secondary Levers</h3>
 
     <div class="slider-row">
-      <label>T-bill Annual Rate <span id="lbl_tbrate">4.8%</span></label>
+      <label>T-Bill Annual Rate <span id="lbl_tbrate">4.8%</span></label>
       <input type="range" id="i_tbrate" min="0.01" max="0.10" step="0.002" value="0.048" oninput="update()">
     </div>
     <div class="slider-row">
@@ -212,7 +196,7 @@
       <input type="range" id="i_serBraise" min="5000000" max="50000000" step="1000000" value="15000000" oninput="update()">
     </div>
 
-    <hr class="divider">
+    <hr class="div">
     <h3>Valuation Parameters</h3>
 
     <div class="slider-row">
@@ -230,22 +214,27 @@
 
   </div>
 
-  <!-- ══ MAIN PANEL ══ -->
+  <!-- ══ MAIN ══ -->
   <div class="main">
 
-    <!-- KPI row -->
+    <!-- KPI row — 6 boxes -->
     <div class="kpi-row">
       <div class="kpi navy">
         <div class="kpi-label">Enterprise Value</div>
         <div class="kpi-value" id="kpi_ev">—</div>
-        <div class="kpi-sub" id="kpi_ev_sub">—</div>
+        <div class="kpi-sub">PV EBITDA + PV terminal</div>
       </div>
       <div class="kpi navy">
         <div class="kpi-label">Risk-Adjusted EV</div>
         <div class="kpi-value" id="kpi_raev">—</div>
-        <div class="kpi-sub">35% survival × 65% discount</div>
+        <div class="kpi-sub">survival × stage discount</div>
       </div>
       <div class="kpi green">
+        <div class="kpi-label">3-Year LTV</div>
+        <div class="kpi-value" id="kpi_ltv">—</div>
+        <div class="kpi-sub">per consumer (net contribution)</div>
+      </div>
+      <div id="kpi_ltvcac_card" class="kpi green">
         <div class="kpi-label">LTV : CAC</div>
         <div class="kpi-value" id="kpi_ltvcac">—</div>
         <div class="kpi-sub">target ≥ 3.0x</div>
@@ -253,7 +242,7 @@
       <div class="kpi orange">
         <div class="kpi-label">EBITDA Positive</div>
         <div class="kpi-value" id="kpi_breakeven">—</div>
-        <div class="kpi-sub" id="kpi_breakeven_sub">first positive EBITDA year</div>
+        <div class="kpi-sub" id="kpi_breakeven_sub">first positive year</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">CAC Payback</div>
@@ -262,44 +251,29 @@
       </div>
     </div>
 
-    <!-- Unit economics strip -->
+    <!-- Unit economics strip — 3 items -->
     <div class="ue-row">
       <div class="ue">
-        <div class="ue-label">T-bill Yield to Consumer</div>
+        <div class="ue-label">T-Bill Yield to Consumer</div>
         <div class="ue-value" id="ue_yield">—</div>
-        <div class="ue-sub">on deployed balance</div>
+        <div class="ue-sub">annual rate on allocated balance</div>
       </div>
       <div class="ue">
-        <div class="ue-label">Consumer Reward / mo</div>
-        <div class="ue-value" id="ue_reward">—</div>
-        <div class="ue-sub">annual: <span id="ue_reward_yr">—</span></div>
-      </div>
-      <div class="ue">
-        <div class="ue-label">Merchant Fee / consumer</div>
+        <div class="ue-label">Merchant Fee / Consumer / Month</div>
         <div class="ue-value" id="ue_mfee">—</div>
-        <div class="ue-sub">per month</div>
+        <div class="ue-sub">Vaulta revenue from transactions</div>
       </div>
       <div class="ue">
-        <div class="ue-label">Vaulta Sleeve / consumer</div>
-        <div class="ue-value" id="ue_vsleeve">—</div>
-        <div class="ue-sub">per month (T-bill)</div>
-      </div>
-      <div class="ue">
-        <div class="ue-label">Net Contribution</div>
-        <div class="ue-value" id="ue_netcontrib">—</div>
-        <div class="ue-sub">per consumer / month</div>
-      </div>
-      <div class="ue">
-        <div class="ue-label">3-Year LTV</div>
-        <div class="ue-value" id="ue_ltv">—</div>
-        <div class="ue-sub">vs CAC: <span id="ue_cac_ref">—</span></div>
+        <div class="ue-label">Annual Net ARPU</div>
+        <div class="ue-value" id="ue_arpu">—</div>
+        <div class="ue-sub">net contribution per consumer per year</div>
       </div>
     </div>
 
     <!-- Charts -->
     <div class="charts-row">
       <div class="chart-card">
-        <h4>P&amp;L — Revenue, Gross Profit &amp; EBITDA (2027–2036)</h4>
+        <h4>Revenue &amp; EBITDA by Year (2027–2036)</h4>
         <canvas id="chart_pl"></canvas>
       </div>
       <div class="chart-card">
@@ -308,361 +282,270 @@
       </div>
     </div>
 
-    <!-- Raise amounts + EBITDA table -->
-    <div class="raise-row">
+    <!-- Bottom row: Funding | EBITDA table | Per-consumer detail -->
+    <div class="bottom-row">
+
       <div class="table-card">
         <h4>Funding Schedule</h4>
         <table>
-          <thead><tr><th>Round</th><th>Amount</th><th>Notes</th></tr></thead>
+          <thead><tr><th>Round</th><th>Amount</th></tr></thead>
           <tbody id="tbl_raises"></tbody>
         </table>
       </div>
+
       <div class="table-card">
         <h4>EBITDA by Year</h4>
         <table>
-          <thead><tr><th>Year</th><th>Phase</th><th>Revenue</th><th>EBITDA</th><th>Margin</th></tr></thead>
+          <thead><tr><th>Year</th><th>Phase</th><th>Revenue</th><th>EBITDA</th></tr></thead>
           <tbody id="tbl_ebitda"></tbody>
         </table>
       </div>
-    </div>
 
+      <div class="detail-box">
+        <h4>Per Consumer Economics / Month</h4>
+        <div class="detail-row"><span class="dlabel">T-Bill income (gross)</span><span class="dval" id="det_tbill">—</span></div>
+        <div class="detail-row"><span class="dlabel">Consumer reward (passed through)</span><span class="dval" id="det_reward">—</span></div>
+        <div class="detail-row"><span class="dlabel">Annual consumer reward</span><span class="dval" id="det_reward_yr">—</span></div>
+        <div class="detail-row"><span class="dlabel">Vaulta T-bill sleeve</span><span class="dval" id="det_sleeve">—</span></div>
+        <div class="detail-row"><span class="dlabel">Merchant fee revenue</span><span class="dval" id="det_mfee">—</span></div>
+        <div class="detail-row"><span class="dlabel">Variable infra cost</span><span class="dval" id="det_infra">—</span></div>
+        <div class="detail-row" style="border-top:2px solid var(--navy);margin-top:4px;padding-top:4px">
+          <span class="dlabel" style="font-weight:700;color:var(--navy)">Net contribution</span>
+          <span class="dval" id="det_net">—</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
 <script>
-// ── Formatters ──────────────────────────────────────────────────────────────
-const fmtM  = v => v === null ? '—' : (Math.abs(v) >= 1e6 ? (v/1e6).toFixed(1)+'M' : (v/1e3).toFixed(0)+'K');
-const fmtD  = v => v === null ? '—' : '$' + fmtM(v);
-const fmtDf = v => v === null ? '—' : '$' + v.toFixed(2);
-const fmtP  = v => (v*100).toFixed(1) + '%';
-const fmtP2 = v => (v*100).toFixed(2) + '%';
-const fmtX  = v => v.toFixed(2) + 'x';
-const comma = v => Math.round(v).toLocaleString();
+const fmtM  = v => Math.abs(v) >= 1e6 ? (v/1e6).toFixed(1)+'M' : (v/1e3).toFixed(0)+'K';
+const fmtD  = v => '$' + fmtM(v);
+const fmtDf = v => '$' + v.toFixed(2);
+const fmtP  = v => (v*100).toFixed(1)+'%';
+const fmtP2 = v => (v*100).toFixed(2)+'%';
+const fmtX  = v => v.toFixed(2)+'x';
 
-// ── Chart instances ──────────────────────────────────────────────────────────
 let chartPL = null, chartCons = null;
 
-// ── Model ───────────────────────────────────────────────────────────────────
 function model() {
-  // Read inputs
-  const seed       = +document.getElementById('i_seed').value;
-  const serA_tgt   = +document.getElementById('i_serA').value;
-  const serB_tgt   = +document.getElementById('i_serB').value;
-  const serA_yrs   = 2;
-  const serB_yrs   = 3;
-  const steady_g   = +document.getElementById('i_ssgrowth').value;
+  const seed     = +document.getElementById('i_seed').value;
+  const serA_tgt = +document.getElementById('i_serA').value;
+  const serB_tgt = +document.getElementById('i_serB').value;
+  const serA_yrs = 2, serB_yrs = 3;
+  const steady_g = +document.getElementById('i_ssgrowth').value;
+  const wallet   = +document.getElementById('i_wallet').value;
+  const tbDeploy = +document.getElementById('i_tbdeploy').value;
+  const tbRate   = +document.getElementById('i_tbrate').value;
+  const cSleeve  = +document.getElementById('i_sleeve').value;
+  const mFeeRate = +document.getElementById('i_mfee').value;
+  const txnRate  = +document.getElementById('i_txnrate').value;
+  const baseCAC  = +document.getElementById('i_cac').value;
+  const mSleeve  = +document.getElementById('i_msleeve').value;
+  const WACC     = +document.getElementById('i_wacc').value;
+  const exitM    = +document.getElementById('i_exitm').value;
+  const termG    = 0.04;
+  const survival = +document.getElementById('i_survival').value;
+  const stageDsc = 0.65;
+  const serBRaise= +document.getElementById('i_serBraise').value;
 
-  const wallet     = +document.getElementById('i_wallet').value;
-  const tbDeploy   = +document.getElementById('i_tbdeploy').value;
-  const tbRate     = +document.getElementById('i_tbrate').value;
-  const cSleeve    = +document.getElementById('i_sleeve').value;
-  const mFeeRate   = +document.getElementById('i_mfee').value;
-  const txnRate    = +document.getElementById('i_txnrate').value;
-  const baseCAC    = +document.getElementById('i_cac').value;
-  const mSleeve    = +document.getElementById('i_msleeve').value;
-
-  const WACC       = +document.getElementById('i_wacc').value;
-  const exitM      = +document.getElementById('i_exitm').value;
-  const termG      = 0.04;
-  const survival   = +document.getElementById('i_survival').value;
-  const stageDsc   = 0.65;
-  const serBRaise  = +document.getElementById('i_serBraise').value;
-
-  // Fixed operating params
-  const CPM         = 100;
-  const mSettle     = 5000;
-  const varInfra    = 0.50;
-  const infraBase   = 6000 * 12;
-  const infraGrowth = 0.15;
-  const kycCost     = 2.50;
-  const GA          = 180000;
-  const GAGrowth    = 0.10;
-  const FCC         = 6000000;
-  const seedBuf     = 18;
-  const serABuf     = 18;
-  const csRatio     = 25000;
-  const chainPct    = 0.40;
-  const locsPerChain= 50;
-  const bdDeals     = 8;
-  const benefits    = 0.25;
+  const CPM=100, mSettle=5000, varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
+  const kycCost=2.50, GA=180000, GAGrowth=0.10, FCC=6000000, seedBuf=18, serABuf=18;
+  const csRatio=25000, chainPct=0.40, locsPerChain=50, bdDeals=8, benefits=0.25;
   const engSal=150000, bdSal=120000, legalSal=135000, csSal=57000, leadSal=112000, cyberSal=190000;
 
-  // Derived growth rates
-  const serAGrowth = Math.pow(serA_tgt / seed, 1 / serA_yrs) - 1;
-  const serBGrowth = Math.pow(serB_tgt / serA_tgt, 1 / serB_yrs) - 1;
-
+  const serAGrowth = Math.pow(serA_tgt/seed, 1/serA_yrs) - 1;
+  const serBGrowth = Math.pow(serB_tgt/serA_tgt, 1/serB_yrs) - 1;
   const phases = ['Seed','Ser A','Ser A','Ser B','Ser B','Ser B','Steady','Steady','Steady','Steady'];
 
-  // Consumer counts
   const cons = new Array(11).fill(0);
   cons[1] = seed;
-  for (let yr = 2; yr <= 10; yr++) {
-    const rate = yr <= 1 + serA_yrs ? serAGrowth
-               : yr <= 1 + serA_yrs + serB_yrs ? serBGrowth
-               : steady_g;
-    cons[yr] = Math.round(cons[yr-1] * (1 + rate));
+  for (let yr=2; yr<=10; yr++) {
+    const rate = yr<=1+serA_yrs ? serAGrowth : yr<=1+serA_yrs+serB_yrs ? serBGrowth : steady_g;
+    cons[yr] = Math.round(cons[yr-1]*(1+rate));
   }
 
-  function phaseVal(yr, sv, av, bv, tv) {
-    if (yr === 1) return sv;
-    if (yr <= 1 + serA_yrs) return av;
-    if (yr <= 1 + serA_yrs + serB_yrs) return bv;
-    return tv;
-  }
-
-  function merchants(yr)  { return Math.round(cons[yr] / CPM); }
-  function newCons(yr)    { return yr === 1 ? cons[1] : Math.max(0, cons[yr] - cons[yr-1]); }
-  function cacTaper(yr)   { return phaseVal(yr, 1.0, 0.8, 0.6, 0.4); }
+  const pv = (yr,sv,av,bv,tv) => yr===1?sv : yr<=1+serA_yrs?av : yr<=1+serA_yrs+serB_yrs?bv : tv;
+  const merch   = yr => Math.round(cons[yr]/CPM);
+  const newCons = yr => yr===1 ? cons[1] : Math.max(0, cons[yr]-cons[yr-1]);
+  const cacTap  = yr => pv(yr,1.0,0.8,0.6,0.4);
 
   function payroll(yr) {
-    const eng   = phaseVal(yr, 2, 3, 8, 12);
-    const legal = phaseVal(yr, 0, 1, 3, 4);
-    const lead  = phaseVal(yr, 1, 2, 3, 3);
-    const cyber = phaseVal(yr, 0.3, 0.5, 1, 1);
-    const cs    = Math.max(2, Math.ceil(cons[yr] / csRatio));
-    const newChains = yr === 1
-      ? Math.round(merchants(yr) * chainPct / locsPerChain)
-      : Math.max(0, Math.round(merchants(yr)*chainPct/locsPerChain) - Math.round(merchants(yr-1)*chainPct/locsPerChain));
-    const bdMin = phaseVal(yr, 0, 1, 2, 2);
-    const bd    = Math.max(bdMin, Math.ceil(newChains / bdDeals));
-    const B = 1 + benefits;
-    return (eng*engSal + legal*legalSal + lead*leadSal + cyber*cyberSal + cs*csSal + bd*bdSal) * B;
+    const eng=pv(yr,2,3,8,12), legal=pv(yr,0,1,3,4), lead=pv(yr,1,2,3,3);
+    const cyber=pv(yr,0.3,0.5,1,1);
+    const cs = Math.max(2, Math.ceil(cons[yr]/csRatio));
+    const nc = yr===1 ? Math.round(merch(yr)*chainPct/locsPerChain)
+             : Math.max(0, Math.round(merch(yr)*chainPct/locsPerChain) - Math.round(merch(yr-1)*chainPct/locsPerChain));
+    const bd = Math.max(pv(yr,0,1,2,2), Math.ceil(nc/bdDeals));
+    return (eng*engSal+legal*legalSal+lead*leadSal+cyber*cyberSal+cs*csSal+bd*bdSal)*(1+benefits);
   }
 
-  function infraFixed(yr)    { return infraBase * Math.pow(1 + infraGrowth, yr - 1); }
-  function infraVar(yr)      { return cons[yr] * varInfra * 12; }
-  function marketing(yr)     { return newCons(yr) * baseCAC * cacTaper(yr); }
-  function referral(yr)      { return cons[yr] * 0.015 * 5.00 * 12; }
-  function gaAmt(yr)         { return GA * Math.pow(1 + GAGrowth, yr - 1); }
-  function legalRet(yr)      { return phaseVal(yr, 5000, 10000, 18000, 18000) * 12; }
-  function kyc(yr)           { return newCons(yr) * kycCost; }
-  function fccAmt(yr)        { return yr === 2 ? FCC : 0; }
+  const infraFix = yr => infraBase*Math.pow(1+infraGrowth,yr-1);
+  const infraVar = yr => cons[yr]*varInfra*12;
+  const mktg     = yr => newCons(yr)*baseCAC*cacTap(yr);
+  const refrl    = yr => cons[yr]*0.015*5.00*12;
+  const gaAmt    = yr => GA*Math.pow(1+GAGrowth,yr-1);
+  const legalRet = yr => pv(yr,5000,10000,18000,18000)*12;
+  const kyc      = yr => newCons(yr)*kycCost;
+  const fccAmt   = yr => yr===2?FCC:0;
+  const opex     = yr => payroll(yr)+mktg(yr)+refrl(yr)+infraFix(yr)+gaAmt(yr)+legalRet(yr)+kyc(yr)+fccAmt(yr);
 
-  function opexPL(yr) {
-    return payroll(yr) + marketing(yr) + referral(yr) + infraFixed(yr)
-         + gaAmt(yr) + legalRet(yr) + kyc(yr) + fccAmt(yr);
-  }
+  const cTbillGross  = yr => cons[yr]*wallet*tbDeploy*tbRate;
+  const mTbillSleeve = yr => merch(yr)*mSettle*tbDeploy*tbRate*mSleeve;
+  const mFeeRev      = yr => cons[yr]*wallet*txnRate*mFeeRate*12;
+  const totalRev     = yr => cTbillGross(yr)+mTbillSleeve(yr)+mFeeRev(yr);
+  const totalCOGS    = yr => cTbillGross(yr)*(1-cSleeve) + infraVar(yr) + merch(yr)*mSettle*tbDeploy*tbRate*(1-mSleeve);
+  const grossProfit  = yr => totalRev(yr)-totalCOGS(yr);
+  const ebitda       = yr => grossProfit(yr)-opex(yr);
 
-  // Revenue
-  function consTbillGross(yr)  { return cons[yr] * wallet * tbDeploy * tbRate; }
-  function merchTbillSleeve(yr){ return merchants(yr) * mSettle * tbDeploy * tbRate * mSleeve; }
-  function merchantFeeRev(yr)  { return cons[yr] * wallet * txnRate * mFeeRate * 12; }
-  function totalRev(yr)        { return consTbillGross(yr) + merchTbillSleeve(yr) + merchantFeeRev(yr); }
+  // Unit economics per consumer/month
+  const monthlyTbill = wallet*tbDeploy*tbRate/12;
+  const vaultSlv     = monthlyTbill*cSleeve;
+  const consRwd      = monthlyTbill*(1-cSleeve);
+  const mFeeMo       = wallet*txnRate*mFeeRate;
+  const netContrib   = vaultSlv+mFeeMo-varInfra;
+  const netAnnual    = netContrib*12;
+  const ltv3         = netAnnual*3;
+  const ltvCac       = ltv3/baseCAC;
+  const cacPayback   = netContrib>0 ? baseCAC/netContrib : 999;
+  const effYield     = tbRate*(1-cSleeve);
 
-  // COGS
-  function consRewardCOGS(yr)  { return consTbillGross(yr) * (1 - cSleeve); }
-  function merchRewardCOGS(yr) { return merchants(yr) * mSettle * tbDeploy * tbRate * (1 - mSleeve); }
-  function totalCOGS(yr)       { return consRewardCOGS(yr) + infraVar(yr) + merchRewardCOGS(yr); }
-
-  function grossProfit(yr) { return totalRev(yr) - totalCOGS(yr); }
-  function ebitda(yr)      { return grossProfit(yr) - opexPL(yr); }
-
-  // Unit economics (per consumer / month)
-  const monthlyTbill  = wallet * tbDeploy * tbRate / 12;
-  const vaultaSleeve  = monthlyTbill * cSleeve;
-  const consReward    = monthlyTbill * (1 - cSleeve);
-  const mFeePerCons   = wallet * txnRate * mFeeRate;
-  const netContrib    = vaultaSleeve + mFeePerCons - varInfra;
-  const netAnnual     = netContrib * 12;
-  const ltv3          = netAnnual * 3;
-  const ltvCac        = ltv3 / baseCAC;
-  const cacPayback    = netContrib > 0 ? baseCAC / netContrib : 999;
-  const effYield      = tbRate * (1 - cSleeve);
-
-  // Raise amounts
-  const eb1 = ebitda(1), eb2 = ebitda(2);
-  const seedRaise = Math.max(500000, Math.max(0, -eb1) * seedBuf / 12);
-  const serAShortfall = Math.max(0, -(eb1 + eb2));
-  const serARunway = Math.max(0, -eb2) * serABuf / 12;
-  const serARaise = Math.max(1000000, serAShortfall + serARunway);
-  const totalRaised = seedRaise + serARaise + serBRaise;
+  // Raises
+  const eb1=ebitda(1), eb2=ebitda(2);
+  const seedRaise = Math.max(500000, Math.max(0,-eb1)*seedBuf/12);
+  const serARaise = Math.max(1000000, Math.max(0,-(eb1+eb2)) + Math.max(0,-eb2)*serABuf/12);
+  const totalRaised = seedRaise+serARaise+serBRaise;
 
   // DCF
-  let pvSum = 0;
-  for (let yr = 1; yr <= 10; yr++) pvSum += ebitda(yr) / Math.pow(1 + WACC, yr);
-  const eb10 = ebitda(10);
-  const tvExit   = eb10 * exitM;
-  const tvGordon = WACC > termG ? eb10 * (1 + termG) / (WACC - termG) : 0;
-  const pvTV = (tvExit + tvGordon) / 2 / Math.pow(1 + WACC, 10);
-  const EV = pvSum + pvTV;
-  const raEV = EV * survival * stageDsc;
+  let pvSum=0;
+  for (let yr=1;yr<=10;yr++) pvSum += ebitda(yr)/Math.pow(1+WACC,yr);
+  const eb10=ebitda(10);
+  const tvExit=eb10*exitM, tvGordon=WACC>termG?eb10*(1+termG)/(WACC-termG):0;
+  const pvTV=(tvExit+tvGordon)/2/Math.pow(1+WACC,10);
+  const EV=pvSum+pvTV, raEV=EV*survival*stageDsc;
 
-  // Breakeven year
-  let beYear = null;
-  for (let yr = 1; yr <= 10; yr++) {
-    if (ebitda(yr) > 0) { beYear = yr; break; }
-  }
+  let beYear=null;
+  for (let yr=1;yr<=10;yr++) if(ebitda(yr)>0){beYear=yr;break;}
 
-  return {
-    cons, phases, merchants,
-    totalRev, grossProfit, ebitda, opexPL,
-    monthlyTbill, vaultaSleeve, consReward, mFeePerCons,
-    netContrib, netAnnual, ltv3, ltvCac, cacPayback, effYield,
-    seedRaise, serARaise, serBRaise, totalRaised,
-    EV, raEV, beYear,
-    serA_tgt, serB_tgt, seed
-  };
+  return { cons, phases, merch, totalRev, grossProfit, ebitda, opex,
+           monthlyTbill, vaultSlv, consRwd, mFeeMo, netContrib, netAnnual,
+           ltv3, ltvCac, cacPayback, effYield,
+           seedRaise, serARaise, serBRaise, totalRaised,
+           EV, raEV, beYear, baseCAC, varInfra };
 }
 
-// ── Update UI ────────────────────────────────────────────────────────────────
 function update() {
-  // Update slider labels
-  const wallet  = +document.getElementById('i_wallet').value;
-  const mfee    = +document.getElementById('i_mfee').value;
-  const cac     = +document.getElementById('i_cac').value;
-  const sleeve  = +document.getElementById('i_sleeve').value;
-  const tbdep   = +document.getElementById('i_tbdeploy').value;
-  const tbrate  = +document.getElementById('i_tbrate').value;
-  const txnrate = +document.getElementById('i_txnrate').value;
-  const msl     = +document.getElementById('i_msleeve').value;
-  const ssg     = +document.getElementById('i_ssgrowth').value;
-  const serBR   = +document.getElementById('i_serBraise').value;
-  const wacc    = +document.getElementById('i_wacc').value;
-  const exitm   = +document.getElementById('i_exitm').value;
-  const surv    = +document.getElementById('i_survival').value;
-
-  document.getElementById('lbl_wallet').textContent    = '$' + wallet.toLocaleString();
-  document.getElementById('lbl_mfee').textContent      = fmtP2(mfee);
-  document.getElementById('lbl_cac').textContent       = '$' + cac;
-  document.getElementById('lbl_sleeve').textContent    = fmtP(sleeve);
-  document.getElementById('lbl_tbdeploy').textContent  = fmtP(tbdep);
-  document.getElementById('lbl_tbrate').textContent    = fmtP2(tbrate);
-  document.getElementById('lbl_txnrate').textContent   = fmtP(txnrate);
-  document.getElementById('lbl_msleeve').textContent   = fmtP(msl);
-  document.getElementById('lbl_ssgrowth').textContent  = fmtP(ssg);
-  document.getElementById('lbl_serBraise').textContent = '$' + (serBR/1e6).toFixed(0) + 'M';
-  document.getElementById('lbl_wacc').textContent      = fmtP(wacc);
-  document.getElementById('lbl_exitm').textContent     = exitm + 'x';
-  document.getElementById('lbl_survival').textContent  = fmtP(surv);
+  // Label updates
+  document.getElementById('lbl_wallet').textContent   = '$'+(+document.getElementById('i_wallet').value).toLocaleString();
+  document.getElementById('lbl_mfee').textContent     = fmtP2(+document.getElementById('i_mfee').value);
+  document.getElementById('lbl_cac').textContent      = '$'+(+document.getElementById('i_cac').value);
+  document.getElementById('lbl_sleeve').textContent   = fmtP(+document.getElementById('i_sleeve').value);
+  document.getElementById('lbl_tbdeploy').textContent = fmtP(+document.getElementById('i_tbdeploy').value);
+  document.getElementById('lbl_tbrate').textContent   = fmtP2(+document.getElementById('i_tbrate').value);
+  document.getElementById('lbl_txnrate').textContent  = fmtP(+document.getElementById('i_txnrate').value);
+  document.getElementById('lbl_msleeve').textContent  = fmtP(+document.getElementById('i_msleeve').value);
+  document.getElementById('lbl_ssgrowth').textContent = fmtP(+document.getElementById('i_ssgrowth').value);
+  document.getElementById('lbl_serBraise').textContent= '$'+(+document.getElementById('i_serBraise').value/1e6).toFixed(0)+'M';
+  document.getElementById('lbl_wacc').textContent     = fmtP(+document.getElementById('i_wacc').value);
+  document.getElementById('lbl_exitm').textContent    = (+document.getElementById('i_exitm').value)+'x';
+  document.getElementById('lbl_survival').textContent = fmtP(+document.getElementById('i_survival').value);
 
   const m = model();
 
   // KPIs
-  document.getElementById('kpi_ev').textContent       = fmtD(m.EV);
-  document.getElementById('kpi_ev_sub').textContent   = 'PV EBITDA + PV terminal value';
-  document.getElementById('kpi_raev').textContent     = fmtD(m.raEV);
-  document.getElementById('kpi_ltvcac').textContent   = fmtX(m.ltvCac);
-  const ltvEl = document.getElementById('kpi_ltvcac').parentElement;
-  ltvEl.className = 'kpi ' + (m.ltvCac >= 3 ? 'green' : m.ltvCac >= 2 ? 'orange' : 'red');
+  document.getElementById('kpi_ev').textContent     = fmtD(m.EV);
+  document.getElementById('kpi_raev').textContent   = fmtD(m.raEV);
+  document.getElementById('kpi_ltv').textContent    = '$'+m.ltv3.toFixed(0);
+  document.getElementById('kpi_ltvcac').textContent = fmtX(m.ltvCac);
+  const ltvCard = document.getElementById('kpi_ltvcac_card');
+  ltvCard.className = 'kpi '+(m.ltvCac>=3?'green':m.ltvCac>=2?'orange':'red');
 
-  if (m.beYear) {
-    document.getElementById('kpi_breakeven').textContent     = 'Year ' + m.beYear;
-    document.getElementById('kpi_breakeven_sub').textContent = m.phases[m.beYear-1] + ' phase';
-  } else {
-    document.getElementById('kpi_breakeven').textContent     = 'Not reached';
-    document.getElementById('kpi_breakeven_sub').textContent = 'within 10 years';
-  }
-  document.getElementById('kpi_payback').textContent = m.cacPayback < 900 ? m.cacPayback.toFixed(1) + ' mo' : 'N/A';
+  document.getElementById('kpi_breakeven').textContent    = m.beYear ? 'Year '+m.beYear : 'Not reached';
+  document.getElementById('kpi_breakeven_sub').textContent = m.beYear ? m.phases[m.beYear-1]+' phase' : 'within 10 years';
+  document.getElementById('kpi_payback').textContent = m.cacPayback<900 ? m.cacPayback.toFixed(1)+' mo' : 'N/A';
 
-  // Unit economics
-  document.getElementById('ue_yield').textContent      = fmtP2(m.effYield);
-  document.getElementById('ue_reward').textContent     = fmtDf(m.consReward);
-  document.getElementById('ue_reward_yr').textContent  = '$' + (m.consReward*12).toFixed(2);
-  document.getElementById('ue_mfee').textContent       = fmtDf(m.mFeePerCons);
-  document.getElementById('ue_vsleeve').textContent    = fmtDf(m.vaultaSleeve);
-  document.getElementById('ue_netcontrib').textContent = fmtDf(m.netContrib);
-  document.getElementById('ue_ltv').textContent        = '$' + m.ltv3.toFixed(0);
-  document.getElementById('ue_cac_ref').textContent    = '$' + cac + ' CAC';
+  // UE strip
+  document.getElementById('ue_yield').textContent = fmtP2(m.effYield);
+  document.getElementById('ue_mfee').textContent  = fmtDf(m.mFeeMo);
+  document.getElementById('ue_arpu').textContent  = '$'+m.netAnnual.toFixed(2);
 
-  // P&L chart
+  // P&L bar chart
   const years = ['2027','2028','2029','2030','2031','2032','2033','2034','2035','2036'];
-  const revData = [], gpData = [], ebData = [];
-  for (let yr = 1; yr <= 10; yr++) {
-    revData.push(m.totalRev(yr) / 1e6);
-    gpData.push(m.grossProfit(yr) / 1e6);
-    ebData.push(m.ebitda(yr) / 1e6);
+  const revData=[], ebData=[];
+  for (let yr=1;yr<=10;yr++) {
+    revData.push(+(m.totalRev(yr)/1e6).toFixed(2));
+    ebData.push(+(m.ebitda(yr)/1e6).toFixed(2));
   }
-
   if (chartPL) chartPL.destroy();
   chartPL = new Chart(document.getElementById('chart_pl'), {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: years,
       datasets: [
-        { label: 'Revenue', data: revData, borderColor: '#2E75B6', backgroundColor: 'rgba(46,117,182,0.07)', tension: 0.3, fill: true, pointRadius: 3 },
-        { label: 'Gross Profit', data: gpData, borderColor: '#70AD47', backgroundColor: 'rgba(112,173,71,0.07)', tension: 0.3, fill: true, pointRadius: 3 },
-        { label: 'EBITDA', data: ebData, borderColor: '#ED7D31', backgroundColor: 'rgba(237,125,49,0.07)', tension: 0.3, fill: true, pointRadius: 3, borderDash: ebData.some(v=>v<0) ? [] : [] }
+        { label: 'Revenue ($M)', data: revData, backgroundColor: 'rgba(46,117,182,0.75)', borderRadius: 3, order: 2 },
+        { label: 'EBITDA ($M)',  data: ebData,  backgroundColor: ebData.map(v=>v>=0?'rgba(112,173,71,0.85)':'rgba(192,0,0,0.75)'), borderRadius: 3, order: 1 }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: true,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } },
-        tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.y.toFixed(1) + 'M' } }
+        legend: { position: 'top', labels: { font:{size:10}, boxWidth:12 } },
+        tooltip: { callbacks: { label: ctx => ' $'+ctx.parsed.y.toFixed(1)+'M' } }
       },
       scales: {
-        y: { ticks: { callback: v => '$' + v.toFixed(0) + 'M', font: { size: 9 } }, grid: { color: '#eee' } },
-        x: { ticks: { font: { size: 9 } } }
+        y: { ticks: { callback: v=>'$'+v+'M', font:{size:9} }, grid:{color:'#eee'} },
+        x: { ticks: { font:{size:9} } }
       }
     }
   });
 
   // Consumer chart
-  const consData = [], colors = [];
-  const phaseColors = {
-    'Seed':'#2E75B6','Ser A':'#4472C4','Ser B':'#70AD47','Steady':'#ED7D31'
-  };
-  for (let yr = 1; yr <= 10; yr++) {
-    consData.push(Math.round(m.cons[yr] / 1000));
-    colors.push(phaseColors[m.phases[yr-1]] || '#999');
-  }
-
+  const consData=[], colors=[];
+  const pc = {'Seed':'#2E75B6','Ser A':'#4472C4','Ser B':'#70AD47','Steady':'#ED7D31'};
+  for (let yr=1;yr<=10;yr++) { consData.push(Math.round(m.cons[yr]/1000)); colors.push(pc[m.phases[yr-1]]||'#999'); }
   if (chartCons) chartCons.destroy();
   chartCons = new Chart(document.getElementById('chart_consumers'), {
     type: 'bar',
-    data: {
-      labels: years,
-      datasets: [{ label: 'Consumers (K)', data: consData, backgroundColor: colors, borderRadius: 3 }]
-    },
+    data: { labels: years, datasets: [{ label:'Consumers (K)', data:consData, backgroundColor:colors, borderRadius:3 }] },
     options: {
-      responsive: true, maintainAspectRatio: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toFixed(0) + 'K consumers' } }
-      },
-      scales: {
-        y: { ticks: { callback: v => v + 'K', font: { size: 9 } }, grid: { color: '#eee' } },
-        x: { ticks: { font: { size: 9 } } }
-      }
+      responsive:true, maintainAspectRatio:true,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toFixed(0)+'K consumers'}} },
+      scales: { y:{ticks:{callback:v=>v+'K',font:{size:9}},grid:{color:'#eee'}}, x:{ticks:{font:{size:9}}} }
     }
   });
 
-  // Raises table
-  const raises = [
-    ['Seed', m.seedRaise, 'Yr1 burn × 18-mo buffer'],
-    ['Series A', m.serARaise, 'Shortfall Yr1+Yr2 (incl. FCC) + runway'],
-    ['Series B', m.serBRaise, 'Fundraising target'],
-    ['Total', m.totalRaised, ''],
-  ];
-  document.getElementById('tbl_raises').innerHTML = raises.map(([rnd, amt, note]) =>
-    `<tr>
-      <td class="${rnd==='Total'?'bold':''}">${rnd}</td>
-      <td class="${rnd==='Total'?'bold':''} ${amt>0?'pos':''}">${fmtD(amt)}</td>
-      <td style="color:#888;font-size:10px">${note}</td>
-    </tr>`
-  ).join('');
+  // Funding table
+  document.getElementById('tbl_raises').innerHTML = [
+    ['Seed', m.seedRaise], ['Series A', m.serARaise],
+    ['Series B', m.serBRaise], ['Total', m.totalRaised]
+  ].map(([r,a],i)=>`<tr><td class="${i===3?'bold':''}">${r}</td><td class="${i===3?'bold pos':'pos'}">${fmtD(a)}</td></tr>`).join('');
 
   // EBITDA table
-  let ebitdaHTML = '';
-  for (let yr = 1; yr <= 10; yr++) {
-    const eb = m.ebitda(yr);
-    const rev = m.totalRev(yr);
-    const margin = rev > 0 ? eb / rev : 0;
-    const cls = eb >= 0 ? 'pos' : 'neg';
-    const be = (m.beYear === yr) ? '<span class="breakeven-badge">BREAKEVEN</span>' : '';
-    ebitdaHTML += `<tr>
+  let html='';
+  for (let yr=1;yr<=10;yr++) {
+    const eb=m.ebitda(yr), rev=m.totalRev(yr);
+    const be = m.beYear===yr ? '<span class="breakeven-badge">✓</span>' : '';
+    html+=`<tr>
       <td>${2026+yr}${be}</td>
       <td style="font-size:10px;color:#888">${m.phases[yr-1]}</td>
       <td>${fmtD(rev)}</td>
-      <td class="${cls}">${fmtD(eb)}</td>
-      <td class="${cls}">${fmtP(margin)}</td>
+      <td class="${eb>=0?'pos':'neg'}">${fmtD(eb)}</td>
     </tr>`;
   }
-  document.getElementById('tbl_ebitda').innerHTML = ebitdaHTML;
+  document.getElementById('tbl_ebitda').innerHTML = html;
+
+  // Detail box
+  document.getElementById('det_tbill').textContent     = fmtDf(m.monthlyTbill);
+  document.getElementById('det_reward').textContent    = fmtDf(m.consRwd);
+  document.getElementById('det_reward_yr').textContent = '$'+(m.consRwd*12).toFixed(2)+'/yr';
+  document.getElementById('det_sleeve').textContent    = fmtDf(m.vaultSlv);
+  document.getElementById('det_mfee').textContent      = fmtDf(m.mFeeMo);
+  document.getElementById('det_infra').textContent     = '-$'+m.varInfra.toFixed(2);
+  document.getElementById('det_net').textContent       = fmtDf(m.netContrib);
 }
 
-// Initial render
 update();
 </script>
 </body>
