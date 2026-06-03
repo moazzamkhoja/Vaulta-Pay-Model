@@ -392,10 +392,10 @@ function model() {
   const opex     = yr => payroll(yr)+mktg(yr)+refrl(yr)+infraFix(yr)+gaAmt(yr)+legalRet(yr)+kyc(yr)+fccAmt(yr);
 
   const cTbillGross  = yr => cons[yr]*wallet*tbDeploy*tbRate;
-  const mTbillSleeve = yr => merch(yr)*mSettle*tbDeploy*tbRate*mSleeve;
+  const mTbillFull   = yr => merch(yr)*mSettle*tbDeploy*tbRate;
   const mFeeRev      = yr => cons[yr]*wallet*txnRate*mFeeRate*12;
-  const totalRev     = yr => cTbillGross(yr)+mTbillSleeve(yr)+mFeeRev(yr);
-  const totalCOGS    = yr => cTbillGross(yr)*(1-cSleeve) + infraVar(yr) + merch(yr)*mSettle*tbDeploy*tbRate*(1-mSleeve);
+  const totalRev     = yr => cTbillGross(yr)+mTbillFull(yr)+mFeeRev(yr);
+  const totalCOGS    = yr => cTbillGross(yr)*(1-cSleeve) + infraVar(yr) + mTbillFull(yr)*(1-mSleeve);
   const grossProfit  = yr => totalRev(yr)-totalCOGS(yr);
   const ebitda       = yr => grossProfit(yr)-opex(yr);
 
