@@ -208,8 +208,24 @@
     </div>
 
     <hr class="div">
+    <h3>Valuation Parameters</h3>
+
+    <div class="slider-row">
+      <label>WACC <span id="lbl_wacc">20%</span></label>
+      <input type="range" id="i_wacc" min="0.10" max="0.40" step="0.01" value="0.20" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Exit EBITDA Multiple <span id="lbl_exitm">10x</span></label>
+      <input type="range" id="i_exitm" min="3" max="20" step="1" value="10" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Survival Probability <span id="lbl_survival">35%</span></label>
+      <input type="range" id="i_survival" min="0.10" max="0.80" step="0.05" value="0.35" oninput="update()">
+    </div>
+
+    <hr class="div">
     <h3>Headcount &amp; Salaries</h3>
-    <div class="hint" style="color:#7fb3d3;margin-bottom:8px;">Annual salary per role (excl. 25% benefits loading)</div>
+    <div class="hint" style="color:#7fb3d3;margin-bottom:8px;">Annual salary per role (excl. benefits loading)</div>
 
     <div class="sal-row">
       <label>Engineering</label>
@@ -238,22 +254,6 @@
     <div class="sal-row">
       <label>Benefits Loading</label>
       <div class="sal-input-wrap"><span>&nbsp;</span><input type="number" id="i_benefits" value="25" min="0" max="50" step="1" oninput="update()"><span>%</span></div>
-    </div>
-
-    <hr class="div">
-    <h3>Valuation Parameters</h3>
-
-    <div class="slider-row">
-      <label>WACC <span id="lbl_wacc">20%</span></label>
-      <input type="range" id="i_wacc" min="0.10" max="0.40" step="0.01" value="0.20" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Exit EBITDA Multiple <span id="lbl_exitm">10x</span></label>
-      <input type="range" id="i_exitm" min="3" max="20" step="1" value="10" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Survival Probability <span id="lbl_survival">35%</span></label>
-      <input type="range" id="i_survival" min="0.10" max="0.80" step="0.05" value="0.35" oninput="update()">
     </div>
 
   </div>
@@ -397,7 +397,7 @@ function model() {
 
   const CPM=100, mSettle=5000, varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
   const kycCost=2.50, GA=180000, GAGrowth=0.10, FCC=6000000, seedBuf=18, serABuf=18;
-  const csRatio=25000, chainPct=0.40, locsPerChain=50, bdDeals=8, benefits=0.25;
+  const csRatio=25000, chainPct=0.40, locsPerChain=50, bdDeals=8;
   const engSal   = +document.getElementById('i_sal_eng').value;
   const bdSal    = +document.getElementById('i_sal_bd').value;
   const csSal    = +document.getElementById('i_sal_cs').value;
