@@ -190,7 +190,7 @@
   <span>Drag sliders — all outputs update instantly</span>
   <button id="save-btn" onclick="saveDefaults()" title="Save current values as default URL">💾 Save as Default</button>
 </header>
-<div id="save-toast">✓ Link copied to clipboard — bookmark or share it</div>
+<div id="save-toast">✓ Settings saved — will reload automatically next time you open this link</div>
 
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('model')">📊 Model</button>
@@ -933,32 +933,34 @@ const SAVED_INPUTS = [
   'i_sal_eng','i_sal_bd','i_sal_cs','i_sal_lead','i_sal_legal','i_sal_cyber','i_benefits'
 ];
 
-// On load: apply URL params if present, show save button if owner
+// On load: restore saved values from localStorage, show save button if owner
 (function() {
   const params = new URLSearchParams(location.search);
-  let applied = false;
-  SAVED_INPUTS.forEach(id => {
-    if (params.has(id)) {
-      const el = document.getElementById(id);
-      if (el) { el.value = params.get(id); applied = true; }
-    }
-  });
-  if (applied) update();
   if (params.get('owner') === '1') {
     document.getElementById('save-btn').style.display = 'flex';
+    const saved = localStorage.getItem('vaultapay_defaults');
+    if (saved) {
+      try {
+        const vals = JSON.parse(saved);
+        SAVED_INPUTS.forEach(id => {
+          if (vals[id] != null) {
+            const el = document.getElementById(id);
+            if (el) el.value = vals[id];
+          }
+        });
+        update();
+      } catch(e) {}
+    }
   }
 })();
 
 function saveDefaults() {
-  const params = new URLSearchParams(location.search);
-  params.set('owner', '1');
+  const vals = {};
   SAVED_INPUTS.forEach(id => {
     const el = document.getElementById(id);
-    if (el) params.set(id, el.value);
+    if (el) vals[id] = el.value;
   });
-  const url = location.origin + location.pathname + '?' + params.toString();
-  history.replaceState(null, '', url);
-  navigator.clipboard.writeText(url).catch(() => {});
+  localStorage.setItem('vaultapay_defaults', JSON.stringify(vals));
   const toast = document.getElementById('save-toast');
   toast.style.opacity = '1';
   setTimeout(() => { toast.style.opacity = '0'; }, 2800);
