@@ -104,8 +104,12 @@ body {
 .raise-badge .lbl { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; }
 .divider-v { width: 1px; background: rgba(255,255,255,0.1); }
 
+/* Global: cards never stretch beyond their content height */
+.pcard, .wncard, .val-card, .rev-card, .seed-goal, .curr-state,
+.cap-panel, .ret-panel, .uof-panel, .be-row { align-self: start; width: 100%; box-sizing: border-box; }
+
 /* ══ SLIDE 2: PROBLEM ══ */
-.problem-cards { display: flex; gap: 16px; flex: 1; align-items: stretch; }
+.problem-cards { display: flex; gap: 16px; flex: 1; align-items: start; }
 .pcard {
   flex: 1; background: white; border-radius: 14px;
   padding: 20px 18px; border: 1px solid var(--border);
@@ -164,7 +168,7 @@ body {
 .sol-enabler p { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.45; }
 
 /* ══ SLIDE 4: WHY NOW ══ */
-.whynow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; align-content: start; }
+.whynow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; align-content: start; align-items: start; }
 .wncard {
   background: white; border-radius: 10px; padding: 10px 12px;
   border: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px;
