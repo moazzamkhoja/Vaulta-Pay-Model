@@ -627,6 +627,10 @@ function switchTab(name) {
   if (name === 'pitch') setTimeout(sendPitchData, 150);
 }
 
+window.addEventListener('message', e => {
+  if (e.data && e.data.type === 'pitchReady') sendPitchData();
+});
+
 function sendPitchData() {
   const iframe = document.getElementById('pitch-iframe');
   if (!iframe || !iframe.contentWindow) return;
