@@ -60,19 +60,19 @@ body {
 /* ── Common layout ── */
 .slide-inner {
   flex: 1; display: flex; flex-direction: column;
-  padding: 26px 52px 68px;
+  padding: 40px 60px 80px;
   background: var(--light);
 }
 .slide-label {
   font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  color: var(--green); text-transform: uppercase; margin-bottom: 6px;
+  color: var(--green); text-transform: uppercase; margin-bottom: 8px;
 }
 .slide-title {
-  font-size: 28px; font-weight: 800; color: var(--navy);
-  letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 16px;
+  font-size: 36px; font-weight: 800; color: var(--navy);
+  letter-spacing: -1px; line-height: 1.1; margin-bottom: 24px;
 }
 .slide-title em { color: var(--green); font-style: normal; }
-.slide-body { flex: 1; display: flex; gap: 28px; align-items: flex-start; min-height: 0; overflow: hidden; }
+.slide-body { flex: 1; display: flex; gap: 24px; align-items: flex-start; min-height: 0; overflow: hidden; }
 .slide-dark .slide-inner { background: var(--navy); }
 .slide-dark .slide-title { color: white; }
 
@@ -117,52 +117,50 @@ body {
 .pcard .stat span { color: var(--green); }
 
 /* ══ SLIDE 3: SOLUTION ══ */
-.sol-compare { display: flex; gap: 20px; flex: 1; }
-.sol-side {
-  flex: 1; border-radius: 16px; padding: 14px 16px;
-  display: flex; flex-direction: column; gap: 8px;
+.sol-flows { display: flex; flex-direction: column; gap: 8px; }
+.sol-flow-row {
+  border-radius: 12px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: nowrap;
 }
-.sol-side.old { background: white; border: 1px solid var(--border); }
-.sol-side.new { background: var(--navy); }
-.sol-side-title {
-  font-size: 12px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1.5px; margin-bottom: 6px;
+.sol-flow-row.old { background: white; border: 1px solid var(--border); }
+.sol-flow-row.new { background: var(--navy); }
+.sol-flow-lbl {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; white-space: nowrap; min-width: 56px;
 }
-.sol-side.old .sol-side-title { color: var(--grey); }
-.sol-side.new .sol-side-title { color: var(--green); }
-.flow-chain { display: flex; flex-direction: column; gap: 5px; }
-.flow-node {
-  border-radius: 8px; padding: 5px 10px; font-size: 11px; font-weight: 600;
-  text-align: center;
+.sol-flow-row.old .sol-flow-lbl { color: var(--grey); }
+.sol-flow-row.new .sol-flow-lbl { color: var(--green); }
+.fnode {
+  border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 600;
+  text-align: center; white-space: nowrap;
 }
-.flow-node.old-node { background: #F3F4F6; color: var(--navy); border: 1px solid var(--border); }
-.flow-node.new-node { background: rgba(0,200,150,0.15); color: var(--green); border: 1px solid rgba(0,200,150,0.3); }
-.flow-arrow { text-align: center; font-size: 13px; }
-.flow-arrow.old { color: #D1D5DB; }
-.flow-arrow.new { color: var(--green); }
-.sol-metrics { display: flex; flex-direction: column; gap: 0; margin-top: 6px; }
-.sol-metric {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 4px 0;
+.fnode.old { background: #F3F4F6; color: var(--navy); border: 1px solid var(--border); }
+.fnode.new { background: rgba(0,200,150,0.18); color: var(--green); border: 1px solid rgba(0,200,150,0.35); flex: 1; }
+.farr { font-size: 12px; color: #D1D5DB; flex-shrink: 0; }
+.farr.new { color: var(--green); }
+.sol-table { width: 100%; border-collapse: collapse; }
+.sol-table th {
+  padding: 7px 12px; font-size: 11px; font-weight: 700; text-align: center;
+  border: 1px solid var(--border); background: var(--light);
+  text-transform: uppercase; letter-spacing: 0.8px; color: var(--grey);
 }
-.sol-side.old .sol-metric { border-bottom: 1px solid var(--border); }
-.sol-side.new .sol-metric { border-bottom: 1px solid rgba(255,255,255,0.07); }
-.sol-metric:last-child { border: none !important; }
-.sol-metric .mlbl { font-size: 12px; }
-.sol-side.old .mlbl { color: var(--grey); }
-.sol-side.new .mlbl { color: rgba(255,255,255,0.5); }
-.sol-metric .mval { font-size: 13px; font-weight: 700; }
-.sol-side.old .mval { color: var(--red); }
-.sol-side.new .mval { color: var(--green); }
-.sol-enablers { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.sol-table th.new-h { background: var(--navy); color: var(--green); }
+.sol-table td {
+  padding: 7px 12px; font-size: 12px; font-weight: 600; text-align: center;
+  border: 1px solid var(--border); background: white;
+}
+.sol-table td.metric-col { text-align: left; color: var(--navy); background: var(--light); font-weight: 500; font-size: 11px; }
+.sol-table td.bad { color: var(--red); }
+.sol-table td.good { color: var(--green); background: rgba(0,200,150,0.04); }
+.sol-enablers-row { display: flex; gap: 12px; }
 .sol-enabler {
-  display: flex; gap: 8px; align-items: flex-start;
-  background: rgba(0,200,150,0.08); border-radius: 8px;
-  padding: 7px 10px; border: 1px solid rgba(0,200,150,0.2);
+  flex: 1; display: flex; gap: 10px; align-items: flex-start;
+  background: var(--navy); border-radius: 10px;
+  padding: 10px 14px; border: 1px solid rgba(0,200,150,0.2);
 }
-.sol-enabler .eicon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-.sol-enabler h5 { font-size: 11px; font-weight: 700; color: white; margin-bottom: 1px; }
-.sol-enabler p { font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+.sol-enabler .eicon { font-size: 16px; flex-shrink: 0; }
+.sol-enabler h5 { font-size: 11px; font-weight: 700; color: var(--green); margin-bottom: 2px; }
+.sol-enabler p { font-size: 10px; color: rgba(255,255,255,0.55); line-height: 1.4; }
 
 /* ══ SLIDE 4: WHY NOW ══ */
 .whynow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; align-content: start; }
@@ -483,63 +481,83 @@ body {
   <div class="slide-inner">
     <div class="slide-label">The Solution</div>
     <div class="slide-title">Replace 4 layers of banking<br>with <em>one blockchain</em></div>
-    <div class="slide-body">
-      <div class="sol-compare">
+    <div class="slide-body" style="flex-direction:column; gap:12px;">
 
-        <!-- Old Way -->
-        <div class="sol-side old">
-          <div class="sol-side-title">Old Way — Layered Banking</div>
-          <div class="flow-chain">
-            <div class="flow-node old-node">Consumer</div>
-            <div class="flow-arrow old">↓</div>
-            <div class="flow-node old-node">Issuing Bank</div>
-            <div class="flow-arrow old">↓</div>
-            <div class="flow-node old-node">Card Network (Visa / MC)</div>
-            <div class="flow-arrow old">↓</div>
-            <div class="flow-node old-node">Acquiring Bank</div>
-            <div class="flow-arrow old">↓</div>
-            <div class="flow-node old-node">Merchant</div>
-          </div>
-          <div class="sol-metrics">
-            <div class="sol-metric"><div class="mlbl">Intermediaries</div><div class="mval">4 layers</div></div>
-            <div class="sol-metric"><div class="mlbl">Merchant Fee</div><div class="mval">2–3%</div></div>
-            <div class="sol-metric"><div class="mlbl">Settlement Time</div><div class="mval">1–3 days</div></div>
-            <div class="sol-metric"><div class="mlbl">Consumer Rewards</div><div class="mval">None (checking)</div></div>
-            <div class="sol-metric"><div class="mlbl">Bank Account Required</div><div class="mval">Yes</div></div>
-            <div class="sol-metric"><div class="mlbl">Tx Cost to Network</div><div class="mval">~$0.30+</div></div>
-          </div>
+      <!-- Flow chains -->
+      <div class="sol-flows">
+        <div class="sol-flow-row old">
+          <span class="sol-flow-lbl">Old Way</span>
+          <div class="fnode old">Consumer</div>
+          <span class="farr">→</span>
+          <div class="fnode old">Issuing Bank</div>
+          <span class="farr">→</span>
+          <div class="fnode old">Visa / MC</div>
+          <span class="farr">→</span>
+          <div class="fnode old">Acquiring Bank</div>
+          <span class="farr">→</span>
+          <div class="fnode old">Merchant</div>
         </div>
-
-        <!-- VaultaPay -->
-        <div class="sol-side new">
-          <div class="sol-side-title">VaultaPay — Blockchain Native</div>
-          <div class="flow-chain">
-            <div class="flow-node new-node">Consumer (vUSD wallet)</div>
-            <div class="flow-arrow new">↓</div>
-            <div class="flow-node new-node">Solana Blockchain</div>
-            <div class="flow-arrow new">↓</div>
-            <div class="flow-node new-node">Merchant (vUSD wallet)</div>
-          </div>
-          <div class="sol-metrics">
-            <div class="sol-metric"><div class="mlbl">Intermediaries</div><div class="mval">1 (blockchain)</div></div>
-            <div class="sol-metric"><div class="mlbl">Merchant Fee</div><div class="mval" id="s3_mfee">0.8%</div></div>
-            <div class="sol-metric"><div class="mlbl">Settlement Time</div><div class="mval">&lt;1 second</div></div>
-            <div class="sol-metric"><div class="mlbl">Consumer Rewards</div><div class="mval">✓ Every cycle</div></div>
-            <div class="sol-metric"><div class="mlbl">Bank Account Required</div><div class="mval">No</div></div>
-            <div class="sol-metric"><div class="mlbl">Tx Cost to Network</div><div class="mval">$0.0005</div></div>
-          </div>
-          <div class="sol-enablers">
-            <div class="sol-enabler">
-              <div class="eicon">⚖️</div>
-              <div><h5>GENIUS Act (2025) — Why Rewards Are Legal</h5><p>First US federal law authorizing stablecoins to hold T-bill reserves. Vaulta keeps the float, passes it back as Vaulta Rewards — legally compliant.</p></div>
-            </div>
-            <div class="sol-enabler">
-              <div class="eicon">⚡</div>
-              <div><h5>Solana — Why Fees Can Be 0.8%</h5><p>$0.0005/tx makes blockchain settlement 600x cheaper than card processing, enabling sub-1% merchant fees that are still profitable.</p></div>
-            </div>
-          </div>
+        <div class="sol-flow-row new">
+          <span class="sol-flow-lbl">VaultaPay</span>
+          <div class="fnode new">Consumer (vUSD wallet)</div>
+          <span class="farr new">——————————→</span>
+          <div class="fnode new">Solana Blockchain</div>
+          <span class="farr new">——————————→</span>
+          <div class="fnode new">Merchant (vUSD wallet)</div>
         </div>
       </div>
+
+      <!-- Comparison table -->
+      <table class="sol-table">
+        <tr>
+          <th style="text-align:left; width:28%;">Metric</th>
+          <th>Old Way (4 layers)</th>
+          <th class="new-h">VaultaPay (Blockchain)</th>
+        </tr>
+        <tr>
+          <td class="metric-col">Intermediaries</td>
+          <td class="bad">4 layers</td>
+          <td class="good">1 (blockchain)</td>
+        </tr>
+        <tr>
+          <td class="metric-col">Merchant Fee</td>
+          <td class="bad">2–3%</td>
+          <td class="good" id="s3_mfee">0.80%</td>
+        </tr>
+        <tr>
+          <td class="metric-col">Settlement Time</td>
+          <td class="bad">1–3 days</td>
+          <td class="good">&lt;1 second</td>
+        </tr>
+        <tr>
+          <td class="metric-col">Consumer Rewards</td>
+          <td class="bad">None (checking accts)</td>
+          <td class="good">✓ Every 90-day cycle</td>
+        </tr>
+        <tr>
+          <td class="metric-col">Bank Account Required</td>
+          <td class="bad">Yes</td>
+          <td class="good">No</td>
+        </tr>
+        <tr>
+          <td class="metric-col">Network Tx Cost</td>
+          <td class="bad">~$0.30+</td>
+          <td class="good">$0.0005</td>
+        </tr>
+      </table>
+
+      <!-- Enablers -->
+      <div class="sol-enablers-row">
+        <div class="sol-enabler">
+          <div class="eicon">⚖️</div>
+          <div><h5>GENIUS Act (2025) — Why Rewards Are Legal</h5><p>First US federal law authorizing stablecoins to hold T-bill reserves. Vaulta passes float income back as Vaulta Rewards — legally compliant from day one.</p></div>
+        </div>
+        <div class="sol-enabler">
+          <div class="eicon">⚡</div>
+          <div><h5>Solana — Why Merchant Fees Can Be <span id="s3_mfee2">0.80%</span></h5><p>$0.0005/tx makes blockchain settlement 600x cheaper than card processing — enabling sub-1% fees that are still profitable at scale.</p></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1182,8 +1200,9 @@ window.addEventListener('message', e => {
   set('ue_contrib',  contFmt);
 
   // Inline merchant fee mentions on slides 3 & 6
-  set('s3_mfee', mfeeFmt);
-  set('s6_mfee', mfeeFmt);
+  set('s3_mfee',  mfeeFmt);
+  set('s3_mfee2', mfeeFmt);
+  set('s6_mfee',  mfeeFmt);
 
   // Ask slide break-even
   set('be_year', beYrFmt);
