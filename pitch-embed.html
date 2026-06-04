@@ -60,20 +60,20 @@ body {
 /* ── Common layout ── */
 .slide-inner {
   flex: 1; display: flex; flex-direction: column;
-  padding: 40px 60px 80px;
+  padding: 24px 48px 50px;
   background: var(--light);
   min-height: 0; overflow: hidden;
 }
 .slide-label {
   font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  color: var(--green); text-transform: uppercase; margin-bottom: 8px;
+  color: var(--green); text-transform: uppercase; margin-bottom: 4px;
 }
 .slide-title {
-  font-size: 36px; font-weight: 800; color: var(--navy);
-  letter-spacing: -1px; line-height: 1.1; margin-bottom: 24px;
+  font-size: 34px; font-weight: 800; color: var(--navy);
+  letter-spacing: -1px; line-height: 1.1; margin-bottom: 16px;
 }
 .slide-title em { color: var(--green); font-style: normal; }
-.slide-body { flex: 1; display: flex; gap: 24px; align-items: flex-start; min-height: 0; overflow: hidden; }
+.slide-body { flex: 1; display: flex; gap: 24px; align-items: stretch; min-height: 0; overflow: hidden; }
 .slide-dark .slide-inner { background: var(--navy); }
 .slide-dark .slide-title { color: white; }
 
@@ -105,16 +105,16 @@ body {
 .divider-v { width: 1px; background: rgba(255,255,255,0.1); }
 
 /* ══ SLIDE 2: PROBLEM ══ */
-.problem-cards { display: flex; gap: 16px; flex: 1; }
+.problem-cards { display: flex; gap: 16px; flex: 1; align-items: stretch; }
 .pcard {
   flex: 1; background: white; border-radius: 14px;
-  padding: 22px; border: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 10px;
+  padding: 20px 18px; border: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 8px;
 }
-.pcard .icon { font-size: 30px; }
-.pcard h3 { font-size: 16px; font-weight: 700; color: var(--navy); }
-.pcard p { font-size: 13px; color: var(--grey); line-height: 1.6; }
-.pcard .stat { font-size: 24px; font-weight: 800; color: var(--navy); margin-top: auto; }
+.pcard .icon { font-size: 28px; }
+.pcard h3 { font-size: 15px; font-weight: 700; color: var(--navy); }
+.pcard p { font-size: 12px; color: var(--grey); line-height: 1.55; }
+.pcard .stat { font-size: 26px; font-weight: 800; color: var(--navy); margin-top: auto; }
 .pcard .stat span { color: var(--green); }
 
 /* ══ SLIDE 3: SOLUTION ══ */
@@ -141,13 +141,13 @@ body {
 .farr.new { color: var(--green); }
 .sol-table { width: 100%; border-collapse: collapse; }
 .sol-table th {
-  padding: 7px 12px; font-size: 11px; font-weight: 700; text-align: center;
+  padding: 9px 14px; font-size: 12px; font-weight: 700; text-align: center;
   border: 1px solid var(--border); background: var(--light);
   text-transform: uppercase; letter-spacing: 0.8px; color: var(--grey);
 }
 .sol-table th.new-h { background: var(--navy); color: var(--green); }
 .sol-table td {
-  padding: 7px 12px; font-size: 12px; font-weight: 600; text-align: center;
+  padding: 9px 14px; font-size: 13px; font-weight: 600; text-align: center;
   border: 1px solid var(--border); background: white;
 }
 .sol-table td.metric-col { text-align: left; color: var(--navy); background: var(--light); font-weight: 500; font-size: 11px; }
@@ -155,37 +155,37 @@ body {
 .sol-table td.good { color: var(--green); background: rgba(0,200,150,0.04); }
 .sol-enablers-row { display: flex; gap: 12px; }
 .sol-enabler {
-  flex: 1; display: flex; gap: 10px; align-items: flex-start;
-  background: var(--navy); border-radius: 10px;
-  padding: 10px 14px; border: 1px solid rgba(0,200,150,0.2);
+  flex: 1; display: flex; gap: 12px; align-items: flex-start;
+  background: var(--navy); border-radius: 12px;
+  padding: 14px 18px; border: 1px solid rgba(0,200,150,0.2);
 }
-.sol-enabler .eicon { font-size: 16px; flex-shrink: 0; }
-.sol-enabler h5 { font-size: 11px; font-weight: 700; color: var(--green); margin-bottom: 2px; }
-.sol-enabler p { font-size: 10px; color: rgba(255,255,255,0.55); line-height: 1.4; }
+.sol-enabler .eicon { font-size: 20px; flex-shrink: 0; }
+.sol-enabler h5 { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+.sol-enabler p { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.45; }
 
 /* ══ SLIDE 4: WHY NOW ══ */
-.whynow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; align-content: start; }
+.whynow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; align-content: start; }
 .wncard {
-  background: white; border-radius: 14px; padding: 20px;
-  border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;
+  background: white; border-radius: 12px; padding: 12px 14px;
+  border: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px;
 }
 .wn-tag {
-  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
   font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
 }
 .wn-tag.law    { background: rgba(0,200,150,0.1); color: var(--green); border: 1px solid rgba(0,200,150,0.3); }
 .wn-tag.tech   { background: rgba(99,102,241,0.1); color: #6366F1;     border: 1px solid rgba(99,102,241,0.3); }
 .wn-tag.market { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
-.wncard h3 { font-size: 15px; font-weight: 700; color: var(--navy); }
-.wncard p  { font-size: 12px; color: var(--grey); line-height: 1.5; }
-.wn-stat   { font-size: 20px; font-weight: 800; color: var(--navy); margin-top: auto; }
+.wncard h3 { font-size: 13px; font-weight: 700; color: var(--navy); }
+.wncard p  { font-size: 11px; color: var(--grey); line-height: 1.45; }
+.wn-stat   { font-size: 17px; font-weight: 800; color: var(--navy); margin-top: auto; }
 .wn-stat span { color: var(--green); }
 
 /* ══ SLIDES 5 & 6: HOW IT WORKS ══ */
 .hiw-flow { display: flex; gap: 0; align-items: flex-start; }
 .hiw-step {
   flex: 1; display: flex; flex-direction: column; align-items: center;
-  padding: 16px 12px; position: relative; text-align: center;
+  padding: 10px 10px; position: relative; text-align: center;
 }
 .hiw-step:not(:last-child)::after {
   content: '→'; position: absolute; right: -8px; top: 20px;
@@ -209,8 +209,8 @@ body {
 
 /* T-bill flow */
 .tbill-box {
-  background: var(--navy); border-radius: 14px; padding: 20px 24px;
-  display: flex; flex-direction: column; gap: 10px;
+  background: var(--navy); border-radius: 12px; padding: 12px 18px;
+  display: flex; flex-direction: column; gap: 7px;
 }
 .tbill-box h4 { font-size: 13px; font-weight: 700; color: white; }
 .tbill-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -234,25 +234,25 @@ body {
 .bar-fill  { height: 100%; border-radius: 8px; }
 .bar-sub   { font-size: 11px; color: var(--grey); margin-top: 3px; }
 .mpoint {
-  background: white; border-radius: 12px; padding: 14px 16px;
-  border: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start;
-  margin-bottom: 10px;
+  background: white; border-radius: 10px; padding: 8px 12px;
+  border: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-start;
+  margin-bottom: 6px;
 }
-.mpoint .micon { font-size: 20px; flex-shrink: 0; }
-.mpoint h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
-.mpoint p  { font-size: 12px; color: var(--grey); line-height: 1.5; }
+.mpoint .micon { font-size: 16px; flex-shrink: 0; }
+.mpoint h4 { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 1px; }
+.mpoint p  { font-size: 11px; color: var(--grey); line-height: 1.4; }
 
 /* ══ SLIDE 8: BENCHMARKS ══ */
 .bm-label { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 8px; padding-bottom: 5px; border-bottom: 2px solid var(--green); }
 .bm-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
 .bm-table th {
   font-size: 10px; font-weight: 700; color: var(--grey); text-transform: uppercase;
-  letter-spacing: 0.8px; padding: 7px 8px; text-align: center;
+  letter-spacing: 0.8px; padding: 5px 6px; text-align: center;
   background: white; border: 1px solid var(--border);
 }
 .bm-table th.vp-h { background: var(--navy); color: var(--green); }
 .bm-table td {
-  padding: 7px 8px; text-align: center; font-size: 12px;
+  padding: 5px 6px; text-align: center; font-size: 11px;
   border: 1px solid var(--border); background: white; color: var(--grey);
 }
 .bm-table td.met { text-align: left; font-weight: 600; color: var(--navy); background: var(--light); font-size: 11px; }
@@ -261,38 +261,38 @@ body {
 .bm-live { font-size: 11px; color: var(--green); font-weight: 600; margin-bottom: 8px; }
 
 /* ══ SLIDE 9: BUSINESS MODEL ══ */
-.biz-cols { display: flex; gap: 24px; flex: 1; }
-.biz-left { flex: 1.1; display: flex; flex-direction: column; gap: 12px; }
-.biz-right { flex: 0.9; display: flex; flex-direction: column; gap: 12px; }
+.biz-cols { display: flex; gap: 24px; flex: 1; min-height: 0; overflow: hidden; }
+.biz-left { flex: 1.1; display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow: hidden; }
+.biz-right { flex: 0.9; display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow: hidden; }
 .val-card {
-  background: white; border-radius: 13px; padding: 18px 20px;
+  background: white; border-radius: 11px; padding: 11px 14px;
   border: 1px solid var(--border);
 }
-.val-card h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
-.val-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.val-card li { font-size: 12px; color: var(--grey); display: flex; gap: 8px; align-items: flex-start; line-height: 1.4; }
+.val-card h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.val-card ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.val-card li { font-size: 11px; color: var(--grey); display: flex; gap: 6px; align-items: flex-start; line-height: 1.35; }
 .val-card li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
 .rev-card {
-  background: white; border-radius: 13px; padding: 14px 18px;
+  background: white; border-radius: 11px; padding: 10px 14px;
   border: 1px solid var(--border);
 }
-.rev-card h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.rev-card h3 { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
 .rev-row {
-  display: flex; justify-content: space-between; font-size: 12px;
-  padding: 5px 0; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; font-size: 11px;
+  padding: 4px 0; border-bottom: 1px solid var(--border);
 }
 .rev-row:last-child { border: none; }
 .rev-row .rl { color: var(--grey); }
 .rev-row .rv { font-weight: 700; color: var(--navy); }
 .ue-panel {
-  background: var(--navy); border-radius: 13px; padding: 18px 20px;
-  display: flex; flex-direction: column; gap: 8px; flex: 1;
+  background: var(--navy); border-radius: 13px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px; flex: 1; min-height: 0; overflow: hidden;
 }
-.ue-panel h3 { font-size: 13px; font-weight: 700; color: white; margin-bottom: 4px; }
+.ue-panel h3 { font-size: 12px; font-weight: 700; color: white; margin-bottom: 2px; }
 .ue-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
-  font-size: 12px;
+  padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 11px;
 }
 .ue-row:last-child { border: none; }
 .ue-lbl { color: rgba(255,255,255,0.55); }
@@ -455,21 +455,21 @@ body {
     <div class="slide-body">
       <div class="problem-cards">
         <div class="pcard">
-          <div class="icon">🏦</div>
+          <div><div class="icon">🏦</div>
           <h3>Your Money Works for the Bank, Not You</h3>
-          <p>Banks borrow your checking balance at 0.08% and lend it out at 7–24%. The layered banking system has no mechanism to pass any of that return back to depositors.</p>
+          <p>Banks borrow your checking balance at 0.08% and lend it out at 7–24%. The layered banking system has no mechanism to pass any of that return back to depositors.</p></div>
           <div class="stat"><span>$4.7T</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">in US checking accounts earning near zero</small></div>
         </div>
         <div class="pcard">
-          <div class="icon">💸</div>
+          <div><div class="icon">💸</div>
           <h3>Merchants Pay 2–3% to Get Paid</h3>
-          <p>Visa, Mastercard, issuing banks, and acquiring banks each take a cut — a 4-layer system built for the 1970s. Small merchants processing $500K/yr hand over $10K–$15K in fees.</p>
+          <p>Visa, Mastercard, issuing banks, and acquiring banks each take a cut — a 4-layer system built for the 1970s. Small merchants processing $500K/yr hand over $10K–$15K in fees.</p></div>
           <div class="stat"><span>$160B</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">paid in US card network fees annually</small></div>
         </div>
         <div class="pcard">
-          <div class="icon">🚫</div>
+          <div><div class="icon">🚫</div>
           <h3>22 Million Americans Are Locked Out</h3>
-          <p>Unbanked and underbanked consumers can't access rewards programs, earn on their balances, or participate in digital payments on equal terms. A phone is their only bank.</p>
+          <p>Unbanked and underbanked consumers can't access rewards programs, earn on their balances, or participate in digital payments on equal terms. A phone is their only bank.</p></div>
           <div class="stat"><span>22M</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">unbanked / underbanked Americans</small></div>
         </div>
       </div>
@@ -482,7 +482,7 @@ body {
   <div class="slide-inner">
     <div class="slide-label">The Solution</div>
     <div class="slide-title">Replace 4 layers of banking<br>with <em>one blockchain</em></div>
-    <div class="slide-body" style="flex-direction:column; gap:12px;">
+    <div class="slide-body" style="flex-direction:column; gap:16px;">
 
       <!-- Flow chains -->
       <div class="sol-flows">
