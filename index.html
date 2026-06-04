@@ -279,9 +279,48 @@
             <td>—</td>
             <td><span class="bench-pill pill-green">50 – 70% target</span></td>
           </tr>
+          <tr>
+            <td class="metric-col">EBITDA Margin (current)</td>
+            <td class="vaulta-col" id="bm_ebitda_margin">—</td>
+            <td>~20% <span style="font-size:9px;color:#888">(stable 2016–24)</span></td>
+            <td>~4–9% <span style="font-size:9px;color:#888">(recovering; excl. Bitcoin vol.)</span></td>
+            <td>~17% <span style="font-size:9px;color:#888">(2025; private)</span></td>
+            <td>~65–70% <span style="font-size:9px;color:#888">(Visa/MC network premium)</span></td>
+            <td><span class="bench-pill pill-orange">15 – 25% at maturity</span></td>
+          </tr>
         </tbody>
       </table>
-      <p class="source-note">Sources: PayPal 10-K (2023), Block Inc. 10-K (2023), Stripe Revenue Report (2023), Nilson Report interchange averages</p>
+      <p class="source-note">Sources: PayPal 10-K (2016–2024); Block Inc. 10-K (2016–2024, revenue incl. Bitcoin gross volume); Stripe via Sacra/public reports (2024–2025); Visa 10-K (2021–2025). EBITDA = Operating Income + D&A.</p>
+    </div>
+
+    <!-- EBITDA Margin 10-Year Trend -->
+    <div class="bench-section">
+      <h3>EBITDA Margin — 10-Year Trend (2016 – 2025)</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col" style="width:70px">Year</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(model target)</span></th>
+            <th>PayPal</th>
+            <th>Block / Square</th>
+            <th>Stripe<br><span style="font-weight:400;font-size:9px">(private)</span></th>
+            <th>Visa<br><span style="font-weight:400;font-size:9px">(network, not direct comp)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="metric-col">2016</td><td class="vaulta-col">Pre-rev.</td><td>21.3%</td><td><span class="bench-pill pill-grey">-7.8%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2017</td><td class="vaulta-col">Pre-rev.</td><td>22.4%</td><td><span class="bench-pill pill-grey">-0.8%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2018</td><td class="vaulta-col">Pre-rev.</td><td>19.2%</td><td><span class="bench-pill pill-grey">0.7%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2019</td><td class="vaulta-col">Pre-rev.</td><td>20.4%</td><td><span class="bench-pill pill-green">2.2%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2020</td><td class="vaulta-col">Pre-rev.</td><td>20.9%</td><td><span class="bench-pill pill-green">1.5%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2021</td><td class="vaulta-col">Yr 1 target: <span id="bm_eb_yr1">—</span></td><td>22.1%</td><td><span class="bench-pill pill-green">1.9%</span></td><td>Negative</td><td>68.9%</td></tr>
+          <tr><td class="metric-col">2022</td><td class="vaulta-col">Yr 2 target: <span id="bm_eb_yr2">—</span></td><td>18.5%</td><td><span class="bench-pill pill-grey">-5.0%</span></td><td>Negative</td><td>67.1%</td></tr>
+          <tr><td class="metric-col">2023</td><td class="vaulta-col">Yr 3 target: <span id="bm_eb_yr3">—</span></td><td>19.3%</td><td><span class="bench-pill pill-grey">-3.3%</span></td><td>~Breakeven</td><td>67.3%</td></tr>
+          <tr><td class="metric-col">2024</td><td class="vaulta-col">Yr 4 target: <span id="bm_eb_yr4">—</span></td><td>18.9%</td><td><span class="bench-pill pill-green">1.3%</span></td><td>~2%</td><td>68.5%</td></tr>
+          <tr><td class="metric-col">2025</td><td class="vaulta-col">Yr 5 target: <span id="bm_eb_yr5">—</span></td><td>20.9%</td><td><span class="bench-pill pill-green">3.9%</span></td><td>~17%</td><td>63.1%</td></tr>
+        </tbody>
+      </table>
+      <p class="source-note">Block/Square margins shown on total reported revenue (incl. Bitcoin gross volume). Adjusted fintech-only margins are materially higher (~5–12% range 2019–2024). Stripe figures are estimates from Sacra and press reports; company is private. VaultaPay shows model-implied EBITDA margin for each launch year (Year 1 = Seed phase).</p>
     </div>
 
     <!-- Growth & Scale -->
@@ -823,6 +862,22 @@ function update() {
   document.getElementById('bm_gm').innerHTML       = `<span class="bench-pill ${gmYr5>=0.5?'pill-green':gmYr5>=0.35?'pill-orange':'pill-grey'}">${fmtP(gmYr5)} (Yr5)</span>`;
   document.getElementById('bm_breakeven').innerHTML= m.beYear ? `<span class="bench-pill ${m.beYear<=6?'pill-green':'pill-orange'}">Year ${m.beYear}</span>` : '<span class="bench-pill pill-grey">10yr+</span>';
   document.getElementById('bm_ltv').textContent    = '$'+m.ltv3.toFixed(0);
+
+  // EBITDA margin — current (Yr 5) and 10-year trend cells
+  const ebMgn = yr => m.totalRev(yr) > 0 ? m.ebitda(yr) / m.totalRev(yr) : null;
+  const fmtEb = yr => {
+    const v = ebMgn(yr);
+    if (v === null) return '—';
+    const pct = (v * 100).toFixed(1) + '%';
+    const cls = v >= 0.15 ? 'pill-green' : v >= 0 ? 'pill-orange' : 'pill-grey';
+    return `<span class="bench-pill ${cls}">${pct}</span>`;
+  };
+  document.getElementById('bm_ebitda_margin').innerHTML = fmtEb(5); // Yr 5 as "current" target
+  document.getElementById('bm_eb_yr1').innerHTML = fmtEb(1);
+  document.getElementById('bm_eb_yr2').innerHTML = fmtEb(2);
+  document.getElementById('bm_eb_yr3').innerHTML = fmtEb(3);
+  document.getElementById('bm_eb_yr4').innerHTML = fmtEb(4);
+  document.getElementById('bm_eb_yr5').innerHTML = fmtEb(5);
 }
 
 update();
