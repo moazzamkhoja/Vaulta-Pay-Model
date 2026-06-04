@@ -62,6 +62,7 @@ body {
   flex: 1; display: flex; flex-direction: column;
   padding: 40px 60px 80px;
   background: var(--light);
+  min-height: 0; overflow: hidden;
 }
 .slide-label {
   font-size: 11px; font-weight: 700; letter-spacing: 2px;
@@ -765,65 +766,34 @@ body {
   <div class="slide-inner" style="padding-bottom:75px;">
     <div class="slide-label">Competitive Benchmarks</div>
     <div class="slide-title">VaultaPay vs. <em>the market</em></div>
-    <div class="slide-body" style="flex-direction:column;gap:12px;overflow:hidden;">
-      <div class="bm-live">⚡ VaultaPay column reflects live financial model assumptions</div>
-
-      <!-- Unit Economics -->
-      <div>
+    <div class="slide-body" style="gap:20px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;min-height:0;">
+        <div class="bm-live">⚡ Live from model</div>
         <div class="bm-label">Unit Economics</div>
         <table class="bm-table">
           <tr>
-            <th style="text-align:left;width:28%;">Metric</th>
+            <th style="text-align:left;">Metric</th>
             <th class="vp-h">VaultaPay</th>
             <th>Chime</th><th>Revolut</th><th>Cash App</th><th>MoneyLion</th>
           </tr>
-          <tr>
-            <td class="met">LTV : CAC</td>
-            <td class="vp" id="bm_ltvcac">—</td>
-            <td>2.1x</td><td>3.2x</td><td>4.1x</td><td>1.8x</td>
-          </tr>
-          <tr>
-            <td class="met">Customer Acquisition Cost</td>
-            <td class="vp" id="bm_cac">—</td>
-            <td>$50</td><td>$35</td><td>$45</td><td>$80</td>
-          </tr>
-          <tr>
-            <td class="met">Annual Net ARPU</td>
-            <td class="vp" id="bm_arpu">—</td>
-            <td>$42</td><td>$67</td><td>$58</td><td>$38</td>
-          </tr>
-          <tr>
-            <td class="met">CAC Payback</td>
-            <td class="vp" id="bm_payback">—</td>
-            <td>15 mo</td><td>8 mo</td><td>10 mo</td><td>25 mo</td>
-          </tr>
+          <tr><td class="met">LTV : CAC</td><td class="vp" id="bm_ltvcac">—</td><td>2.1x</td><td>3.2x</td><td>4.1x</td><td>1.8x</td></tr>
+          <tr><td class="met">CAC</td><td class="vp" id="bm_cac">—</td><td>$50</td><td>$35</td><td>$45</td><td>$80</td></tr>
+          <tr><td class="met">Annual Net ARPU</td><td class="vp" id="bm_arpu">—</td><td>$42</td><td>$67</td><td>$58</td><td>$38</td></tr>
+          <tr><td class="met">CAC Payback</td><td class="vp" id="bm_payback">—</td><td>15 mo</td><td>8 mo</td><td>10 mo</td><td>25 mo</td></tr>
         </table>
       </div>
-
-      <!-- Revenue Model -->
-      <div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;min-height:0;">
+        <div class="bm-live" style="visibility:hidden;">⚡</div>
         <div class="bm-label">Revenue Model</div>
         <table class="bm-table">
           <tr>
-            <th style="text-align:left;width:28%;">Metric</th>
+            <th style="text-align:left;">Metric</th>
             <th class="vp-h">VaultaPay</th>
-            <th>PayPal</th><th>Square/Block</th><th>Stripe</th><th>Interchange Avg</th>
+            <th>PayPal</th><th>Square</th><th>Stripe</th><th>Interchange</th>
           </tr>
-          <tr>
-            <td class="met">Merchant Fee Rate</td>
-            <td class="vp" id="bm_mfee">—</td>
-            <td>2.90%</td><td>2.60%</td><td>2.90%</td><td>1.80%</td>
-          </tr>
-          <tr>
-            <td class="met">Gross Margin (Yr 5)</td>
-            <td class="vp" id="bm_gm">—</td>
-            <td>45%</td><td>35%</td><td>38%</td><td>N/A</td>
-          </tr>
-          <tr>
-            <td class="met">EBITDA Margin (Yr 3)</td>
-            <td class="vp" id="bm_ebitda3">—</td>
-            <td>21%</td><td>4%</td><td>~2%</td><td>N/A</td>
-          </tr>
+          <tr><td class="met">Merchant Fee</td><td class="vp" id="bm_mfee">—</td><td>2.90%</td><td>2.60%</td><td>2.90%</td><td>1.80%</td></tr>
+          <tr><td class="met">Gross Margin (Yr 5)</td><td class="vp" id="bm_gm">—</td><td>45%</td><td>35%</td><td>38%</td><td>N/A</td></tr>
+          <tr><td class="met">EBITDA Margin (Yr 3)</td><td class="vp" id="bm_ebitda3">—</td><td>21%</td><td>4%</td><td>~2%</td><td>N/A</td></tr>
         </table>
       </div>
       <div class="bm-note">Sources: Company 10-Ks, Stripe investor letters, J.D. Power 2024. VaultaPay figures are projections based on model defaults.</div>
