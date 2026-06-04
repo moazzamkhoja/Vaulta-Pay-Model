@@ -3,832 +3,1184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vaulta — Seed Pitch Deck</title>
+<title>VaultaPay — Seed Pitch Deck</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  :root {
-    --navy:   #0A2540;
-    --green:  #00C896;
-    --light:  #F5F7FA;
-    --white:  #FFFFFF;
-    --grey:   #6B7280;
-    --border: #E5E7EB;
-    --dark:   #1A1A2E;
-  }
+:root {
+  --navy:   #0A2540;
+  --green:  #00C896;
+  --light:  #F5F7FA;
+  --white:  #FFFFFF;
+  --grey:   #6B7280;
+  --border: #E5E7EB;
+  --dark:   #1A1A2E;
+  --red:    #EF4444;
+  --amber:  #F59E0B;
+}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #111;
-    color: var(--dark);
-    overflow: hidden;
-    height: 100vh;
-  }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #111;
+  color: var(--dark);
+  overflow: hidden;
+  height: 100vh;
+}
 
-  /* ── Slide Container ── */
-  .deck { width: 100vw; height: 100vh; position: relative; }
+.deck { width: 100vw; height: 100vh; position: relative; }
 
-  .slide {
-    position: absolute; inset: 0;
-    display: none; flex-direction: column;
-    opacity: 0; transition: opacity 0.4s ease;
-  }
-  .slide.active { display: flex; opacity: 1; }
+.slide {
+  position: absolute; inset: 0;
+  display: none; flex-direction: column;
+  opacity: 0; transition: opacity 0.35s ease;
+}
+.slide.active { display: flex; opacity: 1; }
 
-  /* ── Navigation ── */
-  .nav {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-    display: flex; align-items: center; gap: 12px; z-index: 100;
-    background: rgba(10,37,64,0.85); backdrop-filter: blur(8px);
-    padding: 10px 20px; border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .nav button {
-    background: none; border: none; color: white; cursor: pointer;
-    font-size: 18px; padding: 4px 8px; opacity: 0.7; transition: opacity 0.2s;
-  }
-  .nav button:hover { opacity: 1; }
-  .nav .dots { display: flex; gap: 6px; }
-  .nav .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.2s;
-  }
-  .nav .dot.active { background: var(--green); }
-  .slide-counter { color: rgba(255,255,255,0.5); font-size: 12px; min-width: 40px; text-align: center; }
+/* ── Navigation ── */
+.nav {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px; z-index: 100;
+  background: rgba(10,37,64,0.9); backdrop-filter: blur(10px);
+  padding: 8px 18px; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.nav button {
+  background: none; border: none; color: white; cursor: pointer;
+  font-size: 18px; padding: 4px 8px; opacity: 0.6; transition: opacity 0.2s;
+}
+.nav button:hover { opacity: 1; }
+.nav .dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 140px; }
+.nav .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.25); cursor: pointer; transition: background 0.2s;
+}
+.nav .dot.active { background: var(--green); }
+.slide-counter { color: rgba(255,255,255,0.4); font-size: 11px; min-width: 44px; text-align: center; }
 
-  /* ── Slide 1: Cover ── */
-  #s1 {
-    background: var(--navy);
-    justify-content: center; align-items: center; text-align: center;
-    padding: 60px;
-  }
-  .logo-mark {
-    width: 80px; height: 80px; border-radius: 24px;
-    background: var(--green); display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 28px;
-  }
-  .logo-mark svg { width: 48px; height: 48px; }
-  #s1 h1 { font-size: 72px; font-weight: 800; color: white; letter-spacing: -2px; line-height: 1; }
-  #s1 h1 span { color: var(--green); }
-  #s1 .tagline { font-size: 22px; color: rgba(255,255,255,0.6); margin-top: 16px; font-weight: 400; }
-  .cover-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(0,200,150,0.12); border: 1px solid rgba(0,200,150,0.3);
-    border-radius: 999px; padding: 8px 20px; margin-top: 36px;
-    color: var(--green); font-size: 14px; font-weight: 600;
-  }
-  .cover-pill::before { content: '●'; font-size: 8px; }
-  .raise-badge {
-    margin-top: 48px; display: flex; gap: 48px; justify-content: center;
-  }
-  .raise-badge .item { text-align: center; }
-  .raise-badge .val { font-size: 36px; font-weight: 800; color: white; }
-  .raise-badge .val span { color: var(--green); }
-  .raise-badge .lbl { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-  .divider-v { width: 1px; background: rgba(255,255,255,0.1); }
+/* ── Common layout ── */
+.slide-inner {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 40px 60px 80px;
+  background: var(--light);
+}
+.slide-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  color: var(--green); text-transform: uppercase; margin-bottom: 8px;
+}
+.slide-title {
+  font-size: 36px; font-weight: 800; color: var(--navy);
+  letter-spacing: -1px; line-height: 1.1; margin-bottom: 24px;
+}
+.slide-title em { color: var(--green); font-style: normal; }
+.slide-body { flex: 1; display: flex; gap: 36px; align-items: flex-start; min-height: 0; }
+.slide-dark .slide-inner { background: var(--navy); }
+.slide-dark .slide-title { color: white; }
 
-  /* ── Slide layout helpers ── */
-  .slide-inner {
-    flex: 1; display: flex; flex-direction: column;
-    padding: 52px 72px 100px;
-    background: var(--light);
-  }
-  .slide-label {
-    font-size: 12px; font-weight: 700; letter-spacing: 2px;
-    color: var(--green); text-transform: uppercase; margin-bottom: 12px;
-  }
-  .slide-title {
-    font-size: 42px; font-weight: 800; color: var(--navy);
-    letter-spacing: -1px; line-height: 1.1; margin-bottom: 36px;
-  }
-  .slide-title em { color: var(--green); font-style: normal; }
-  .slide-body { flex: 1; display: flex; gap: 48px; align-items: flex-start; }
+/* ══ SLIDE 1: COVER ══ */
+#s1 {
+  background: var(--navy);
+  justify-content: center; align-items: center; text-align: center; padding: 60px;
+}
+.logo-mark {
+  width: 72px; height: 72px; border-radius: 20px;
+  background: var(--green); display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px;
+}
+.logo-mark svg { width: 44px; height: 44px; }
+#s1 h1 { font-size: 64px; font-weight: 800; color: white; letter-spacing: -2px; line-height: 1; }
+#s1 h1 span { color: var(--green); }
+#s1 .tagline { font-size: 18px; color: rgba(255,255,255,0.55); margin-top: 14px; max-width: 560px; }
+.cover-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,200,150,0.12); border: 1px solid rgba(0,200,150,0.3);
+  border-radius: 999px; padding: 7px 18px; margin-top: 28px;
+  color: var(--green); font-size: 13px; font-weight: 600;
+}
+.raise-badge { margin-top: 36px; display: flex; gap: 36px; justify-content: center; }
+.raise-badge .item { text-align: center; }
+.raise-badge .val { font-size: 30px; font-weight: 800; color: white; }
+.raise-badge .val span { color: var(--green); }
+.raise-badge .lbl { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+.divider-v { width: 1px; background: rgba(255,255,255,0.1); }
 
-  /* dark slides */
-  .slide-dark .slide-inner { background: var(--navy); }
-  .slide-dark .slide-title { color: white; }
-  .slide-dark .slide-label { color: var(--green); }
+/* ══ SLIDE 2: PROBLEM ══ */
+.problem-cards { display: flex; gap: 16px; flex: 1; }
+.pcard {
+  flex: 1; background: white; border-radius: 14px;
+  padding: 22px; border: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.pcard .icon { font-size: 30px; }
+.pcard h3 { font-size: 16px; font-weight: 700; color: var(--navy); }
+.pcard p { font-size: 13px; color: var(--grey); line-height: 1.6; }
+.pcard .stat { font-size: 24px; font-weight: 800; color: var(--navy); margin-top: auto; }
+.pcard .stat span { color: var(--green); }
 
-  /* ── Slide 2: Problem ── */
-  .problem-cards { display: flex; gap: 20px; flex: 1; }
-  .pcard {
-    flex: 1; background: white; border-radius: 16px;
-    padding: 28px; border: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 14px;
-  }
-  .pcard .icon { font-size: 36px; }
-  .pcard h3 { font-size: 18px; font-weight: 700; color: var(--navy); }
-  .pcard p { font-size: 14px; color: var(--grey); line-height: 1.6; }
-  .pcard .stat { font-size: 28px; font-weight: 800; color: var(--navy); margin-top: auto; }
-  .pcard .stat span { color: var(--green); }
+/* ══ SLIDE 3: SOLUTION ══ */
+.sol-compare { display: flex; gap: 20px; flex: 1; }
+.sol-side {
+  flex: 1; border-radius: 16px; padding: 24px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.sol-side.old { background: white; border: 1px solid var(--border); }
+.sol-side.new { background: var(--navy); }
+.sol-side-title {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; margin-bottom: 6px;
+}
+.sol-side.old .sol-side-title { color: var(--grey); }
+.sol-side.new .sol-side-title { color: var(--green); }
+.flow-chain { display: flex; flex-direction: column; gap: 5px; }
+.flow-node {
+  border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600;
+  text-align: center;
+}
+.flow-node.old-node { background: #F3F4F6; color: var(--navy); border: 1px solid var(--border); }
+.flow-node.new-node { background: rgba(0,200,150,0.15); color: var(--green); border: 1px solid rgba(0,200,150,0.3); }
+.flow-arrow { text-align: center; font-size: 13px; }
+.flow-arrow.old { color: #D1D5DB; }
+.flow-arrow.new { color: var(--green); }
+.sol-metrics { display: flex; flex-direction: column; gap: 0; margin-top: 6px; }
+.sol-metric {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 0;
+}
+.sol-side.old .sol-metric { border-bottom: 1px solid var(--border); }
+.sol-side.new .sol-metric { border-bottom: 1px solid rgba(255,255,255,0.07); }
+.sol-metric:last-child { border: none !important; }
+.sol-metric .mlbl { font-size: 12px; }
+.sol-side.old .mlbl { color: var(--grey); }
+.sol-side.new .mlbl { color: rgba(255,255,255,0.5); }
+.sol-metric .mval { font-size: 13px; font-weight: 700; }
+.sol-side.old .mval { color: var(--red); }
+.sol-side.new .mval { color: var(--green); }
+.sol-enablers { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.sol-enabler {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: rgba(0,200,150,0.08); border-radius: 10px;
+  padding: 10px 12px; border: 1px solid rgba(0,200,150,0.2);
+}
+.sol-enabler .eicon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.sol-enabler h5 { font-size: 12px; font-weight: 700; color: white; margin-bottom: 2px; }
+.sol-enabler p { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.4; }
 
-  /* ── Slide 3: Solution ── */
-  .solution-grid { display: flex; gap: 32px; flex: 1; align-items: center; }
-  .solution-points { flex: 1; display: flex; flex-direction: column; gap: 20px; }
-  .spoint {
-    display: flex; gap: 16px; align-items: flex-start;
-    background: white; border-radius: 14px; padding: 20px 24px;
-    border: 1px solid var(--border);
-  }
-  .spoint .num {
-    width: 36px; height: 36px; border-radius: 50%; background: var(--navy);
-    color: var(--green); font-weight: 800; font-size: 16px;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .spoint h4 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-  .spoint p { font-size: 13px; color: var(--grey); line-height: 1.5; }
+/* ══ SLIDE 4: WHY NOW ══ */
+.whynow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; align-content: start; }
+.wncard {
+  background: white; border-radius: 14px; padding: 20px;
+  border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;
+}
+.wn-tag {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+}
+.wn-tag.law    { background: rgba(0,200,150,0.1); color: var(--green); border: 1px solid rgba(0,200,150,0.3); }
+.wn-tag.tech   { background: rgba(99,102,241,0.1); color: #6366F1;     border: 1px solid rgba(99,102,241,0.3); }
+.wn-tag.market { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.wncard h3 { font-size: 15px; font-weight: 700; color: var(--navy); }
+.wncard p  { font-size: 12px; color: var(--grey); line-height: 1.5; }
+.wn-stat   { font-size: 20px; font-weight: 800; color: var(--navy); margin-top: auto; }
+.wn-stat span { color: var(--green); }
 
-  /* Phone mockup */
-  .phone {
-    width: 200px; flex-shrink: 0;
-    background: var(--navy); border-radius: 36px;
-    padding: 16px 12px; box-shadow: 0 32px 64px rgba(10,37,64,0.3);
-    border: 2px solid rgba(255,255,255,0.08);
-    position: relative;
-  }
-  .phone::before {
-    content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-    width: 60px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px;
-  }
-  .phone-screen {
-    background: #F5F7FA; border-radius: 24px; overflow: hidden;
-    padding-top: 24px; min-height: 380px;
-  }
-  .phone-bar {
-    background: var(--navy); padding: 12px 14px 10px;
-    color: var(--green); font-size: 11px; font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-  .phone-balance {
-    background: var(--navy); padding: 20px 14px;
-    text-align: center;
-  }
-  .phone-balance .bal-lbl { color: rgba(255,255,255,0.5); font-size: 10px; margin-bottom: 6px; }
-  .phone-balance .bal-val { color: white; font-size: 28px; font-weight: 800; }
-  .phone-balance .bal-val span { color: var(--green); font-size: 14px; }
-  .phone-reward {
-    margin: 10px; background: rgba(0,200,150,0.1); border-radius: 10px;
-    padding: 8px 12px; border: 1px solid rgba(0,200,150,0.3);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .phone-reward .rlbl { font-size: 9px; color: var(--green); font-weight: 600; }
-  .phone-reward .rval { font-size: 12px; font-weight: 800; color: var(--navy); }
-  .phone-btns { display: flex; gap: 6px; margin: 8px 10px; }
-  .phone-btn {
-    flex: 1; background: var(--green); color: var(--navy);
-    border-radius: 8px; padding: 8px 4px; text-align: center;
-    font-size: 9px; font-weight: 700;
-  }
-  .phone-btn.outline { background: white; color: var(--navy); border: 1px solid var(--border); }
-  .phone-tx { margin: 4px 10px; }
-  .phone-tx-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 7px 0; border-bottom: 1px solid var(--border);
-  }
-  .phone-tx-row .tleft { font-size: 9px; color: var(--grey); }
-  .phone-tx-row .tleft strong { display: block; color: var(--navy); font-size: 10px; }
-  .phone-tx-row .tamt { font-size: 10px; font-weight: 700; color: #EF4444; }
-  .phone-tx-row .tamt.credit { color: #10B981; }
+/* ══ SLIDES 5 & 6: HOW IT WORKS ══ */
+.hiw-flow { display: flex; gap: 0; align-items: flex-start; }
+.hiw-step {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 16px 12px; position: relative; text-align: center;
+}
+.hiw-step:not(:last-child)::after {
+  content: '→'; position: absolute; right: -8px; top: 20px;
+  font-size: 16px; color: var(--green); font-weight: 700; z-index: 2;
+}
+.step-num {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--navy); color: var(--green);
+  font-size: 15px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px; flex-shrink: 0;
+}
+.hiw-step h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+.hiw-step p  { font-size: 11px; color: var(--grey); line-height: 1.5; }
+.step-detail {
+  margin-top: 8px; padding: 7px 9px; border-radius: 8px;
+  background: white; border: 1px solid var(--border); width: 100%;
+  font-size: 10px; color: var(--navy); font-weight: 500; line-height: 1.5;
+}
+.step-detail span { color: var(--green); font-weight: 700; }
 
-  /* QR phone */
-  .phone-qr-screen { padding: 16px 12px; text-align: center; }
-  .qr-box {
-    background: white; border-radius: 12px; padding: 12px; margin-bottom: 10px;
-    display: inline-block;
-  }
-  .qr-grid {
-    display: grid; grid-template-columns: repeat(7,8px); grid-template-rows: repeat(7,8px); gap: 1px;
-  }
-  .qr-cell { border-radius: 1px; }
-  .qr-dark { background: var(--navy); }
-  .qr-light { background: white; }
-  .phone-qr-lbl { font-size: 9px; color: var(--grey); margin-bottom: 6px; }
-  .phone-qr-timer { font-size: 8px; color: var(--green); font-weight: 600; }
+/* T-bill flow */
+.tbill-box {
+  background: var(--navy); border-radius: 14px; padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.tbill-box h4 { font-size: 13px; font-weight: 700; color: white; }
+.tbill-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tbill-node {
+  border-radius: 8px; padding: 8px 12px; font-size: 11px; font-weight: 600;
+  text-align: center; line-height: 1.4;
+}
+.tbill-node.source { background: rgba(0,200,150,0.15); color: var(--green); border: 1px solid rgba(0,200,150,0.3); }
+.tbill-node.tbill  { background: rgba(255,255,255,0.1); color: white;        border: 1px solid rgba(255,255,255,0.2); }
+.tbill-node.reward { background: rgba(0,200,150,0.15); color: var(--green); border: 1px solid rgba(0,200,150,0.3); }
+.tbill-node.sleeve { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.1); }
+.tbill-arr { color: rgba(255,255,255,0.4); font-size: 14px; flex-shrink: 0; }
+.tbill-split { display: flex; flex-direction: column; gap: 6px; flex: 1; }
 
-  /* ── Slide 4: How It Works ── */
-  .hiw-steps { display: flex; gap: 0; flex: 1; }
-  .hiw-step {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    padding: 28px 20px; position: relative; text-align: center;
-  }
-  .hiw-step:not(:last-child)::after {
-    content: '→'; position: absolute; right: -12px; top: 52px;
-    font-size: 20px; color: var(--green); font-weight: 700;
-  }
-  .hiw-step .step-num {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--navy); color: var(--green);
-    font-size: 18px; font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 16px;
-  }
-  .hiw-step h4 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-  .hiw-step p { font-size: 13px; color: var(--grey); line-height: 1.5; }
-  .hiw-phone-mini {
-    width: 110px; margin: 20px auto 0;
-    background: var(--navy); border-radius: 20px; padding: 8px 6px;
-    box-shadow: 0 16px 32px rgba(10,37,64,0.25);
-  }
-  .hiw-phone-mini::before {
-    content: ''; display: block; width: 30px; height: 4px;
-    background: rgba(255,255,255,0.15); border-radius: 2px; margin: 0 auto 6px;
-  }
-  .hiw-screen-mini { background: #F5F7FA; border-radius: 14px; padding: 10px 8px; min-height: 160px; }
-  .mini-bar { background: var(--navy); margin: -10px -8px 8px; padding: 6px 8px; border-radius: 14px 14px 0 0; }
-  .mini-bar-lbl { font-size: 7px; color: var(--green); font-weight: 700; }
-  .mini-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-  .mini-lbl { font-size: 7px; color: var(--grey); }
-  .mini-val { font-size: 8px; font-weight: 700; color: var(--navy); }
-  .mini-val.green { color: var(--green); }
-  .mini-btn {
-    background: var(--green); color: var(--navy); font-size: 7px; font-weight: 700;
-    border-radius: 6px; padding: 5px; text-align: center; margin-top: 6px;
-  }
-  .mini-approve {
-    background: white; border-radius: 10px; padding: 8px; text-align: center;
-    border: 1px solid var(--border);
-  }
-  .mini-approve .mini-icon { font-size: 18px; margin-bottom: 3px; }
-  .mini-approve .mini-amt { font-size: 12px; font-weight: 800; color: var(--navy); }
-  .mini-approve .mini-sub { font-size: 7px; color: var(--grey); margin-bottom: 5px; }
-  .mini-confirm-btn {
-    background: var(--green); color: var(--navy); font-size: 7px; font-weight: 700;
-    border-radius: 6px; padding: 4px; text-align: center;
-  }
-  .mini-success { text-align: center; padding-top: 20px; }
-  .mini-success .sicon { font-size: 28px; }
-  .mini-success .stxt { font-size: 8px; font-weight: 700; color: var(--navy); margin-top: 4px; }
-  .mini-success .samt { font-size: 12px; font-weight: 800; color: var(--green); }
+/* ══ SLIDE 7: MARKET ══ */
+.bar-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.bar-labels { display: flex; justify-content: space-between; font-size: 12px; }
+.bar-labels .bl { font-weight: 700; color: var(--navy); }
+.bar-labels .bv { font-weight: 800; color: var(--green); }
+.bar-track { height: 32px; border-radius: 8px; background: rgba(10,37,64,0.06); }
+.bar-fill  { height: 100%; border-radius: 8px; }
+.bar-sub   { font-size: 11px; color: var(--grey); margin-top: 3px; }
+.mpoint {
+  background: white; border-radius: 12px; padding: 14px 16px;
+  border: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start;
+  margin-bottom: 10px;
+}
+.mpoint .micon { font-size: 20px; flex-shrink: 0; }
+.mpoint h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.mpoint p  { font-size: 12px; color: var(--grey); line-height: 1.5; }
 
-  /* ── Slide 5: Market ── */
-  .market-grid { display: flex; gap: 24px; flex: 1; align-items: center; }
-  .tam-circles { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; height: 320px; }
-  .circle {
-    border-radius: 50%; position: absolute;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center;
-  }
-  .c-tam { width: 320px; height: 320px; background: rgba(10,37,64,0.06); border: 2px solid rgba(10,37,64,0.15); }
-  .c-sam { width: 220px; height: 220px; background: rgba(10,37,64,0.1); border: 2px solid rgba(10,37,64,0.2); }
-  .c-som { width: 130px; height: 130px; background: var(--navy); }
-  .c-tam .clbl { font-size: 11px; color: var(--grey); position: absolute; top: 18px; }
-  .c-tam .cval { font-size: 22px; font-weight: 800; color: var(--navy); position: absolute; top: 30px; }
-  .c-sam .clbl { font-size: 11px; color: var(--grey); position: absolute; top: 16px; }
-  .c-sam .cval { font-size: 18px; font-weight: 800; color: var(--navy); position: absolute; top: 28px; }
-  .c-som .clbl { font-size: 9px; color: rgba(255,255,255,0.6); }
-  .c-som .cval { font-size: 16px; font-weight: 800; color: var(--green); }
-  .market-points { flex: 1; display: flex; flex-direction: column; gap: 16px; }
-  .mpoint {
-    background: white; border-radius: 12px; padding: 18px 20px;
-    border: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start;
-  }
-  .mpoint .micon { font-size: 24px; flex-shrink: 0; }
-  .mpoint h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-  .mpoint p { font-size: 13px; color: var(--grey); line-height: 1.5; }
+/* ══ SLIDE 8: BENCHMARKS ══ */
+.bm-label { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 8px; padding-bottom: 5px; border-bottom: 2px solid var(--green); }
+.bm-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+.bm-table th {
+  font-size: 10px; font-weight: 700; color: var(--grey); text-transform: uppercase;
+  letter-spacing: 0.8px; padding: 7px 8px; text-align: center;
+  background: white; border: 1px solid var(--border);
+}
+.bm-table th.vp-h { background: var(--navy); color: var(--green); }
+.bm-table td {
+  padding: 7px 8px; text-align: center; font-size: 12px;
+  border: 1px solid var(--border); background: white; color: var(--grey);
+}
+.bm-table td.met { text-align: left; font-weight: 600; color: var(--navy); background: var(--light); font-size: 11px; }
+.bm-table td.vp  { background: rgba(10,37,64,0.04); font-weight: 800; color: var(--green); }
+.bm-note { font-size: 10px; color: var(--grey); font-style: italic; }
+.bm-live { font-size: 11px; color: var(--green); font-weight: 600; margin-bottom: 8px; }
 
-  /* ── Slide 6: Business Model ── */
-  .biz-grid { display: flex; gap: 24px; flex: 1; }
-  .biz-stream {
-    flex: 1; background: white; border-radius: 16px; padding: 28px;
-    border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;
-  }
-  .biz-stream.primary { border-color: var(--green); box-shadow: 0 0 0 2px rgba(0,200,150,0.2); }
-  .biz-stream .bicon { font-size: 32px; }
-  .biz-stream h3 { font-size: 18px; font-weight: 700; color: var(--navy); }
-  .biz-stream .brate { font-size: 32px; font-weight: 800; color: var(--green); }
-  .biz-stream p { font-size: 13px; color: var(--grey); line-height: 1.6; }
-  .biz-stream .badge {
-    display: inline-block; background: rgba(0,200,150,0.1); color: var(--green);
-    border: 1px solid rgba(0,200,150,0.3); border-radius: 999px;
-    padding: 3px 12px; font-size: 11px; font-weight: 700; margin-top: auto;
-  }
-  .unit-econ {
-    background: var(--navy); border-radius: 16px; padding: 28px;
-    display: flex; flex-direction: column; gap: 14px;
-  }
-  .unit-econ h3 { font-size: 16px; font-weight: 700; color: white; }
-  .ue-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .ue-row:last-child { border: none; }
-  .ue-lbl { font-size: 13px; color: rgba(255,255,255,0.6); }
-  .ue-val { font-size: 16px; font-weight: 700; color: white; }
-  .ue-val.green { color: var(--green); }
+/* ══ SLIDE 9: BUSINESS MODEL ══ */
+.biz-cols { display: flex; gap: 24px; flex: 1; }
+.biz-left { flex: 1.1; display: flex; flex-direction: column; gap: 12px; }
+.biz-right { flex: 0.9; display: flex; flex-direction: column; gap: 12px; }
+.val-card {
+  background: white; border-radius: 13px; padding: 18px 20px;
+  border: 1px solid var(--border);
+}
+.val-card h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+.val-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.val-card li { font-size: 12px; color: var(--grey); display: flex; gap: 8px; align-items: flex-start; line-height: 1.4; }
+.val-card li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+.rev-card {
+  background: white; border-radius: 13px; padding: 14px 18px;
+  border: 1px solid var(--border);
+}
+.rev-card h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.rev-row {
+  display: flex; justify-content: space-between; font-size: 12px;
+  padding: 5px 0; border-bottom: 1px solid var(--border);
+}
+.rev-row:last-child { border: none; }
+.rev-row .rl { color: var(--grey); }
+.rev-row .rv { font-weight: 700; color: var(--navy); }
+.ue-panel {
+  background: var(--navy); border-radius: 13px; padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 8px; flex: 1;
+}
+.ue-panel h3 { font-size: 13px; font-weight: 700; color: white; margin-bottom: 4px; }
+.ue-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 12px;
+}
+.ue-row:last-child { border: none; }
+.ue-lbl { color: rgba(255,255,255,0.55); }
+.ue-val { font-weight: 700; color: white; }
+.ue-val.green { color: var(--green); }
 
-  /* ── Slide 7: Traction ── */
-  .traction-grid { display: flex; gap: 24px; flex: 1; }
-  .tcard {
-    flex: 1; background: white; border-radius: 16px; padding: 28px;
-    border: 1px solid var(--border); display: flex; flex-direction: column;
-    align-items: center; text-align: center; gap: 10px;
-  }
-  .tcard .ticon { font-size: 40px; }
-  .tcard .tval { font-size: 36px; font-weight: 800; color: var(--navy); }
-  .tcard .tval span { color: var(--green); }
-  .tcard .tlbl { font-size: 14px; color: var(--grey); }
-  .milestone-list { flex: 1.2; display: flex; flex-direction: column; gap: 12px; }
-  .milestone {
-    display: flex; gap: 14px; align-items: center;
-    background: white; border-radius: 12px; padding: 14px 18px;
-    border: 1px solid var(--border);
-  }
-  .milestone .mcheck { color: var(--green); font-size: 18px; flex-shrink: 0; }
-  .milestone .mtext { font-size: 14px; color: var(--navy); font-weight: 500; }
-  .milestone .mbadge {
-    margin-left: auto; background: var(--light); border-radius: 999px;
-    padding: 3px 10px; font-size: 11px; color: var(--grey); white-space: nowrap;
-  }
+/* ══ SLIDE 10: COMPETITION ══ */
+.comp-wrap { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.comp-tbl { width: 100%; border-collapse: collapse; }
+.comp-tbl th {
+  padding: 9px 10px; font-size: 11px; font-weight: 700; text-align: center;
+  background: white; border: 1px solid var(--border); color: var(--grey);
+}
+.comp-tbl th.vp-h { background: var(--navy); color: var(--green); }
+.comp-tbl td {
+  padding: 9px 10px; text-align: center; font-size: 13px;
+  border: 1px solid var(--border); background: white;
+}
+.comp-tbl td.feat { text-align: left; font-size: 12px; font-weight: 600; color: var(--navy); background: var(--light); }
+.comp-tbl td.vp-c { background: rgba(10,37,64,0.04); }
+.cy { color: var(--green); font-size: 15px; }
+.cn { color: #D1D5DB; font-size: 15px; }
+.cp { color: var(--amber); font-size: 15px; }
+.comp-callout {
+  background: rgba(0,200,150,0.08); border: 1px solid rgba(0,200,150,0.25);
+  border-radius: 10px; padding: 11px 15px; font-size: 12px; color: var(--navy); font-weight: 500;
+}
 
-  /* ── Slide 8: The Ask ── */
-  #s8 { background: var(--navy); }
-  #s8 .slide-inner { background: var(--navy); }
-  .ask-grid { display: flex; gap: 48px; flex: 1; align-items: center; }
-  .ask-left { flex: 1; }
-  .ask-amount { font-size: 80px; font-weight: 900; color: white; letter-spacing: -3px; line-height: 1; }
-  .ask-amount span { color: var(--green); }
-  .ask-sub { font-size: 18px; color: rgba(255,255,255,0.5); margin-top: 10px; }
-  .ask-terms { display: flex; gap: 32px; margin-top: 40px; }
-  .ask-term { text-align: center; }
-  .ask-term .val { font-size: 28px; font-weight: 800; color: white; }
-  .ask-term .val span { color: var(--green); }
-  .ask-term .lbl { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-  .ask-right { flex: 1; display: flex; flex-direction: column; gap: 14px; }
-  .use-item {
-    background: rgba(255,255,255,0.05); border-radius: 12px;
-    padding: 16px 20px; border: 1px solid rgba(255,255,255,0.08);
-    display: flex; align-items: center; gap: 16px;
-  }
-  .use-pct { font-size: 24px; font-weight: 800; color: var(--green); min-width: 56px; }
-  .use-text h4 { font-size: 14px; font-weight: 700; color: white; }
-  .use-text p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-  .use-bar-track {
-    height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px;
-    margin-top: 6px;
-  }
-  .use-bar-fill { height: 4px; background: var(--green); border-radius: 2px; }
+/* ══ SLIDES 11 & 12: PLACEHOLDERS ══ */
+.ph-content {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px; text-align: center;
+}
+.ph-icon  { font-size: 56px; opacity: 0.25; }
+.ph-badge {
+  padding: 5px 14px; border-radius: 999px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+  color: var(--amber); font-size: 11px; font-weight: 700;
+}
+.ph-title { font-size: 18px; color: var(--grey); font-weight: 600; }
+.ph-sub   { font-size: 13px; color: var(--grey); opacity: 0.7; max-width: 380px; line-height: 1.6; }
 
-  #s8 .slide-label { color: var(--green); }
-  #s8 .slide-title { color: white; }
+/* ══ SLIDE 13: TRACTION & SEED PLAN ══ */
+.seed-cols { display: flex; gap: 24px; flex: 1; }
+.seed-left { flex: 1; }
+.seed-right { flex: 1.3; display: flex; flex-direction: column; gap: 12px; }
+.curr-state {
+  background: white; border-radius: 13px; padding: 18px 20px;
+  border: 1px solid var(--border); display: flex; flex-direction: column; gap: 7px;
+}
+.curr-state h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.cs-item { display: flex; gap: 8px; font-size: 12px; color: var(--grey); line-height: 1.4; }
+.cs-item .ck { color: var(--green); flex-shrink: 0; }
+.seed-goal {
+  background: white; border-radius: 13px; padding: 16px 18px;
+  border: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start;
+}
+.g-num {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--green); color: var(--navy); font-weight: 800; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.seed-goal h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.seed-goal p  { font-size: 12px; color: var(--grey); line-height: 1.5; }
+.g-badge {
+  display: inline-block; margin-top: 5px;
+  background: var(--light); border-radius: 999px;
+  padding: 2px 10px; font-size: 10px; color: var(--navy); font-weight: 600;
+}
+
+/* ══ SLIDE 14: THE ASK ══ */
+#s14 .slide-inner { background: var(--navy); padding: 36px 58px 72px; }
+#s14 .slide-label { color: var(--green); }
+#s14 .slide-title { color: white; font-size: 32px; margin-bottom: 16px; }
+.ask-grid { display: flex; gap: 36px; flex: 1; min-height: 0; }
+.ask-left { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+.ask-right { flex: 1.4; display: flex; flex-direction: column; gap: 10px; }
+.ask-amount { font-size: 66px; font-weight: 900; color: white; letter-spacing: -3px; line-height: 1; }
+.ask-amount span { color: var(--green); }
+.ask-sub { font-size: 15px; color: rgba(255,255,255,0.45); }
+.ask-terms { display: flex; gap: 20px; }
+.ask-term .val { font-size: 22px; font-weight: 800; color: white; }
+.ask-term .val span { color: var(--green); }
+.ask-term .lbl { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+.cap-panel {
+  background: rgba(255,255,255,0.05); border-radius: 11px;
+  padding: 14px 16px; border: 1px solid rgba(255,255,255,0.08);
+}
+.cap-panel h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.cap-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px; }
+.cap-row:last-child { border: none; }
+.cap-row .cr-l { color: rgba(255,255,255,0.55); }
+.cap-row .cr-v { color: var(--green); font-weight: 700; }
+.be-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(0,200,150,0.1); border-radius: 9px;
+  padding: 10px 14px; border: 1px solid rgba(0,200,150,0.25);
+}
+.be-row .be-txt { font-size: 12px; color: rgba(255,255,255,0.65); }
+.be-row .be-val { font-size: 15px; font-weight: 800; color: var(--green); margin-left: auto; }
+.ret-panel {
+  background: rgba(255,255,255,0.05); border-radius: 11px;
+  padding: 14px 16px; border: 1px solid rgba(255,255,255,0.08);
+  flex: 1;
+}
+.ret-panel h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.ret-tbl { width: 100%; border-collapse: collapse; }
+.ret-tbl th { font-size: 10px; color: rgba(255,255,255,0.35); font-weight: 600; text-align: right; padding: 3px 6px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.ret-tbl th:first-child { text-align: left; }
+.ret-tbl td { font-size: 12px; padding: 5px 6px; text-align: right; color: rgba(255,255,255,0.65); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.ret-tbl td:first-child { text-align: left; color: white; font-weight: 600; }
+.ret-tbl td.hl { color: var(--green); font-weight: 700; }
+.ret-tbl tr:last-child td { border: none; }
+.ret-note { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 6px; }
+.uof-panel {
+  background: rgba(255,255,255,0.05); border-radius: 11px;
+  padding: 14px 16px; border: 1px solid rgba(255,255,255,0.08);
+}
+.uof-panel h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.uof-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.uof-pct { font-size: 17px; font-weight: 800; color: var(--green); min-width: 38px; }
+.uof-text h5 { font-size: 12px; color: white; font-weight: 600; }
+.uof-text p  { font-size: 10px; color: rgba(255,255,255,0.4); }
+.uof-bar-track { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; margin-top: 3px; }
+.uof-bar-fill  { height: 3px; background: var(--green); border-radius: 2px; }
+.contact-line { text-align: center; padding-top: 6px; font-size: 13px; color: rgba(255,255,255,0.4); }
+.contact-line a { color: var(--green); font-weight: 600; text-decoration: none; }
 </style>
 </head>
 <body>
-
 <div class="deck">
 
-  <!-- ══ SLIDE 1: COVER ══ -->
-  <div class="slide active" id="s1">
-    <div class="logo-mark">
-      <svg viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="20" stroke="#0A2540" stroke-width="3"/>
-        <circle cx="24" cy="24" r="11" stroke="#0A2540" stroke-width="3"/>
-        <circle cx="24" cy="24" r="4" fill="#0A2540"/>
-      </svg>
-    </div>
-    <h1>Vault<span>a</span></h1>
-    <p class="tagline">The digital wallet that pays you back</p>
-    <div class="cover-pill">Seed Round · 2026</div>
-    <div class="raise-badge">
-      <div class="item"><div class="val">$<span>2M</span></div><div class="lbl">Raising</div></div>
-      <div class="divider-v"></div>
-      <div class="item"><div class="val">$<span>8M</span></div><div class="lbl">Pre-Money Valuation</div></div>
-      <div class="divider-v"></div>
-      <div class="item"><div class="val">$<span>10M</span></div><div class="lbl">Post-Money</div></div>
-    </div>
+<!-- ══ SLIDE 1: COVER ══ -->
+<div class="slide active" id="s1">
+  <div class="logo-mark">
+    <svg viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="20" stroke="#0A2540" stroke-width="3"/>
+      <circle cx="24" cy="24" r="11" stroke="#0A2540" stroke-width="3"/>
+      <circle cx="24" cy="24" r="4" fill="#0A2540"/>
+    </svg>
   </div>
+  <h1>Vault<span>a</span>Pay</h1>
+  <p class="tagline">Blockchain-native payments — lower merchant fees, real consumer rewards, no bank required</p>
+  <div class="cover-pill">● Seed Round · 2026</div>
+  <div class="raise-badge">
+    <div class="item"><div class="val">$<span>2M</span></div><div class="lbl">Raising</div></div>
+    <div class="divider-v"></div>
+    <div class="item"><div class="val">$<span>8M</span></div><div class="lbl">Pre-Money</div></div>
+    <div class="divider-v"></div>
+    <div class="item"><div class="val">$<span>10M</span></div><div class="lbl">Post-Money</div></div>
+  </div>
+</div>
 
-  <!-- ══ SLIDE 2: PROBLEM ══ -->
-  <div class="slide" id="s2">
-    <div class="slide-inner">
-      <div class="slide-label">The Problem</div>
-      <div class="slide-title">Your money sits idle.<br><em>Banks profit. You don't.</em></div>
-      <div class="slide-body">
-        <div class="problem-cards">
-          <div class="pcard">
-            <div class="icon">🏦</div>
-            <h3>Checking Accounts Pay Nothing</h3>
-            <p>The average US checking account earns 0.08% APY while banks lend that same money out at 7–24%. Consumers see none of that return.</p>
-            <div class="stat"><span>$4.7T</span><br><small style="font-size:13px;font-weight:400;color:var(--grey)">sitting in US checking accounts</small></div>
-          </div>
-          <div class="pcard">
-            <div class="icon">💸</div>
-            <h3>Merchants Pay to Get Paid</h3>
-            <p>Card networks charge 2–3% on every transaction. A small merchant processing $500K/year hands $10,000–$15,000 straight to Visa and Mastercard.</p>
-            <div class="stat"><span>$160B</span><br><small style="font-size:13px;font-weight:400;color:var(--grey)">paid in card fees annually (US)</small></div>
-          </div>
-          <div class="pcard">
-            <div class="icon">🚫</div>
-            <h3>Millions Are Left Out</h3>
-            <p>22 million US adults are unbanked or underbanked — excluded from basic financial tools, rewards programs, and any return on their cash.</p>
-            <div class="stat"><span>22M</span><br><small style="font-size:13px;font-weight:400;color:var(--grey)">unbanked / underbanked Americans</small></div>
-          </div>
+<!-- ══ SLIDE 2: PROBLEM ══ -->
+<div class="slide" id="s2">
+  <div class="slide-inner">
+    <div class="slide-label">The Problem</div>
+    <div class="slide-title">The payment system is broken.<br><em>Banks win. Everyone else pays.</em></div>
+    <div class="slide-body">
+      <div class="problem-cards">
+        <div class="pcard">
+          <div class="icon">🏦</div>
+          <h3>Your Money Works for the Bank, Not You</h3>
+          <p>Banks borrow your checking balance at 0.08% and lend it out at 7–24%. The layered banking system has no mechanism to pass any of that return back to depositors.</p>
+          <div class="stat"><span>$4.7T</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">in US checking accounts earning near zero</small></div>
+        </div>
+        <div class="pcard">
+          <div class="icon">💸</div>
+          <h3>Merchants Pay 2–3% to Get Paid</h3>
+          <p>Visa, Mastercard, issuing banks, and acquiring banks each take a cut — a 4-layer system built for the 1970s. Small merchants processing $500K/yr hand over $10K–$15K in fees.</p>
+          <div class="stat"><span>$160B</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">paid in US card network fees annually</small></div>
+        </div>
+        <div class="pcard">
+          <div class="icon">🚫</div>
+          <h3>22 Million Americans Are Locked Out</h3>
+          <p>Unbanked and underbanked consumers can't access rewards programs, earn on their balances, or participate in digital payments on equal terms. A phone is their only bank.</p>
+          <div class="stat"><span>22M</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">unbanked / underbanked Americans</small></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ══ SLIDE 3: SOLUTION ══ -->
-  <div class="slide" id="s3">
-    <div class="slide-inner">
-      <div class="slide-label">The Solution</div>
-      <div class="slide-title">A closed-loop wallet where<br><em>every dollar works harder</em></div>
-      <div class="slide-body">
-        <div class="solution-points">
-          <div class="spoint">
-            <div class="num">1</div>
-            <div>
-              <h4>vUSD — Your Digital Dollar</h4>
-              <p>1 vUSD = $1 USD, always. Load funds, spend at merchants, withdraw anytime. No bank account required — just a phone.</p>
-            </div>
+<!-- ══ SLIDE 3: SOLUTION — BLOCKCHAIN VS. LAYERED BANKING ══ -->
+<div class="slide" id="s3">
+  <div class="slide-inner">
+    <div class="slide-label">The Solution</div>
+    <div class="slide-title">Replace 4 layers of banking<br>with <em>one blockchain</em></div>
+    <div class="slide-body">
+      <div class="sol-compare">
+
+        <!-- Old Way -->
+        <div class="sol-side old">
+          <div class="sol-side-title">Old Way — Layered Banking</div>
+          <div class="flow-chain">
+            <div class="flow-node old-node">Consumer</div>
+            <div class="flow-arrow old">↓</div>
+            <div class="flow-node old-node">Issuing Bank</div>
+            <div class="flow-arrow old">↓</div>
+            <div class="flow-node old-node">Card Network (Visa / MC)</div>
+            <div class="flow-arrow old">↓</div>
+            <div class="flow-node old-node">Acquiring Bank</div>
+            <div class="flow-arrow old">↓</div>
+            <div class="flow-node old-node">Merchant</div>
           </div>
-          <div class="spoint">
-            <div class="num">2</div>
-            <div>
-              <h4>Vaulta Rewards — Earn on Every Purchase</h4>
-              <p>Consumers earn Vaulta Rewards every 90-day cycle based on their spending activity. Not a savings account — a smarter spending account.</p>
-            </div>
-          </div>
-          <div class="spoint">
-            <div class="num">3</div>
-            <div>
-              <h4>Merchants Pay 10x Less</h4>
-              <p>0.5% flat merchant fee vs. 2–3% with card networks. Merchants save thousands per year while their customers earn rewards.</p>
-            </div>
-          </div>
-          <div class="spoint">
-            <div class="num">4</div>
-            <div>
-              <h4>Blockchain-Settled, Consumer-Controlled</h4>
-              <p>Every payment is a real Solana SPL token transfer. Consumer's private key never leaves their device. Transparent, auditable, instant.</p>
-            </div>
+          <div class="sol-metrics">
+            <div class="sol-metric"><div class="mlbl">Intermediaries</div><div class="mval">4 layers</div></div>
+            <div class="sol-metric"><div class="mlbl">Merchant Fee</div><div class="mval">2–3%</div></div>
+            <div class="sol-metric"><div class="mlbl">Settlement Time</div><div class="mval">1–3 days</div></div>
+            <div class="sol-metric"><div class="mlbl">Consumer Rewards</div><div class="mval">None (checking)</div></div>
+            <div class="sol-metric"><div class="mlbl">Bank Account Required</div><div class="mval">Yes</div></div>
+            <div class="sol-metric"><div class="mlbl">Tx Cost to Network</div><div class="mval">~$0.30+</div></div>
           </div>
         </div>
-        <!-- Phone mockup -->
-        <div class="phone">
-          <div class="phone-screen">
-            <div class="phone-bar">Vaulta Pay</div>
-            <div class="phone-balance">
-              <div class="bal-lbl">VUSD BALANCE</div>
-              <div class="bal-val">$247.50 <span>vUSD</span></div>
+
+        <!-- VaultaPay -->
+        <div class="sol-side new">
+          <div class="sol-side-title">VaultaPay — Blockchain Native</div>
+          <div class="flow-chain">
+            <div class="flow-node new-node">Consumer (vUSD wallet)</div>
+            <div class="flow-arrow new">↓</div>
+            <div class="flow-node new-node">Solana Blockchain</div>
+            <div class="flow-arrow new">↓</div>
+            <div class="flow-node new-node">Merchant (vUSD wallet)</div>
+          </div>
+          <div class="sol-metrics">
+            <div class="sol-metric"><div class="mlbl">Intermediaries</div><div class="mval">1 (blockchain)</div></div>
+            <div class="sol-metric"><div class="mlbl">Merchant Fee</div><div class="mval">0.8%</div></div>
+            <div class="sol-metric"><div class="mlbl">Settlement Time</div><div class="mval">&lt;1 second</div></div>
+            <div class="sol-metric"><div class="mlbl">Consumer Rewards</div><div class="mval">✓ Every cycle</div></div>
+            <div class="sol-metric"><div class="mlbl">Bank Account Required</div><div class="mval">No</div></div>
+            <div class="sol-metric"><div class="mlbl">Tx Cost to Network</div><div class="mval">$0.0005</div></div>
+          </div>
+          <div class="sol-enablers">
+            <div class="sol-enabler">
+              <div class="eicon">⚖️</div>
+              <div><h5>GENIUS Act (2025) — Why Rewards Are Legal</h5><p>First US federal law authorizing stablecoins to hold T-bill reserves. Vaulta keeps the float, passes it back as Vaulta Rewards — legally compliant.</p></div>
             </div>
-            <div class="phone-reward">
-              <div class="rlbl">⭐ VAULTA REWARDS</div>
-              <div class="rval">+$12.40</div>
-            </div>
-            <div class="phone-btns">
-              <div class="phone-btn">Pay</div>
-              <div class="phone-btn outline">Add Funds</div>
-              <div class="phone-btn outline">Withdraw</div>
-            </div>
-            <div class="phone-tx">
-              <div class="phone-tx-row">
-                <div class="tleft"><strong>Coffee Shop</strong>Today</div>
-                <div class="tamt">-$6.50</div>
-              </div>
-              <div class="phone-tx-row">
-                <div class="tleft"><strong>Rewards Credit</strong>Cycle 3</div>
-                <div class="tamt credit">+$12.40</div>
-              </div>
-              <div class="phone-tx-row">
-                <div class="tleft"><strong>Grocery Store</strong>Yesterday</div>
-                <div class="tamt">-$43.20</div>
-              </div>
-              <div class="phone-tx-row">
-                <div class="tleft"><strong>Add Funds</strong>Jun 1</div>
-                <div class="tamt credit">+$200.00</div>
-              </div>
+            <div class="sol-enabler">
+              <div class="eicon">⚡</div>
+              <div><h5>Solana — Why Fees Can Be 0.8%</h5><p>$0.0005/tx makes blockchain settlement 600x cheaper than card processing, enabling sub-1% merchant fees that are still profitable.</p></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ══ SLIDE 4: HOW IT WORKS ══ -->
-  <div class="slide" id="s4">
-    <div class="slide-inner">
-      <div class="slide-label">Product</div>
-      <div class="slide-title">Pay in <em>3 seconds</em>, earn every cycle</div>
-      <div class="slide-body" style="flex-direction:column">
-        <div class="hiw-steps">
-          <div class="hiw-step">
-            <div class="step-num">1</div>
-            <h4>Consumer Opens Pay</h4>
-            <p>Unique QR code generated on Solana. Expires in 5 min to prevent fraud.</p>
-            <div class="hiw-phone-mini">
-              <div class="hiw-screen-mini">
-                <div class="mini-bar"><div class="mini-bar-lbl">Pay</div></div>
-                <div style="text-align:center;padding:8px 4px">
-                  <div class="qr-box" style="display:inline-block;padding:6px">
-                    <div style="display:grid;grid-template-columns:repeat(7,6px);grid-template-rows:repeat(7,6px);gap:1px">
-                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div>
-                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
-                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
-                      <div style="background:white"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:white"></div>
-                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
-                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
-                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div>
-                    </div>
-                  </div>
-                  <div style="font-size:7px;color:var(--grey);margin-top:4px">🔄 Expires in 4:32</div>
-                </div>
-              </div>
+<!-- ══ SLIDE 4: WHY NOW ══ -->
+<div class="slide" id="s4">
+  <div class="slide-inner">
+    <div class="slide-label">Why Now</div>
+    <div class="slide-title">Regulation, technology, and consumer<br>behavior are <em>converging</em></div>
+    <div class="slide-body" style="align-items:stretch;">
+      <div class="whynow-grid" style="width:100%;">
+        <div class="wncard">
+          <div class="wn-tag law">Legislation</div>
+          <h3>GENIUS Act — Signed 2025</h3>
+          <p>First US federal law defining stablecoin reserve requirements. Stablecoins backed by T-bills are now legally recognized — the regulatory foundation for VaultaPay's Vaulta Rewards model. Without this, passing float income to consumers was legally ambiguous.</p>
+          <div class="wn-stat">$<span>200B+</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">total stablecoin supply, growing 40% YoY</small></div>
+        </div>
+        <div class="wncard">
+          <div class="wn-tag law">Legislation</div>
+          <h3>CLARITY Act — In Progress</h3>
+          <p>Pending legislation that establishes clear legal classification for digital assets across the US regulatory landscape. Passage removes the final ambiguity holding back institutional adoption of blockchain-settled payments at scale.</p>
+          <div class="wn-stat"><span>2026</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">expected legislative window for passage</small></div>
+        </div>
+        <div class="wncard">
+          <div class="wn-tag tech">Technology</div>
+          <h3>Solana — Production-Ready at Scale</h3>
+          <p>65,000 TPS, sub-400ms finality, $0.0005 per transaction. The infrastructure to displace card networks now exists and is battle-tested in production. This was not true 3 years ago.</p>
+          <div class="wn-stat"><span>600x</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">cheaper per tx than card network processing</small></div>
+        </div>
+        <div class="wncard">
+          <div class="wn-tag market">Market</div>
+          <h3>Consumers Are Ready to Demand More</h3>
+          <p>76% of consumers say rewards are a top reason to choose a payment method (J.D. Power 2024). While Fed Funds rate is 4.8%, banks still offer 0.08% on checking — a 4.7% gap consumers are waking up to.</p>
+          <div class="wn-stat"><span>4.7%</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">gap between T-bill rate and checking account return</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 5: HOW IT WORKS — CONSUMER ══ -->
+<div class="slide" id="s5">
+  <div class="slide-inner">
+    <div class="slide-label">Product</div>
+    <div class="slide-title">Consumer experience —<br><em>open an account in minutes</em></div>
+    <div class="slide-body" style="flex-direction:column; gap:16px;">
+      <div class="hiw-flow">
+        <div class="hiw-step">
+          <div class="step-num">1</div>
+          <h4>Sign Up + KYC</h4>
+          <p>Download app, verify identity with government-issued ID. No bank account or credit check required.</p>
+          <div class="step-detail">📋 Government ID required<br><span>Verified in under 2 minutes</span></div>
+        </div>
+        <div class="hiw-step">
+          <div class="step-num">2</div>
+          <h4>Load Funds</h4>
+          <p>Deposit via ACH bank transfer or cash at a participating merchant location. vUSD minted 1:1 on Solana.</p>
+          <div class="step-detail">🏦 ACH bank transfer<br>💵 <span>Cash deposit at partner merchant</span></div>
+        </div>
+        <div class="hiw-step">
+          <div class="step-num">3</div>
+          <h4>Pay via QR Code</h4>
+          <p>Consumer opens app, generates a time-limited QR code. Merchant scans it, enters amount. Consumer approves in one tap — private key signs on-device.</p>
+          <div class="step-detail">📱 QR code (live today)<br>🖥️ <span>POS terminal (post-seed)</span></div>
+        </div>
+        <div class="hiw-step">
+          <div class="step-num">4</div>
+          <h4>Earn Vaulta Rewards</h4>
+          <p>After 3 qualifying transactions in a 90-day cycle, the consumer earns Vaulta Rewards on their full wallet balance from the T-bill float.</p>
+          <div class="step-detail">⭐ After <span>3 transactions</span><br>🔄 Every 90-day cycle</div>
+        </div>
+      </div>
+      <!-- vUSD explainer strip -->
+      <div style="background:white;border-radius:13px;padding:16px 22px;border:1px solid var(--border);display:flex;gap:28px;align-items:center;">
+        <div style="flex:1;">
+          <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Why vUSD?</div>
+          <div style="font-size:12px;color:var(--grey);line-height:1.6;">1 vUSD = $1 USD, always. Every vUSD in circulation is fully backed by T-bills in Vaulta's reserve — auditable on Solana. Consumers can withdraw to their bank or cash out at any time. No bank account required to get started.</div>
+        </div>
+        <div style="display:flex;gap:20px;flex-shrink:0;">
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--navy);">1:1</div><div style="font-size:10px;color:var(--grey);">USD Backed</div></div>
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--navy);">&lt;1s</div><div style="font-size:10px;color:var(--grey);">Settlement</div></div>
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--navy);">$0</div><div style="font-size:10px;color:var(--grey);">Monthly Fee</div></div>
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:800;color:var(--navy);">🔐</div><div style="font-size:10px;color:var(--grey);">Self-Custody</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 6: HOW IT WORKS — MERCHANT + T-BILL ENGINE ══ -->
+<div class="slide" id="s6">
+  <div class="slide-inner">
+    <div class="slide-label">Product</div>
+    <div class="slide-title">Merchant experience +<br><em>how Vaulta Rewards are funded</em></div>
+    <div class="slide-body" style="flex-direction:column; gap:14px;">
+      <!-- Merchant flow -->
+      <div class="hiw-flow">
+        <div class="hiw-step" style="padding:12px 10px;">
+          <div class="step-num">1</div>
+          <h4>Register + KYB</h4>
+          <p>Business registration, EIN, ID verification. Approved in under 24 hours.</p>
+        </div>
+        <div class="hiw-step" style="padding:12px 10px;">
+          <div class="step-num">2</div>
+          <h4>Accept Payments</h4>
+          <p>Scan consumer QR codes. POS terminal integration coming post-seed.</p>
+          <div class="step-detail"><span>0.8%</span> flat fee<br>vs 2–3% card network</div>
+        </div>
+        <div class="hiw-step" style="padding:12px 10px;">
+          <div class="step-num">3</div>
+          <h4>Instant Settlement</h4>
+          <p>Funds appear in merchant vUSD wallet in &lt;1 second. ACH withdrawal to bank anytime.</p>
+        </div>
+        <div class="hiw-step" style="padding:12px 10px;">
+          <div class="step-num">4</div>
+          <h4>Earn Rewards Too</h4>
+          <p>After 30 transactions in a 90-day cycle, merchants earn Vaulta Rewards on their settlement balance.</p>
+          <div class="step-detail">⭐ After <span>30 transactions</span><br>🔄 Every 90-day cycle</div>
+        </div>
+      </div>
+
+      <!-- T-Bill engine -->
+      <div class="tbill-box">
+        <h4>The T-Bill Engine — How Vaulta Rewards Are Funded (GENIUS Act Compliant)</h4>
+        <div class="tbill-row">
+          <div class="tbill-node source">Consumer &amp; Merchant<br>Deposits (vUSD)</div>
+          <div class="tbill-arr">→</div>
+          <div class="tbill-node tbill">Vaulta Treasury<br>Short-Duration US T-Bills<br><small style="font-size:9px;opacity:0.7;">~4.8% annual return</small></div>
+          <div class="tbill-arr">→</div>
+          <div class="tbill-split">
+            <div class="tbill-node reward">80% → Vaulta Rewards<br><small style="font-size:9px;">Paid to consumers &amp; merchants each cycle</small></div>
+            <div class="tbill-node sleeve">20% → Vaulta Revenue<br><small style="font-size:9px;">Float income sleeve (recurring, zero marginal cost)</small></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:32px;margin-top:4px;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.45);">
+            Example: $1,000 avg wallet × 4.8% × 80% =
+            <strong style="color:var(--green);">$38.40/yr</strong> Vaulta Rewards per consumer
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-left:auto;">
+            Vaulta keeps: <strong style="color:rgba(255,255,255,0.65);">$9.60/yr</strong> per consumer from float — scales with deposits, zero incremental cost
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 7: MARKET ══ -->
+<div class="slide" id="s7">
+  <div class="slide-inner">
+    <div class="slide-label">Market Opportunity</div>
+    <div class="slide-title">A <em>massive, underserved</em> market</div>
+    <div class="slide-body">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-start;">
+        <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:14px;">Bottom-Up Market Sizing</div>
+        <div class="bar-row">
+          <div class="bar-labels"><span class="bl">TAM — Global Digital Payments</span><span class="bv">$9.5T</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:rgba(10,37,64,0.1);"></div></div>
+          <div class="bar-sub">Total addressable market, 14% CAGR through 2030 (Statista)</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-labels"><span class="bl">SAM — US Fintech + Closed-Loop Wallets</span><span class="bv">$850B</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:60%;background:rgba(10,37,64,0.18);"></div></div>
+          <div class="bar-sub">US digital wallet + underbanked consumer payment volume</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-labels"><span class="bl">SOM — VaultaPay 5-Year Reachable</span><span class="bv">$2.1B GMV</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--green);opacity:0.75;"></div></div>
+          <div class="bar-sub">500K consumers × $4,200/yr avg spend → $2.1B GMV → $16.8M revenue at 0.8% fee</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:14px 18px;border:1px solid var(--border);margin-top:10px;">
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:7px;">Why VaultaPay Wins</div>
+          <div style="display:flex;gap:14px;">
+            <div style="flex:1;font-size:11px;color:var(--grey);">✓ Only closed-loop wallet with <strong>built-in Vaulta Rewards</strong> from day one</div>
+            <div style="flex:1;font-size:11px;color:var(--grey);">✓ <strong>3–4x lower merchant fees</strong> — no bank or card network cut</div>
+            <div style="flex:1;font-size:11px;color:var(--grey);">✓ <strong>No bank account needed</strong> — serves 22M underserved Americans</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;">
+        <div class="mpoint">
+          <div class="micon">⚖️</div>
+          <div><h4>Regulatory Tailwind — GENIUS Act</h4><p>First time US law authorizes stablecoin issuers to invest reserves in T-bills — directly enabling VaultaPay's Vaulta Rewards at scale.</p></div>
+        </div>
+        <div class="mpoint">
+          <div class="micon">📱</div>
+          <div><h4>Mobile-First, Unbanked-First</h4><p>Smartphone penetration among unbanked consumers exceeds 80%. A phone is their bank — VaultaPay is built around this reality.</p></div>
+        </div>
+        <div class="mpoint">
+          <div class="micon">🏪</div>
+          <div><h4>Small Merchant Pain is Acute</h4><p>A merchant doing $500K/yr pays $10K–$15K in card fees. VaultaPay saves them $6K–$11K — a compelling, quantifiable switch incentive.</p></div>
+        </div>
+        <div class="mpoint">
+          <div class="micon">📈</div>
+          <div><h4>Stablecoin Adoption Accelerating</h4><p>$200B+ in stablecoin supply, 40% YoY growth. Consumer comfort with digital dollars is no longer a barrier to adoption.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 8: BENCHMARKS ══ -->
+<div class="slide" id="s8">
+  <div class="slide-inner" style="padding-bottom:75px;">
+    <div class="slide-label">Competitive Benchmarks</div>
+    <div class="slide-title">VaultaPay vs. <em>the market</em></div>
+    <div class="slide-body" style="flex-direction:column;gap:12px;overflow:hidden;">
+      <div class="bm-live">⚡ VaultaPay column reflects live financial model assumptions</div>
+
+      <!-- Unit Economics -->
+      <div>
+        <div class="bm-label">Unit Economics</div>
+        <table class="bm-table">
+          <tr>
+            <th style="text-align:left;width:28%;">Metric</th>
+            <th class="vp-h">VaultaPay</th>
+            <th>Chime</th><th>Revolut</th><th>Cash App</th><th>MoneyLion</th>
+          </tr>
+          <tr>
+            <td class="met">LTV : CAC</td>
+            <td class="vp" id="bm_ltvcac">—</td>
+            <td>2.1x</td><td>3.2x</td><td>4.1x</td><td>1.8x</td>
+          </tr>
+          <tr>
+            <td class="met">Customer Acquisition Cost</td>
+            <td class="vp" id="bm_cac">—</td>
+            <td>$50</td><td>$35</td><td>$45</td><td>$80</td>
+          </tr>
+          <tr>
+            <td class="met">Annual Net ARPU</td>
+            <td class="vp" id="bm_arpu">—</td>
+            <td>$42</td><td>$67</td><td>$58</td><td>$38</td>
+          </tr>
+          <tr>
+            <td class="met">CAC Payback</td>
+            <td class="vp" id="bm_payback">—</td>
+            <td>15 mo</td><td>8 mo</td><td>10 mo</td><td>25 mo</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Revenue Model -->
+      <div>
+        <div class="bm-label">Revenue Model</div>
+        <table class="bm-table">
+          <tr>
+            <th style="text-align:left;width:28%;">Metric</th>
+            <th class="vp-h">VaultaPay</th>
+            <th>PayPal</th><th>Square/Block</th><th>Stripe</th><th>Interchange Avg</th>
+          </tr>
+          <tr>
+            <td class="met">Merchant Fee Rate</td>
+            <td class="vp" id="bm_mfee">—</td>
+            <td>2.90%</td><td>2.60%</td><td>2.90%</td><td>1.80%</td>
+          </tr>
+          <tr>
+            <td class="met">Gross Margin (Yr 5)</td>
+            <td class="vp" id="bm_gm">—</td>
+            <td>45%</td><td>35%</td><td>38%</td><td>N/A</td>
+          </tr>
+          <tr>
+            <td class="met">EBITDA Margin (Yr 3)</td>
+            <td class="vp" id="bm_ebitda3">—</td>
+            <td>21%</td><td>4%</td><td>~2%</td><td>N/A</td>
+          </tr>
+        </table>
+      </div>
+      <div class="bm-note">Sources: Company 10-Ks, Stripe investor letters, J.D. Power 2024. VaultaPay figures are projections based on model defaults.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 9: BUSINESS MODEL ══ -->
+<div class="slide" id="s9">
+  <div class="slide-inner">
+    <div class="slide-label">Business Model</div>
+    <div class="slide-title">Disruptive technology,<br><em>aligned incentives — both sides win</em></div>
+    <div class="slide-body">
+      <div class="biz-cols">
+        <div class="biz-left">
+          <div class="val-card">
+            <h3>👤 Consumer Value</h3>
+            <ul>
+              <li>Earn Vaulta Rewards every 90-day cycle — the return banks keep, returned to you</li>
+              <li>Pay merchants instantly via QR code — no card, no bank account needed</li>
+              <li>vUSD self-custody on Solana — withdraw to bank or cash out anytime</li>
+              <li>ID + phone = account in minutes; serves the 22M unbanked</li>
+            </ul>
+          </div>
+          <div class="val-card">
+            <h3>🏪 Merchant Value</h3>
+            <ul>
+              <li>0.8% flat fee vs. 2–3% card networks — saves $6K–$11K/yr per $500K GMV</li>
+              <li>Instant settlement — no 1–3 day ACH float, funds available immediately</li>
+              <li>Reward-motivated consumers drive higher repeat purchase frequency</li>
+              <li>Merchants earning Vaulta Rewards become VaultaPay's best growth channel</li>
+            </ul>
+          </div>
+          <div class="rev-card">
+            <h3>📊 Revenue Streams</h3>
+            <div class="rev-row"><span class="rl">Merchant Transaction Fee</span><span class="rv">0.8% per transaction</span></div>
+            <div class="rev-row"><span class="rl">Float Income Sleeve (T-bills)</span><span class="rv">20% of ~4.8%/yr on deposits</span></div>
+            <div class="rev-row"><span class="rl">Premium Merchant SaaS</span><span class="rv" style="color:var(--green);">Roadmap</span></div>
+          </div>
+        </div>
+        <div class="biz-right">
+          <div class="ue-panel">
+            <h3>Unit Economics (per consumer)</h3>
+            <div class="ue-row"><div class="ue-lbl">Base CAC (Seed phase)</div><div class="ue-val" id="ue_cac">—</div></div>
+            <div class="ue-row"><div class="ue-lbl">3-Year LTV</div><div class="ue-val green" id="ue_ltv">—</div></div>
+            <div class="ue-row"><div class="ue-lbl">LTV : CAC Ratio</div><div class="ue-val green" id="ue_ltvcac">—</div></div>
+            <div class="ue-row"><div class="ue-lbl">CAC Payback Period</div><div class="ue-val" id="ue_payback">—</div></div>
+            <div class="ue-row"><div class="ue-lbl">Monthly Merchant Fee Revenue</div><div class="ue-val" id="ue_mfee_mo">—</div></div>
+            <div class="ue-row"><div class="ue-lbl">Monthly Float Income (kept)</div><div class="ue-val" id="ue_tbill_mo">—</div></div>
+            <div class="ue-row"><div class="ue-lbl">Net Monthly Contribution</div><div class="ue-val green" id="ue_contrib">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 10: COMPETITION ══ -->
+<div class="slide" id="s10">
+  <div class="slide-inner">
+    <div class="slide-label">Competitive Landscape</div>
+    <div class="slide-title">No one else does <em>all of this</em></div>
+    <div class="slide-body" style="flex-direction:column;gap:12px;">
+      <div class="comp-wrap">
+        <table class="comp-tbl">
+          <tr>
+            <th style="text-align:left;width:28%;">Feature</th>
+            <th class="vp-h">VaultaPay</th>
+            <th>Venmo / PayPal</th>
+            <th>Cash App</th>
+            <th>Zelle</th>
+            <th>Chime</th>
+            <th>Apple Pay</th>
+          </tr>
+          <tr>
+            <td class="feat">No Bank Account Required</td>
+            <td class="vp-c"><span class="cy">✓</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Consumer Rewards on Balance</td>
+            <td class="vp-c"><span class="cy">✓</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td><td><span class="cn">✗</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Merchant Fee &lt; 1%</td>
+            <td class="vp-c"><span class="cy">✓</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td><span class="cy">✓</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Blockchain Settlement</td>
+            <td class="vp-c"><span class="cy">✓</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+          </tr>
+          <tr>
+            <td class="feat">T-Bill Float Passed to Users</td>
+            <td class="vp-c"><span class="cy">✓</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Merchant Rewards Program</td>
+            <td class="vp-c"><span class="cy">✓</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+          </tr>
+          <tr>
+            <td class="feat">GENIUS Act Compliant Model</td>
+            <td class="vp-c"><span class="cy">✓</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td>
+            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+          </tr>
+        </table>
+        <div style="font-size:10px;color:var(--grey);margin-top:6px;">✓ Yes &nbsp; ~ Partial / in progress &nbsp; ✗ No. &nbsp; *Zelle is fee-free consumer-to-consumer only; merchants use bank-side card processing at standard rates.</div>
+        <div class="comp-callout">
+          🎯 VaultaPay is the only platform combining <strong>no-bank onboarding</strong>, <strong>consumer + merchant rewards funded by T-bill float</strong>, and <strong>sub-1% merchant fees</strong> — made possible exclusively by blockchain settlement on Solana.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 11: GO-TO-MARKET (PLACEHOLDER) ══ -->
+<div class="slide" id="s11">
+  <div class="slide-inner">
+    <div class="slide-label">Go-to-Market</div>
+    <div class="slide-title">How we <em>acquire and grow</em></div>
+    <div class="ph-content">
+      <div class="ph-icon">🗺️</div>
+      <div class="ph-badge">In Development</div>
+      <div class="ph-title">Go-to-Market Strategy</div>
+      <div class="ph-sub">This slide will detail our merchant acquisition funnel, consumer onboarding playbook, geographic launch sequence, referral mechanics, and partnership channel plan.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 12: TEAM (PLACEHOLDER) ══ -->
+<div class="slide" id="s12">
+  <div class="slide-inner">
+    <div class="slide-label">Team</div>
+    <div class="slide-title">The people <em>building it</em></div>
+    <div class="ph-content">
+      <div class="ph-icon">👥</div>
+      <div class="ph-badge">In Development</div>
+      <div class="ph-title">Founding Team</div>
+      <div class="ph-sub">This slide will feature founder bios, domain expertise across fintech, blockchain, and payments, key advisors, and relevant prior experience that de-risks execution.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 13: TRACTION & SEED PLAN ══ -->
+<div class="slide" id="s13">
+  <div class="slide-inner">
+    <div class="slide-label">Traction &amp; Seed Plan</div>
+    <div class="slide-title">Built and proven —<br><em>seed round scales it</em></div>
+    <div class="slide-body">
+      <div class="seed-cols">
+        <div class="seed-left">
+          <div class="curr-state">
+            <h3>Where We Are Today</h3>
+            <div class="cs-item"><div class="ck">✅</div><div>iOS app live on TestFlight (Build 8) — full end-to-end payment flow</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>Consumer KYC + Merchant KYB on Solana devnet</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>Two-phone live payment: consumer signs on own device, vUSD transferred on-chain</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>On-chain merchant withdrawal — burns vUSD, settles to bank</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>Vaulta Rewards cycle engine (90-day) deployed and tested</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>172 automated tests passing; Firestore security rules deployed</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>6 Cloud Functions live on Firebase; Solana SPL token in production</div></div>
+          </div>
+        </div>
+        <div class="seed-right">
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px;">$2M Seed — Three Goals</div>
+          <div class="seed-goal">
+            <div class="g-num">1</div>
+            <div>
+              <h4>Launch Production App</h4>
+              <p>Ship production iOS + Android apps with full consumer and merchant flows. Move from Solana devnet to mainnet with MSB licensing and AML/KYC compliance infrastructure in place.</p>
+              <div class="g-badge">40% of Seed → Product &amp; Engineering</div>
             </div>
           </div>
-
-          <div class="hiw-step">
-            <div class="step-num">2</div>
-            <h4>Merchant Scans &amp; Charges</h4>
-            <p>Merchant scans QR, enters amount. Payment request sent to consumer via Firestore.</p>
-            <div class="hiw-phone-mini">
-              <div class="hiw-screen-mini">
-                <div class="mini-bar"><div class="mini-bar-lbl">Receive Payment</div></div>
-                <div style="padding:6px">
-                  <div class="mini-row"><div class="mini-lbl">Customer</div><div class="mini-val green">✅ Scanned</div></div>
-                  <div class="mini-row"><div class="mini-lbl">Amount</div><div class="mini-val">$24.00</div></div>
-                  <div class="mini-row"><div class="mini-lbl">Fee (0.5%)</div><div class="mini-val">-$0.12</div></div>
-                  <div class="mini-row"><div class="mini-lbl">You receive</div><div class="mini-val green">$23.88</div></div>
-                  <div class="mini-btn">Confirm &amp; Charge</div>
-                </div>
-              </div>
+          <div class="seed-goal">
+            <div class="g-num">2</div>
+            <div>
+              <h4>Execute Merchant LOI — 500 Stores</h4>
+              <p>Execute on existing merchant Letter of Intent to launch with a partner network of 500 store locations. First major real-world closed-loop merchant network, generating transaction volume and fee revenue.</p>
+              <div class="g-badge">30% of Seed → Merchant &amp; Consumer Growth</div>
             </div>
           </div>
-
-          <div class="hiw-step">
-            <div class="step-num">3</div>
-            <h4>Consumer Approves</h4>
-            <p>Consumer's phone shows approval modal. One tap — private key signs the Solana transfer.</p>
-            <div class="hiw-phone-mini">
-              <div class="hiw-screen-mini" style="padding:6px">
-                <div class="mini-approve">
-                  <div class="mini-icon">💳</div>
-                  <div class="mini-amt">$24.00</div>
-                  <div class="mini-sub">Payment Request</div>
-                  <div class="mini-confirm-btn">Confirm Payment</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="hiw-step">
-            <div class="step-num">4</div>
-            <h4>Instant Settlement</h4>
-            <p>vUSD transferred on Solana devnet. Both phones show success. Rewards accumulate.</p>
-            <div class="hiw-phone-mini">
-              <div class="hiw-screen-mini">
-                <div class="mini-bar"><div class="mini-bar-lbl">Payment Received!</div></div>
-                <div class="mini-success">
-                  <div class="sicon">✅</div>
-                  <div class="stxt">Payment Received</div>
-                  <div class="samt">+$23.88</div>
-                  <div style="font-size:7px;color:var(--green);margin-top:4px">View on Solana →</div>
-                </div>
-              </div>
+          <div class="seed-goal">
+            <div class="g-num">3</div>
+            <div>
+              <h4>Acquire 1,000 Active Consumers</h4>
+              <p>Onboard 1,000 verified, transacting consumers by end of Seed period — proving unit economics, CAC, and the Vaulta Rewards flywheel ahead of a Series A raise.</p>
+              <div class="g-badge">20% → Compliance · 10% → Ops &amp; Reserve</div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ══ SLIDE 5: MARKET ══ -->
-  <div class="slide" id="s5">
-    <div class="slide-inner">
-      <div class="slide-label">Market Opportunity</div>
-      <div class="slide-title">A <em>massive, underserved</em> market</div>
-      <div class="slide-body">
-        <div class="tam-circles">
-          <div class="circle c-tam">
-            <span class="clbl" style="top:18px;position:absolute;font-size:11px;color:var(--grey)">TAM</span>
-            <span class="cval" style="top:30px;position:absolute;font-size:22px;font-weight:800;color:var(--navy)">$9.5T</span>
-          </div>
-          <div class="circle c-sam">
-            <span style="position:absolute;top:16px;font-size:11px;color:var(--grey)">SAM</span>
-            <span style="position:absolute;top:28px;font-size:18px;font-weight:800;color:var(--navy)">$850B</span>
-          </div>
-          <div class="circle c-som" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
-            <span style="font-size:9px;color:rgba(255,255,255,0.6)">SOM</span>
-            <span style="font-size:16px;font-weight:800;color:var(--green)">$2.1B</span>
-          </div>
+<!-- ══ SLIDE 14: THE ASK ══ -->
+<div class="slide slide-dark" id="s14">
+  <div class="slide-inner">
+    <div class="slide-label">The Ask</div>
+    <div class="slide-title">Join us at the <em>ground floor</em></div>
+    <div class="ask-grid">
+
+      <div class="ask-left">
+        <div class="ask-amount">$<span>2M</span></div>
+        <div class="ask-sub">Seed Round · 2026</div>
+        <div class="ask-terms">
+          <div class="ask-term"><div class="val">$<span>8M</span></div><div class="lbl">Pre-Money</div></div>
+          <div class="ask-term"><div class="val">$<span>10M</span></div><div class="lbl">Post-Money</div></div>
+          <div class="ask-term"><div class="val"><span>20%</span></div><div class="lbl">Equity Offered</div></div>
         </div>
-        <div class="market-points">
-          <div class="mpoint">
-            <div class="micon">🌍</div>
-            <div>
-              <h4>TAM — $9.5T Global Digital Payments</h4>
-              <p>Total global digital payments market growing at 14% CAGR through 2030 (Statista).</p>
-            </div>
-          </div>
-          <div class="mpoint">
-            <div class="micon">🇺🇸</div>
-            <div>
-              <h4>SAM — $850B US Closed-Loop &amp; Fintech</h4>
-              <p>US digital wallet and closed-loop payment volume targeting underbanked consumers and small-to-mid merchants.</p>
-            </div>
-          </div>
-          <div class="mpoint">
-            <div class="micon">🎯</div>
-            <div>
-              <h4>SOM — $2.1B Reachable in 5 Years</h4>
-              <p>Targeting 500K active consumers spending avg. $4,200/yr = $2.1B GMV at 0.5% fee = $10.5M revenue.</p>
-            </div>
-          </div>
-          <div class="mpoint">
-            <div class="micon">📈</div>
-            <div>
-              <h4>Tailwind: Rewards-Seeking Consumers</h4>
-              <p>76% of consumers say rewards are a top reason to choose a payment method (J.D. Power). Vaulta is built around this behavior.</p>
-            </div>
-          </div>
+        <div class="cap-panel">
+          <h4>Cap Table — Dilution Path</h4>
+          <div class="cap-row"><div class="cr-l">Seed investors — $2M @ $8M pre</div><div class="cr-v">20.0%</div></div>
+          <div class="cap-row"><div class="cr-l">After Series A (est. ~20% new shares)</div><div class="cr-v">16.0%</div></div>
+          <div class="cap-row"><div class="cr-l">After Series B (est. ~20% new shares)</div><div class="cr-v">12.8%</div></div>
+        </div>
+        <div class="be-row">
+          <div style="font-size:18px;">📈</div>
+          <div class="be-txt">Model break-even</div>
+          <div class="be-val" id="be_year">Year 4</div>
+        </div>
+        <div class="contact-line">
+          <a href="mailto:khoja.research@gmail.com">khoja.research@gmail.com</a>
+          <span style="margin:0 8px;opacity:0.3;">·</span>
+          <span style="font-size:12px;">moazzamkhoja.github.io/Vaulta-Pay-Model</span>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- ══ SLIDE 6: BUSINESS MODEL ══ -->
-  <div class="slide" id="s6">
-    <div class="slide-inner">
-      <div class="slide-label">Business Model</div>
-      <div class="slide-title">Simple fees.<br><em>Profitable at scale.</em></div>
-      <div class="slide-body">
-        <div class="biz-grid">
-          <div class="biz-stream primary">
-            <div class="bicon">💳</div>
-            <h3>Merchant Transaction Fee</h3>
-            <div class="brate">0.5%</div>
-            <p>Every consumer-to-merchant payment. 5–6x cheaper than card networks for merchants. Primary revenue stream from day one.</p>
-            <div class="badge">Live Today</div>
-          </div>
-          <div class="biz-stream">
-            <div class="bicon">🏦</div>
-            <h3>Float Income</h3>
-            <div class="brate">~4–5%</div>
-            <p>vUSD deposits held in short-duration T-bills. As consumer balances grow, float income scales automatically with zero marginal cost.</p>
-            <div class="badge">Near-Term</div>
-          </div>
-          <div class="biz-stream">
-            <div class="bicon">🏪</div>
-            <h3>Premium Merchant Tools</h3>
-            <div class="brate">SaaS</div>
-            <p>Analytics dashboard, loyalty campaign builder, and bulk cash-in tools for growing merchant networks. Recurring monthly subscription.</p>
-            <div class="badge">Roadmap</div>
-          </div>
+      <div class="ask-right">
+        <div class="ret-panel">
+          <h4>Investor Return Scenarios (at 12.8% post full dilution)</h4>
+          <table class="ret-tbl">
+            <tr>
+              <th>Exit Valuation</th><th>Seed Value</th><th>Return on $2M</th>
+            </tr>
+            <tr><td>$50M</td><td>$6.4M</td><td class="hl">3.2x</td></tr>
+            <tr><td>$100M</td><td>$12.8M</td><td class="hl">6.4x</td></tr>
+            <tr><td>$250M</td><td>$32.0M</td><td class="hl">16x</td></tr>
+            <tr><td>$500M</td><td>$64.0M</td><td class="hl">32x</td></tr>
+          </table>
+          <div class="ret-note">Assumes Seed → Series A (~20% dilution) → Series B (~20% dilution). Illustrative only; not a guarantee of returns.</div>
         </div>
-        <div class="unit-econ">
-          <h3 style="color:white;margin-bottom:4px">Unit Economics (per $1,000 GMV)</h3>
-          <div class="ue-row"><div class="ue-lbl">Gross Revenue (0.5% fee)</div><div class="ue-val">$5.00</div></div>
-          <div class="ue-row"><div class="ue-lbl">Vaulta Rewards Payout</div><div class="ue-val" style="color:#EF4444">-$1.50</div></div>
-          <div class="ue-row"><div class="ue-lbl">Solana tx costs (~$0.0005/tx)</div><div class="ue-val" style="color:#EF4444">-$0.05</div></div>
-          <div class="ue-row"><div class="ue-lbl">Contribution Margin</div><div class="ue-val green">$3.45 (69%)</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ══ SLIDE 7: TRACTION ══ -->
-  <div class="slide" id="s7">
-    <div class="slide-inner">
-      <div class="slide-label">Traction</div>
-      <div class="slide-title">Real product.<br><em>Real transactions on blockchain.</em></div>
-      <div class="slide-body">
-        <div class="traction-grid">
-          <div class="tcard">
-            <div class="ticon">📱</div>
-            <div class="tval"><span>Live</span></div>
-            <div class="tlbl">iOS App on TestFlight<br>Build 8</div>
-          </div>
-          <div class="tcard">
-            <div class="ticon">⛓️</div>
-            <div class="tval"><span>Real</span></div>
-            <div class="tlbl">Solana SPL Token<br>On-chain transactions</div>
-          </div>
-          <div class="tcard">
-            <div class="ticon">✅</div>
-            <div class="tval"><span>2</span></div>
-            <div class="tlbl">Phones tested<br>Full payment flow</div>
-          </div>
-          <div class="tcard">
-            <div class="ticon">🔥</div>
-            <div class="tval"><span>6</span></div>
-            <div class="tlbl">Cloud Functions<br>deployed on Firebase</div>
-          </div>
-        </div>
-        <div class="milestone-list">
-          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Consumer KYC + wallet creation on Solana devnet</div><div class="mbadge">Build 4</div></div>
-          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Merchant KYB + cash-in via Cloud Function</div><div class="mbadge">Build 5</div></div>
-          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Vaulta Rewards cycle engine (90-day cycles)</div><div class="mbadge">Build 5</div></div>
-          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">On-chain merchant withdrawal (burns vUSD)</div><div class="mbadge">Build 8</div></div>
-          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Two-phone payment: consumer signs on their own device</div><div class="mbadge">Build 8</div></div>
-          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">172 automated tests passing, Firestore rules deployed</div><div class="mbadge">Live</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 8: THE ASK ══ -->
-  <div class="slide slide-dark" id="s8">
-    <div class="slide-inner">
-      <div class="slide-label">The Ask</div>
-      <div class="slide-title">Join us at the<br><em>ground floor</em></div>
-      <div class="ask-grid">
-        <div class="ask-left">
-          <div class="ask-amount">$<span>2M</span></div>
-          <div class="ask-sub">Seed Round · 2026</div>
-          <div class="ask-terms">
-            <div class="ask-term">
-              <div class="val">$<span>8M</span></div>
-              <div class="lbl">Pre-Money Valuation</div>
-            </div>
-            <div class="ask-term">
-              <div class="val">$<span>10M</span></div>
-              <div class="lbl">Post-Money</div>
-            </div>
-            <div class="ask-term">
-              <div class="val"><span>20%</span></div>
-              <div class="lbl">Equity Offered</div>
+        <div class="uof-panel">
+          <h4>Use of $2M Seed</h4>
+          <div class="uof-row">
+            <div class="uof-pct">40%</div>
+            <div class="uof-text">
+              <h5>Product &amp; Engineering</h5>
+              <p>Production iOS + Android, Solana mainnet, MSB licensing</p>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:40%"></div></div>
             </div>
           </div>
-        </div>
-        <div class="ask-right">
-          <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Use of Funds</div>
-          <div class="use-item">
-            <div class="use-pct">40%</div>
-            <div class="use-text">
-              <h4>Product &amp; Engineering</h4>
-              <p>Android app, consumer withdrawal, merchant analytics dashboard</p>
-              <div class="use-bar-track"><div class="use-bar-fill" style="width:40%"></div></div>
+          <div class="uof-row">
+            <div class="uof-pct">30%</div>
+            <div class="uof-text">
+              <h5>Merchant &amp; Consumer Growth</h5>
+              <p>500-store merchant LOI execution, 1,000 consumer target</p>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:30%"></div></div>
             </div>
           </div>
-          <div class="use-item">
-            <div class="use-pct">30%</div>
-            <div class="use-text">
-              <h4>Growth &amp; Merchant Acquisition</h4>
-              <p>Onboard first 500 merchants, seed consumer user base</p>
-              <div class="use-bar-track"><div class="use-bar-fill" style="width:30%"></div></div>
-            </div>
-          </div>
-          <div class="use-item">
-            <div class="use-pct">20%</div>
-            <div class="use-text">
-              <h4>Compliance &amp; Licensing</h4>
+          <div class="uof-row">
+            <div class="uof-pct">20%</div>
+            <div class="uof-text">
+              <h5>Compliance &amp; Licensing</h5>
               <p>MSB registration, AML/KYC program, legal infrastructure</p>
-              <div class="use-bar-track"><div class="use-bar-fill" style="width:20%"></div></div>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:20%"></div></div>
             </div>
           </div>
-          <div class="use-item">
-            <div class="use-pct">10%</div>
-            <div class="use-text">
-              <h4>Operations &amp; Reserve</h4>
-              <p>Infrastructure, customer support, working capital</p>
-              <div class="use-bar-track"><div class="use-bar-fill" style="width:10%"></div></div>
+          <div class="uof-row">
+            <div class="uof-pct">10%</div>
+            <div class="uof-text">
+              <h5>Operations &amp; Reserve</h5>
+              <p>Infrastructure, customer support, working capital buffer</p>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:10%"></div></div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
+</div>
 
 </div><!-- /deck -->
 
-<!-- ── Navigation ── -->
+<!-- Navigation -->
 <div class="nav">
-  <button id="prev" onclick="go(-1)">‹</button>
+  <button onclick="go(-1)">‹</button>
   <div class="dots" id="dots"></div>
-  <button id="next" onclick="go(1)">›</button>
-  <div class="slide-counter" id="counter">1 / 8</div>
+  <button onclick="go(1)">›</button>
+  <div class="slide-counter" id="counter">1 / 14</div>
 </div>
 
 <script>
-  const slides = document.querySelectorAll('.slide');
-  const dotsEl = document.getElementById('dots');
-  const counter = document.getElementById('counter');
-  let cur = 0;
-  const total = slides.length;
+const slides = document.querySelectorAll('.slide');
+const dotsEl  = document.getElementById('dots');
+const counter = document.getElementById('counter');
+let cur = 0;
+const total = slides.length;
 
-  // Build dots
-  for (let i = 0; i < total; i++) {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.onclick = () => goTo(i);
-    dotsEl.appendChild(d);
-  }
+for (let i = 0; i < total; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+}
 
-  function goTo(n) {
-    slides[cur].classList.remove('active');
-    dotsEl.children[cur].classList.remove('active');
-    cur = (n + total) % total;
-    slides[cur].classList.add('active');
-    dotsEl.children[cur].classList.add('active');
-    counter.textContent = `${cur + 1} / ${total}`;
-  }
+function goTo(n) {
+  slides[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = (n + total) % total;
+  slides[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  counter.textContent = `${cur + 1} / ${total}`;
+}
 
-  function go(dir) { goTo(cur + dir); }
+function go(dir) { goTo(cur + dir); }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
-    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
-  });
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+});
+
+// ── Dynamic updates from parent financial model ──
+window.addEventListener('message', e => {
+  if (!e.data || e.data.type !== 'vaultaModelUpdate') return;
+  const d = e.data.data;
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.textContent = val; };
+
+  const ltvCacFmt  = d.ltvCac  != null ? d.ltvCac.toFixed(1)  + 'x'  : null;
+  const cacFmt     = d.cac     != null ? '$' + Math.round(d.cac)      : null;
+  const arpuFmt    = d.arpu    != null ? '$' + Math.round(d.arpu) + '/yr' : null;
+  const paybackFmt = d.payback != null ? d.payback.toFixed(1)   + ' mo' : null;
+  const mfeeFmt    = d.mfee    != null ? d.mfee.toFixed(2)      + '%'  : null;
+  const gmFmt      = d.gm      != null ? Math.round(d.gm)       + '%'  : null;
+  const eb3Fmt     = d.ebitda3 != null ? Math.round(d.ebitda3)  + '%'  : null;
+  const ltv3Fmt    = d.ltv3    != null ? '$' + Math.round(d.ltv3)      : null;
+  const mfeMoFmt   = d.mfee_mo != null ? '$' + d.mfee_mo.toFixed(2)   : null;
+  const tbMoFmt    = d.tbill_mo!= null ? '$' + d.tbill_mo.toFixed(2)  : null;
+  const contFmt    = d.contrib != null ? '$' + d.contrib.toFixed(2)   : null;
+  const beYrFmt    = d.beYear  != null ? 'Year ' + d.beYear           : null;
+
+  // Benchmarks tab
+  set('bm_ltvcac',  ltvCacFmt);
+  set('bm_cac',     cacFmt);
+  set('bm_arpu',    arpuFmt);
+  set('bm_payback', paybackFmt);
+  set('bm_mfee',    mfeeFmt);
+  set('bm_gm',      gmFmt);
+  set('bm_ebitda3', eb3Fmt);
+
+  // Unit economics panel
+  set('ue_cac',      cacFmt);
+  set('ue_ltv',      ltv3Fmt);
+  set('ue_ltvcac',   ltvCacFmt);
+  set('ue_payback',  paybackFmt);
+  set('ue_mfee_mo',  mfeMoFmt);
+  set('ue_tbill_mo', tbMoFmt);
+  set('ue_contrib',  contFmt);
+
+  // Ask slide break-even
+  set('be_year', beYrFmt);
+});
 </script>
-
 </body>
 </html>

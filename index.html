@@ -367,7 +367,7 @@
 
 <!-- ══ PITCH TAB ══ -->
 <div id="tab-pitch" class="tab-panel">
-  <iframe src="pitch-embed.html"></iframe>
+  <iframe id="pitch-iframe" src="pitch-embed.html"></iframe>
 </div>
 
 <div id="tab-model" class="tab-panel active">
@@ -608,6 +608,32 @@ function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelectorAll('.tab-btn').forEach(b => { if(b.textContent.toLowerCase().includes(name)) b.classList.add('active'); });
+  if (name === 'pitch') setTimeout(sendPitchData, 150);
+}
+
+function sendPitchData() {
+  const iframe = document.getElementById('pitch-iframe');
+  if (!iframe || !iframe.contentWindow) return;
+  const m = model();
+  const gmYr5  = m.totalRev(5) > 0 ? m.grossProfit(5) / m.totalRev(5) : 0;
+  const eb3    = m.totalRev(3) > 0 ? m.ebitda(3)      / m.totalRev(3) : null;
+  iframe.contentWindow.postMessage({
+    type: 'vaultaModelUpdate',
+    data: {
+      ltvCac:   m.ltvCac,
+      cac:      m.baseCAC,
+      arpu:     m.netAnnual,
+      payback:  m.cacPayback < 900 ? m.cacPayback : null,
+      mfee:     +document.getElementById('i_mfee').value * 100,
+      gm:       gmYr5 * 100,
+      ebitda3:  eb3 != null ? eb3 * 100 : null,
+      ltv3:     m.ltv3,
+      mfee_mo:  m.mFeeMo,
+      tbill_mo: m.vaultSlv,
+      contrib:  m.netContrib,
+      beYear:   m.beYear,
+    }
+  }, '*');
 }
 </script>
 
@@ -878,6 +904,8 @@ function update() {
   document.getElementById('bm_eb_yr3').innerHTML = fmtEb(3);
   document.getElementById('bm_eb_yr4').innerHTML = fmtEb(4);
   document.getElementById('bm_eb_yr5').innerHTML = fmtEb(5);
+
+  if (document.getElementById('tab-pitch').classList.contains('active')) sendPitchData();
 }
 
 update();
