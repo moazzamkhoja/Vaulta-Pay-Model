@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaulta — Seed Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy:   #0A2540;
+    --green:  #00C896;
+    --light:  #F5F7FA;
+    --white:  #FFFFFF;
+    --grey:   #6B7280;
+    --border: #E5E7EB;
+    --dark:   #1A1A2E;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #111;
+    color: var(--dark);
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ── Slide Container ── */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .slide.active { display: flex; opacity: 1; }
+
+  /* ── Navigation ── */
+  .nav {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px; z-index: 100;
+    background: rgba(10,37,64,0.85); backdrop-filter: blur(8px);
+    padding: 10px 20px; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .nav button {
+    background: none; border: none; color: white; cursor: pointer;
+    font-size: 18px; padding: 4px 8px; opacity: 0.7; transition: opacity 0.2s;
+  }
+  .nav button:hover { opacity: 1; }
+  .nav .dots { display: flex; gap: 6px; }
+  .nav .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.2s;
+  }
+  .nav .dot.active { background: var(--green); }
+  .slide-counter { color: rgba(255,255,255,0.5); font-size: 12px; min-width: 40px; text-align: center; }
+
+  /* ── Slide 1: Cover ── */
+  #s1 {
+    background: var(--navy);
+    justify-content: center; align-items: center; text-align: center;
+    padding: 60px;
+  }
+  .logo-mark {
+    width: 80px; height: 80px; border-radius: 24px;
+    background: var(--green); display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+  }
+  .logo-mark svg { width: 48px; height: 48px; }
+  #s1 h1 { font-size: 72px; font-weight: 800; color: white; letter-spacing: -2px; line-height: 1; }
+  #s1 h1 span { color: var(--green); }
+  #s1 .tagline { font-size: 22px; color: rgba(255,255,255,0.6); margin-top: 16px; font-weight: 400; }
+  .cover-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,200,150,0.12); border: 1px solid rgba(0,200,150,0.3);
+    border-radius: 999px; padding: 8px 20px; margin-top: 36px;
+    color: var(--green); font-size: 14px; font-weight: 600;
+  }
+  .cover-pill::before { content: '●'; font-size: 8px; }
+  .raise-badge {
+    margin-top: 48px; display: flex; gap: 48px; justify-content: center;
+  }
+  .raise-badge .item { text-align: center; }
+  .raise-badge .val { font-size: 36px; font-weight: 800; color: white; }
+  .raise-badge .val span { color: var(--green); }
+  .raise-badge .lbl { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+  .divider-v { width: 1px; background: rgba(255,255,255,0.1); }
+
+  /* ── Slide layout helpers ── */
+  .slide-inner {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 52px 72px 100px;
+    background: var(--light);
+  }
+  .slide-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--green); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .slide-title {
+    font-size: 42px; font-weight: 800; color: var(--navy);
+    letter-spacing: -1px; line-height: 1.1; margin-bottom: 36px;
+  }
+  .slide-title em { color: var(--green); font-style: normal; }
+  .slide-body { flex: 1; display: flex; gap: 48px; align-items: flex-start; }
+
+  /* dark slides */
+  .slide-dark .slide-inner { background: var(--navy); }
+  .slide-dark .slide-title { color: white; }
+  .slide-dark .slide-label { color: var(--green); }
+
+  /* ── Slide 2: Problem ── */
+  .problem-cards { display: flex; gap: 20px; flex: 1; }
+  .pcard {
+    flex: 1; background: white; border-radius: 16px;
+    padding: 28px; border: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .pcard .icon { font-size: 36px; }
+  .pcard h3 { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .pcard p { font-size: 14px; color: var(--grey); line-height: 1.6; }
+  .pcard .stat { font-size: 28px; font-weight: 800; color: var(--navy); margin-top: auto; }
+  .pcard .stat span { color: var(--green); }
+
+  /* ── Slide 3: Solution ── */
+  .solution-grid { display: flex; gap: 32px; flex: 1; align-items: center; }
+  .solution-points { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+  .spoint {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: white; border-radius: 14px; padding: 20px 24px;
+    border: 1px solid var(--border);
+  }
+  .spoint .num {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--navy);
+    color: var(--green); font-weight: 800; font-size: 16px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .spoint h4 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .spoint p { font-size: 13px; color: var(--grey); line-height: 1.5; }
+
+  /* Phone mockup */
+  .phone {
+    width: 200px; flex-shrink: 0;
+    background: var(--navy); border-radius: 36px;
+    padding: 16px 12px; box-shadow: 0 32px 64px rgba(10,37,64,0.3);
+    border: 2px solid rgba(255,255,255,0.08);
+    position: relative;
+  }
+  .phone::before {
+    content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px;
+  }
+  .phone-screen {
+    background: #F5F7FA; border-radius: 24px; overflow: hidden;
+    padding-top: 24px; min-height: 380px;
+  }
+  .phone-bar {
+    background: var(--navy); padding: 12px 14px 10px;
+    color: var(--green); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .phone-balance {
+    background: var(--navy); padding: 20px 14px;
+    text-align: center;
+  }
+  .phone-balance .bal-lbl { color: rgba(255,255,255,0.5); font-size: 10px; margin-bottom: 6px; }
+  .phone-balance .bal-val { color: white; font-size: 28px; font-weight: 800; }
+  .phone-balance .bal-val span { color: var(--green); font-size: 14px; }
+  .phone-reward {
+    margin: 10px; background: rgba(0,200,150,0.1); border-radius: 10px;
+    padding: 8px 12px; border: 1px solid rgba(0,200,150,0.3);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .phone-reward .rlbl { font-size: 9px; color: var(--green); font-weight: 600; }
+  .phone-reward .rval { font-size: 12px; font-weight: 800; color: var(--navy); }
+  .phone-btns { display: flex; gap: 6px; margin: 8px 10px; }
+  .phone-btn {
+    flex: 1; background: var(--green); color: var(--navy);
+    border-radius: 8px; padding: 8px 4px; text-align: center;
+    font-size: 9px; font-weight: 700;
+  }
+  .phone-btn.outline { background: white; color: var(--navy); border: 1px solid var(--border); }
+  .phone-tx { margin: 4px 10px; }
+  .phone-tx-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+  }
+  .phone-tx-row .tleft { font-size: 9px; color: var(--grey); }
+  .phone-tx-row .tleft strong { display: block; color: var(--navy); font-size: 10px; }
+  .phone-tx-row .tamt { font-size: 10px; font-weight: 700; color: #EF4444; }
+  .phone-tx-row .tamt.credit { color: #10B981; }
+
+  /* QR phone */
+  .phone-qr-screen { padding: 16px 12px; text-align: center; }
+  .qr-box {
+    background: white; border-radius: 12px; padding: 12px; margin-bottom: 10px;
+    display: inline-block;
+  }
+  .qr-grid {
+    display: grid; grid-template-columns: repeat(7,8px); grid-template-rows: repeat(7,8px); gap: 1px;
+  }
+  .qr-cell { border-radius: 1px; }
+  .qr-dark { background: var(--navy); }
+  .qr-light { background: white; }
+  .phone-qr-lbl { font-size: 9px; color: var(--grey); margin-bottom: 6px; }
+  .phone-qr-timer { font-size: 8px; color: var(--green); font-weight: 600; }
+
+  /* ── Slide 4: How It Works ── */
+  .hiw-steps { display: flex; gap: 0; flex: 1; }
+  .hiw-step {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 28px 20px; position: relative; text-align: center;
+  }
+  .hiw-step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -12px; top: 52px;
+    font-size: 20px; color: var(--green); font-weight: 700;
+  }
+  .hiw-step .step-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--navy); color: var(--green);
+    font-size: 18px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .hiw-step h4 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .hiw-step p { font-size: 13px; color: var(--grey); line-height: 1.5; }
+  .hiw-phone-mini {
+    width: 110px; margin: 20px auto 0;
+    background: var(--navy); border-radius: 20px; padding: 8px 6px;
+    box-shadow: 0 16px 32px rgba(10,37,64,0.25);
+  }
+  .hiw-phone-mini::before {
+    content: ''; display: block; width: 30px; height: 4px;
+    background: rgba(255,255,255,0.15); border-radius: 2px; margin: 0 auto 6px;
+  }
+  .hiw-screen-mini { background: #F5F7FA; border-radius: 14px; padding: 10px 8px; min-height: 160px; }
+  .mini-bar { background: var(--navy); margin: -10px -8px 8px; padding: 6px 8px; border-radius: 14px 14px 0 0; }
+  .mini-bar-lbl { font-size: 7px; color: var(--green); font-weight: 700; }
+  .mini-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .mini-lbl { font-size: 7px; color: var(--grey); }
+  .mini-val { font-size: 8px; font-weight: 700; color: var(--navy); }
+  .mini-val.green { color: var(--green); }
+  .mini-btn {
+    background: var(--green); color: var(--navy); font-size: 7px; font-weight: 700;
+    border-radius: 6px; padding: 5px; text-align: center; margin-top: 6px;
+  }
+  .mini-approve {
+    background: white; border-radius: 10px; padding: 8px; text-align: center;
+    border: 1px solid var(--border);
+  }
+  .mini-approve .mini-icon { font-size: 18px; margin-bottom: 3px; }
+  .mini-approve .mini-amt { font-size: 12px; font-weight: 800; color: var(--navy); }
+  .mini-approve .mini-sub { font-size: 7px; color: var(--grey); margin-bottom: 5px; }
+  .mini-confirm-btn {
+    background: var(--green); color: var(--navy); font-size: 7px; font-weight: 700;
+    border-radius: 6px; padding: 4px; text-align: center;
+  }
+  .mini-success { text-align: center; padding-top: 20px; }
+  .mini-success .sicon { font-size: 28px; }
+  .mini-success .stxt { font-size: 8px; font-weight: 700; color: var(--navy); margin-top: 4px; }
+  .mini-success .samt { font-size: 12px; font-weight: 800; color: var(--green); }
+
+  /* ── Slide 5: Market ── */
+  .market-grid { display: flex; gap: 24px; flex: 1; align-items: center; }
+  .tam-circles { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; height: 320px; }
+  .circle {
+    border-radius: 50%; position: absolute;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .c-tam { width: 320px; height: 320px; background: rgba(10,37,64,0.06); border: 2px solid rgba(10,37,64,0.15); }
+  .c-sam { width: 220px; height: 220px; background: rgba(10,37,64,0.1); border: 2px solid rgba(10,37,64,0.2); }
+  .c-som { width: 130px; height: 130px; background: var(--navy); }
+  .c-tam .clbl { font-size: 11px; color: var(--grey); position: absolute; top: 18px; }
+  .c-tam .cval { font-size: 22px; font-weight: 800; color: var(--navy); position: absolute; top: 30px; }
+  .c-sam .clbl { font-size: 11px; color: var(--grey); position: absolute; top: 16px; }
+  .c-sam .cval { font-size: 18px; font-weight: 800; color: var(--navy); position: absolute; top: 28px; }
+  .c-som .clbl { font-size: 9px; color: rgba(255,255,255,0.6); }
+  .c-som .cval { font-size: 16px; font-weight: 800; color: var(--green); }
+  .market-points { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .mpoint {
+    background: white; border-radius: 12px; padding: 18px 20px;
+    border: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start;
+  }
+  .mpoint .micon { font-size: 24px; flex-shrink: 0; }
+  .mpoint h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .mpoint p { font-size: 13px; color: var(--grey); line-height: 1.5; }
+
+  /* ── Slide 6: Business Model ── */
+  .biz-grid { display: flex; gap: 24px; flex: 1; }
+  .biz-stream {
+    flex: 1; background: white; border-radius: 16px; padding: 28px;
+    border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;
+  }
+  .biz-stream.primary { border-color: var(--green); box-shadow: 0 0 0 2px rgba(0,200,150,0.2); }
+  .biz-stream .bicon { font-size: 32px; }
+  .biz-stream h3 { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .biz-stream .brate { font-size: 32px; font-weight: 800; color: var(--green); }
+  .biz-stream p { font-size: 13px; color: var(--grey); line-height: 1.6; }
+  .biz-stream .badge {
+    display: inline-block; background: rgba(0,200,150,0.1); color: var(--green);
+    border: 1px solid rgba(0,200,150,0.3); border-radius: 999px;
+    padding: 3px 12px; font-size: 11px; font-weight: 700; margin-top: auto;
+  }
+  .unit-econ {
+    background: var(--navy); border-radius: 16px; padding: 28px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .unit-econ h3 { font-size: 16px; font-weight: 700; color: white; }
+  .ue-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .ue-row:last-child { border: none; }
+  .ue-lbl { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .ue-val { font-size: 16px; font-weight: 700; color: white; }
+  .ue-val.green { color: var(--green); }
+
+  /* ── Slide 7: Traction ── */
+  .traction-grid { display: flex; gap: 24px; flex: 1; }
+  .tcard {
+    flex: 1; background: white; border-radius: 16px; padding: 28px;
+    border: 1px solid var(--border); display: flex; flex-direction: column;
+    align-items: center; text-align: center; gap: 10px;
+  }
+  .tcard .ticon { font-size: 40px; }
+  .tcard .tval { font-size: 36px; font-weight: 800; color: var(--navy); }
+  .tcard .tval span { color: var(--green); }
+  .tcard .tlbl { font-size: 14px; color: var(--grey); }
+  .milestone-list { flex: 1.2; display: flex; flex-direction: column; gap: 12px; }
+  .milestone {
+    display: flex; gap: 14px; align-items: center;
+    background: white; border-radius: 12px; padding: 14px 18px;
+    border: 1px solid var(--border);
+  }
+  .milestone .mcheck { color: var(--green); font-size: 18px; flex-shrink: 0; }
+  .milestone .mtext { font-size: 14px; color: var(--navy); font-weight: 500; }
+  .milestone .mbadge {
+    margin-left: auto; background: var(--light); border-radius: 999px;
+    padding: 3px 10px; font-size: 11px; color: var(--grey); white-space: nowrap;
+  }
+
+  /* ── Slide 8: The Ask ── */
+  #s8 { background: var(--navy); }
+  #s8 .slide-inner { background: var(--navy); }
+  .ask-grid { display: flex; gap: 48px; flex: 1; align-items: center; }
+  .ask-left { flex: 1; }
+  .ask-amount { font-size: 80px; font-weight: 900; color: white; letter-spacing: -3px; line-height: 1; }
+  .ask-amount span { color: var(--green); }
+  .ask-sub { font-size: 18px; color: rgba(255,255,255,0.5); margin-top: 10px; }
+  .ask-terms { display: flex; gap: 32px; margin-top: 40px; }
+  .ask-term { text-align: center; }
+  .ask-term .val { font-size: 28px; font-weight: 800; color: white; }
+  .ask-term .val span { color: var(--green); }
+  .ask-term .lbl { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+  .ask-right { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+  .use-item {
+    background: rgba(255,255,255,0.05); border-radius: 12px;
+    padding: 16px 20px; border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .use-pct { font-size: 24px; font-weight: 800; color: var(--green); min-width: 56px; }
+  .use-text h4 { font-size: 14px; font-weight: 700; color: white; }
+  .use-text p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .use-bar-track {
+    height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px;
+    margin-top: 6px;
+  }
+  .use-bar-fill { height: 4px; background: var(--green); border-radius: 2px; }
+
+  #s8 .slide-label { color: var(--green); }
+  #s8 .slide-title { color: white; }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ══ SLIDE 1: COVER ══ -->
+  <div class="slide active" id="s1">
+    <div class="logo-mark">
+      <svg viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="20" stroke="#0A2540" stroke-width="3"/>
+        <circle cx="24" cy="24" r="11" stroke="#0A2540" stroke-width="3"/>
+        <circle cx="24" cy="24" r="4" fill="#0A2540"/>
+      </svg>
+    </div>
+    <h1>Vault<span>a</span></h1>
+    <p class="tagline">The digital wallet that pays you back</p>
+    <div class="cover-pill">Seed Round · 2026</div>
+    <div class="raise-badge">
+      <div class="item"><div class="val">$<span>2M</span></div><div class="lbl">Raising</div></div>
+      <div class="divider-v"></div>
+      <div class="item"><div class="val">$<span>8M</span></div><div class="lbl">Pre-Money Valuation</div></div>
+      <div class="divider-v"></div>
+      <div class="item"><div class="val">$<span>10M</span></div><div class="lbl">Post-Money</div></div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: PROBLEM ══ -->
+  <div class="slide" id="s2">
+    <div class="slide-inner">
+      <div class="slide-label">The Problem</div>
+      <div class="slide-title">Your money sits idle.<br><em>Banks profit. You don't.</em></div>
+      <div class="slide-body">
+        <div class="problem-cards">
+          <div class="pcard">
+            <div class="icon">🏦</div>
+            <h3>Checking Accounts Pay Nothing</h3>
+            <p>The average US checking account earns 0.08% APY while banks lend that same money out at 7–24%. Consumers see none of that return.</p>
+            <div class="stat"><span>$4.7T</span><br><small style="font-size:13px;font-weight:400;color:var(--grey)">sitting in US checking accounts</small></div>
+          </div>
+          <div class="pcard">
+            <div class="icon">💸</div>
+            <h3>Merchants Pay to Get Paid</h3>
+            <p>Card networks charge 2–3% on every transaction. A small merchant processing $500K/year hands $10,000–$15,000 straight to Visa and Mastercard.</p>
+            <div class="stat"><span>$160B</span><br><small style="font-size:13px;font-weight:400;color:var(--grey)">paid in card fees annually (US)</small></div>
+          </div>
+          <div class="pcard">
+            <div class="icon">🚫</div>
+            <h3>Millions Are Left Out</h3>
+            <p>22 million US adults are unbanked or underbanked — excluded from basic financial tools, rewards programs, and any return on their cash.</p>
+            <div class="stat"><span>22M</span><br><small style="font-size:13px;font-weight:400;color:var(--grey)">unbanked / underbanked Americans</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: SOLUTION ══ -->
+  <div class="slide" id="s3">
+    <div class="slide-inner">
+      <div class="slide-label">The Solution</div>
+      <div class="slide-title">A closed-loop wallet where<br><em>every dollar works harder</em></div>
+      <div class="slide-body">
+        <div class="solution-points">
+          <div class="spoint">
+            <div class="num">1</div>
+            <div>
+              <h4>vUSD — Your Digital Dollar</h4>
+              <p>1 vUSD = $1 USD, always. Load funds, spend at merchants, withdraw anytime. No bank account required — just a phone.</p>
+            </div>
+          </div>
+          <div class="spoint">
+            <div class="num">2</div>
+            <div>
+              <h4>Vaulta Rewards — Earn on Every Purchase</h4>
+              <p>Consumers earn Vaulta Rewards every 90-day cycle based on their spending activity. Not a savings account — a smarter spending account.</p>
+            </div>
+          </div>
+          <div class="spoint">
+            <div class="num">3</div>
+            <div>
+              <h4>Merchants Pay 10x Less</h4>
+              <p>0.5% flat merchant fee vs. 2–3% with card networks. Merchants save thousands per year while their customers earn rewards.</p>
+            </div>
+          </div>
+          <div class="spoint">
+            <div class="num">4</div>
+            <div>
+              <h4>Blockchain-Settled, Consumer-Controlled</h4>
+              <p>Every payment is a real Solana SPL token transfer. Consumer's private key never leaves their device. Transparent, auditable, instant.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Phone mockup -->
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-bar">Vaulta Pay</div>
+            <div class="phone-balance">
+              <div class="bal-lbl">VUSD BALANCE</div>
+              <div class="bal-val">$247.50 <span>vUSD</span></div>
+            </div>
+            <div class="phone-reward">
+              <div class="rlbl">⭐ VAULTA REWARDS</div>
+              <div class="rval">+$12.40</div>
+            </div>
+            <div class="phone-btns">
+              <div class="phone-btn">Pay</div>
+              <div class="phone-btn outline">Add Funds</div>
+              <div class="phone-btn outline">Withdraw</div>
+            </div>
+            <div class="phone-tx">
+              <div class="phone-tx-row">
+                <div class="tleft"><strong>Coffee Shop</strong>Today</div>
+                <div class="tamt">-$6.50</div>
+              </div>
+              <div class="phone-tx-row">
+                <div class="tleft"><strong>Rewards Credit</strong>Cycle 3</div>
+                <div class="tamt credit">+$12.40</div>
+              </div>
+              <div class="phone-tx-row">
+                <div class="tleft"><strong>Grocery Store</strong>Yesterday</div>
+                <div class="tamt">-$43.20</div>
+              </div>
+              <div class="phone-tx-row">
+                <div class="tleft"><strong>Add Funds</strong>Jun 1</div>
+                <div class="tamt credit">+$200.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4: HOW IT WORKS ══ -->
+  <div class="slide" id="s4">
+    <div class="slide-inner">
+      <div class="slide-label">Product</div>
+      <div class="slide-title">Pay in <em>3 seconds</em>, earn every cycle</div>
+      <div class="slide-body" style="flex-direction:column">
+        <div class="hiw-steps">
+          <div class="hiw-step">
+            <div class="step-num">1</div>
+            <h4>Consumer Opens Pay</h4>
+            <p>Unique QR code generated on Solana. Expires in 5 min to prevent fraud.</p>
+            <div class="hiw-phone-mini">
+              <div class="hiw-screen-mini">
+                <div class="mini-bar"><div class="mini-bar-lbl">Pay</div></div>
+                <div style="text-align:center;padding:8px 4px">
+                  <div class="qr-box" style="display:inline-block;padding:6px">
+                    <div style="display:grid;grid-template-columns:repeat(7,6px);grid-template-rows:repeat(7,6px);gap:1px">
+                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div>
+                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
+                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
+                      <div style="background:white"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:white"></div>
+                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
+                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div>
+                      <div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:white"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div><div style="background:var(--navy);border-radius:1px"></div>
+                    </div>
+                  </div>
+                  <div style="font-size:7px;color:var(--grey);margin-top:4px">🔄 Expires in 4:32</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hiw-step">
+            <div class="step-num">2</div>
+            <h4>Merchant Scans &amp; Charges</h4>
+            <p>Merchant scans QR, enters amount. Payment request sent to consumer via Firestore.</p>
+            <div class="hiw-phone-mini">
+              <div class="hiw-screen-mini">
+                <div class="mini-bar"><div class="mini-bar-lbl">Receive Payment</div></div>
+                <div style="padding:6px">
+                  <div class="mini-row"><div class="mini-lbl">Customer</div><div class="mini-val green">✅ Scanned</div></div>
+                  <div class="mini-row"><div class="mini-lbl">Amount</div><div class="mini-val">$24.00</div></div>
+                  <div class="mini-row"><div class="mini-lbl">Fee (0.5%)</div><div class="mini-val">-$0.12</div></div>
+                  <div class="mini-row"><div class="mini-lbl">You receive</div><div class="mini-val green">$23.88</div></div>
+                  <div class="mini-btn">Confirm &amp; Charge</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hiw-step">
+            <div class="step-num">3</div>
+            <h4>Consumer Approves</h4>
+            <p>Consumer's phone shows approval modal. One tap — private key signs the Solana transfer.</p>
+            <div class="hiw-phone-mini">
+              <div class="hiw-screen-mini" style="padding:6px">
+                <div class="mini-approve">
+                  <div class="mini-icon">💳</div>
+                  <div class="mini-amt">$24.00</div>
+                  <div class="mini-sub">Payment Request</div>
+                  <div class="mini-confirm-btn">Confirm Payment</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hiw-step">
+            <div class="step-num">4</div>
+            <h4>Instant Settlement</h4>
+            <p>vUSD transferred on Solana devnet. Both phones show success. Rewards accumulate.</p>
+            <div class="hiw-phone-mini">
+              <div class="hiw-screen-mini">
+                <div class="mini-bar"><div class="mini-bar-lbl">Payment Received!</div></div>
+                <div class="mini-success">
+                  <div class="sicon">✅</div>
+                  <div class="stxt">Payment Received</div>
+                  <div class="samt">+$23.88</div>
+                  <div style="font-size:7px;color:var(--green);margin-top:4px">View on Solana →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5: MARKET ══ -->
+  <div class="slide" id="s5">
+    <div class="slide-inner">
+      <div class="slide-label">Market Opportunity</div>
+      <div class="slide-title">A <em>massive, underserved</em> market</div>
+      <div class="slide-body">
+        <div class="tam-circles">
+          <div class="circle c-tam">
+            <span class="clbl" style="top:18px;position:absolute;font-size:11px;color:var(--grey)">TAM</span>
+            <span class="cval" style="top:30px;position:absolute;font-size:22px;font-weight:800;color:var(--navy)">$9.5T</span>
+          </div>
+          <div class="circle c-sam">
+            <span style="position:absolute;top:16px;font-size:11px;color:var(--grey)">SAM</span>
+            <span style="position:absolute;top:28px;font-size:18px;font-weight:800;color:var(--navy)">$850B</span>
+          </div>
+          <div class="circle c-som" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <span style="font-size:9px;color:rgba(255,255,255,0.6)">SOM</span>
+            <span style="font-size:16px;font-weight:800;color:var(--green)">$2.1B</span>
+          </div>
+        </div>
+        <div class="market-points">
+          <div class="mpoint">
+            <div class="micon">🌍</div>
+            <div>
+              <h4>TAM — $9.5T Global Digital Payments</h4>
+              <p>Total global digital payments market growing at 14% CAGR through 2030 (Statista).</p>
+            </div>
+          </div>
+          <div class="mpoint">
+            <div class="micon">🇺🇸</div>
+            <div>
+              <h4>SAM — $850B US Closed-Loop &amp; Fintech</h4>
+              <p>US digital wallet and closed-loop payment volume targeting underbanked consumers and small-to-mid merchants.</p>
+            </div>
+          </div>
+          <div class="mpoint">
+            <div class="micon">🎯</div>
+            <div>
+              <h4>SOM — $2.1B Reachable in 5 Years</h4>
+              <p>Targeting 500K active consumers spending avg. $4,200/yr = $2.1B GMV at 0.5% fee = $10.5M revenue.</p>
+            </div>
+          </div>
+          <div class="mpoint">
+            <div class="micon">📈</div>
+            <div>
+              <h4>Tailwind: Rewards-Seeking Consumers</h4>
+              <p>76% of consumers say rewards are a top reason to choose a payment method (J.D. Power). Vaulta is built around this behavior.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6: BUSINESS MODEL ══ -->
+  <div class="slide" id="s6">
+    <div class="slide-inner">
+      <div class="slide-label">Business Model</div>
+      <div class="slide-title">Simple fees.<br><em>Profitable at scale.</em></div>
+      <div class="slide-body">
+        <div class="biz-grid">
+          <div class="biz-stream primary">
+            <div class="bicon">💳</div>
+            <h3>Merchant Transaction Fee</h3>
+            <div class="brate">0.5%</div>
+            <p>Every consumer-to-merchant payment. 5–6x cheaper than card networks for merchants. Primary revenue stream from day one.</p>
+            <div class="badge">Live Today</div>
+          </div>
+          <div class="biz-stream">
+            <div class="bicon">🏦</div>
+            <h3>Float Income</h3>
+            <div class="brate">~4–5%</div>
+            <p>vUSD deposits held in short-duration T-bills. As consumer balances grow, float income scales automatically with zero marginal cost.</p>
+            <div class="badge">Near-Term</div>
+          </div>
+          <div class="biz-stream">
+            <div class="bicon">🏪</div>
+            <h3>Premium Merchant Tools</h3>
+            <div class="brate">SaaS</div>
+            <p>Analytics dashboard, loyalty campaign builder, and bulk cash-in tools for growing merchant networks. Recurring monthly subscription.</p>
+            <div class="badge">Roadmap</div>
+          </div>
+        </div>
+        <div class="unit-econ">
+          <h3 style="color:white;margin-bottom:4px">Unit Economics (per $1,000 GMV)</h3>
+          <div class="ue-row"><div class="ue-lbl">Gross Revenue (0.5% fee)</div><div class="ue-val">$5.00</div></div>
+          <div class="ue-row"><div class="ue-lbl">Vaulta Rewards Payout</div><div class="ue-val" style="color:#EF4444">-$1.50</div></div>
+          <div class="ue-row"><div class="ue-lbl">Solana tx costs (~$0.0005/tx)</div><div class="ue-val" style="color:#EF4444">-$0.05</div></div>
+          <div class="ue-row"><div class="ue-lbl">Contribution Margin</div><div class="ue-val green">$3.45 (69%)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7: TRACTION ══ -->
+  <div class="slide" id="s7">
+    <div class="slide-inner">
+      <div class="slide-label">Traction</div>
+      <div class="slide-title">Real product.<br><em>Real transactions on blockchain.</em></div>
+      <div class="slide-body">
+        <div class="traction-grid">
+          <div class="tcard">
+            <div class="ticon">📱</div>
+            <div class="tval"><span>Live</span></div>
+            <div class="tlbl">iOS App on TestFlight<br>Build 8</div>
+          </div>
+          <div class="tcard">
+            <div class="ticon">⛓️</div>
+            <div class="tval"><span>Real</span></div>
+            <div class="tlbl">Solana SPL Token<br>On-chain transactions</div>
+          </div>
+          <div class="tcard">
+            <div class="ticon">✅</div>
+            <div class="tval"><span>2</span></div>
+            <div class="tlbl">Phones tested<br>Full payment flow</div>
+          </div>
+          <div class="tcard">
+            <div class="ticon">🔥</div>
+            <div class="tval"><span>6</span></div>
+            <div class="tlbl">Cloud Functions<br>deployed on Firebase</div>
+          </div>
+        </div>
+        <div class="milestone-list">
+          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Consumer KYC + wallet creation on Solana devnet</div><div class="mbadge">Build 4</div></div>
+          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Merchant KYB + cash-in via Cloud Function</div><div class="mbadge">Build 5</div></div>
+          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Vaulta Rewards cycle engine (90-day cycles)</div><div class="mbadge">Build 5</div></div>
+          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">On-chain merchant withdrawal (burns vUSD)</div><div class="mbadge">Build 8</div></div>
+          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">Two-phone payment: consumer signs on their own device</div><div class="mbadge">Build 8</div></div>
+          <div class="milestone"><div class="mcheck">✅</div><div class="mtext">172 automated tests passing, Firestore rules deployed</div><div class="mbadge">Live</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 8: THE ASK ══ -->
+  <div class="slide slide-dark" id="s8">
+    <div class="slide-inner">
+      <div class="slide-label">The Ask</div>
+      <div class="slide-title">Join us at the<br><em>ground floor</em></div>
+      <div class="ask-grid">
+        <div class="ask-left">
+          <div class="ask-amount">$<span>2M</span></div>
+          <div class="ask-sub">Seed Round · 2026</div>
+          <div class="ask-terms">
+            <div class="ask-term">
+              <div class="val">$<span>8M</span></div>
+              <div class="lbl">Pre-Money Valuation</div>
+            </div>
+            <div class="ask-term">
+              <div class="val">$<span>10M</span></div>
+              <div class="lbl">Post-Money</div>
+            </div>
+            <div class="ask-term">
+              <div class="val"><span>20%</span></div>
+              <div class="lbl">Equity Offered</div>
+            </div>
+          </div>
+        </div>
+        <div class="ask-right">
+          <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Use of Funds</div>
+          <div class="use-item">
+            <div class="use-pct">40%</div>
+            <div class="use-text">
+              <h4>Product &amp; Engineering</h4>
+              <p>Android app, consumer withdrawal, merchant analytics dashboard</p>
+              <div class="use-bar-track"><div class="use-bar-fill" style="width:40%"></div></div>
+            </div>
+          </div>
+          <div class="use-item">
+            <div class="use-pct">30%</div>
+            <div class="use-text">
+              <h4>Growth &amp; Merchant Acquisition</h4>
+              <p>Onboard first 500 merchants, seed consumer user base</p>
+              <div class="use-bar-track"><div class="use-bar-fill" style="width:30%"></div></div>
+            </div>
+          </div>
+          <div class="use-item">
+            <div class="use-pct">20%</div>
+            <div class="use-text">
+              <h4>Compliance &amp; Licensing</h4>
+              <p>MSB registration, AML/KYC program, legal infrastructure</p>
+              <div class="use-bar-track"><div class="use-bar-fill" style="width:20%"></div></div>
+            </div>
+          </div>
+          <div class="use-item">
+            <div class="use-pct">10%</div>
+            <div class="use-text">
+              <h4>Operations &amp; Reserve</h4>
+              <p>Infrastructure, customer support, working capital</p>
+              <div class="use-bar-track"><div class="use-bar-fill" style="width:10%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── Navigation ── -->
+<div class="nav">
+  <button id="prev" onclick="go(-1)">‹</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" onclick="go(1)">›</button>
+  <div class="slide-counter" id="counter">1 / 8</div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  let cur = 0;
+  const total = slides.length;
+
+  // Build dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    dotsEl.children[cur].classList.remove('active');
+    cur = (n + total) % total;
+    slides[cur].classList.add('active');
+    dotsEl.children[cur].classList.add('active');
+    counter.textContent = `${cur + 1} / ${total}`;
+  }
+
+  function go(dir) { goTo(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+  });
+</script>
+
+</body>
+</html>
