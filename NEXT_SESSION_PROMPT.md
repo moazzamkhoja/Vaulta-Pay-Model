@@ -8,14 +8,14 @@ A standalone interactive HTML financial model + investor pitch deck for **Vaulta
 
 ## Repository
 - **GitHub:** https://github.com/moazzamkhoja/Vaulta-Pay-Model (public)
-- **GitHub Pages (if enabled):** https://moazzamkhoja.github.io/Vaulta-Pay-Model/
+- **GitHub Pages:** https://moazzamkhoja.github.io/Vaulta-Pay-Model/
+- **Owner link (Save as Default button visible):** https://moazzamkhoja.github.io/Vaulta-Pay-Model/?owner=1
 - **Local path:** `C:\Projects\Vaulta-Pay-Model\`
-- **Files:** `index.html` (model + benchmarks + pitch tabs), `pitch-embed.html` (8-slide pitch deck)
+- **Files:** `index.html` (model + benchmarks + pitch tabs), `pitch-embed.html` (14-slide pitch deck)
 
-> ⚠️ There is a **separate** app repo at `C:\Projects\Vaulta` (`moazzamkhoja/Vaulta`). Do NOT make model changes there. The stale `model/` subfolder inside that repo has been deleted.
+> ⚠️ There is a **separate** app repo at `C:\Projects\Vaulta` (`moazzamkhoja/Vaulta`). Do NOT make model changes there.
 
-## Current State (Session 19)
-The model is a single-file HTML app with three tabs:
+## Current State (Session 20)
 
 ### Tab 1 — 📊 Financial Model
 Interactive 10-year DCF model. Sidebar has sliders; all KPIs and charts update instantly.
@@ -38,7 +38,11 @@ Interactive 10-year DCF model. Sidebar has sliders; all KPIs and charts update i
 | `i_survival` | Survival Probability | 35% |
 | `i_sal_eng` | Engineering salary | $150,000 |
 | `i_sal_bd` | Business Dev salary | $120,000 |
-| *(+ more salary inputs)* | CS, Legal, Lead, Cyber | various |
+| `i_sal_cs` | CS salary | $57,000 |
+| `i_sal_lead` | Lead salary | $112,000 |
+| `i_sal_legal` | Legal salary | $135,000 |
+| `i_sal_cyber` | Cyber salary | $190,000 |
+| `i_benefits` | Benefits % | 25% |
 
 **Consumer targets (number inputs):**
 - Seed: 1,000 | Series A: 25,000 | Series B: 500,000
@@ -55,6 +59,12 @@ Interactive 10-year DCF model. Sidebar has sliders; all KPIs and charts update i
 **Key computed outputs (returned from `model()`):**
 `cons[], phases[], merch, totalRev, grossProfit, ebitda, opex, monthlyTbill, vaultSlv, consRwd, mFeeMo, netContrib, netAnnual, ltv3, ltvCac, cacPayback, effYield, seedRaise, serARaise, serBRaise, totalRaised, EV, raEV, beYear, baseCAC, varInfra`
 
+**Save as Default feature:**
+- Button hidden unless `?owner=1` in URL — only Moazzam sees it
+- On click: saves all 23 slider/input values to `localStorage` under key `vaultapay_defaults`
+- On load with `?owner=1`: reads localStorage and pre-fills inputs
+- Investors use the plain URL — always see hardcoded defaults, no save button
+
 ### Tab 2 — 📐 Benchmarks
 All VaultaPay cells are **live-linked to model sliders**. Three sections:
 
@@ -66,39 +76,59 @@ All VaultaPay cells are **live-linked to model sliders**. Three sections:
 
 **EBITDA Margin 10-Year Trend (2016–2025):**
 - VaultaPay Yr1–5 targets (`bm_eb_yr1` through `bm_eb_yr5`) — live from model
-- PayPal: 19–22% (stable, 10 years of data from 10-K)
-- Block/Square: -7.8% (2016) → +3.9% (2025); margins suppressed by Bitcoin gross revenue
-- Stripe: private; negative through 2022, ~breakeven 2023, ~2% in 2024, ~17% in 2025
-- Visa: 63–69% (network economics — shown as ceiling, not a direct comp)
-
-**Growth & Scale** (vs Chime, Revolut, Cash App, Robinhood):
-- EBITDA Positive year (`bm_breakeven`), 3-Year LTV (`bm_ltv`)
 
 ### Tab 3 — 🎯 Investor Pitch
-Full-screen iframe loading `pitch-embed.html`. 8-slide seed deck:
-1. Cover — VaultaPay / $2M Seed
-2. Problem — unbanked/underbanked, high payment fees
-3. Solution — closed-loop vUSD wallet
-4. How It Works — CSS phone mockups, QR flow
-5. Market — TAM/SAM/SOM
-6. Business Model — T-bill sleeve + merchant fees
-7. Traction — metrics
-8. The Ask — $2M at $8M pre-money, 20% equity, $10M post-money
+Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck (rebuilt Session 20):
 
-Navigation: ← → keyboard arrows + dot clicks.
+| # | Slide | Notes |
+|---|---|---|
+| 1 | Cover | $2M / $8M pre / $10M post |
+| 2 | Problem | 3 cards: checking earns nothing, merchant fees, unbanked |
+| 3 | Solution | Side-by-side: 4-layer banking vs Solana; GENIUS Act + Solana explainers |
+| 4 | Why Now | GENIUS Act, CLARITY Act, Solana speed, consumer demand |
+| 5 | Consumer Flow | KYC → Load (ACH/cash) → QR Pay → Rewards after 3 txns |
+| 6 | Merchant Flow + T-Bill | KYB → accept → settle → rewards after 30 txns; T-bill 80/20 split diagram |
+| 7 | Market | Bottom-up bar sizing, TAM/SAM/SOM |
+| 8 | Benchmarks | **Live-linked** to model via postMessage |
+| 9 | Business Model | Consumer + merchant value, revenue streams, live unit economics |
+| 10 | Competition | 7-feature table vs Venmo/Cash App/Zelle/Chime/Apple Pay |
+| 11 | GTM | Placeholder |
+| 12 | Team | Placeholder |
+| 13 | Traction + Seed Plan | Current state + 3 seed goals (prod app, 500-store LOI, 1K consumers) |
+| 14 | The Ask | $2M, dilution path Seed→A→B, return scenarios $50M–$500M exit |
+
+**Dynamic link (postMessage):**
+- iframe signals parent with `{ type: 'pitchReady' }` when loaded
+- parent calls `sendPitchData()` immediately on receiving pitchReady (no timeout)
+- `sendPitchData()` also called from `update()` if pitch tab is active
+- Fields sent: `ltvCac, cac, arpu, payback, mfee, gm, ebitda3, ltv3, mfee_mo, tbill_mo, contrib, beYear`
+- Dynamic IDs in pitch deck: `bm_ltvcac, bm_cac, bm_arpu, bm_payback, bm_mfee, bm_gm, bm_ebitda3, ue_cac, ue_ltv, ue_ltvcac, ue_payback, ue_mfee_mo, ue_tbill_mo, ue_contrib, be_year, s3_mfee, s6_mfee`
+
+**Navigation:** ← → keyboard arrows + dot clicks (14 dots).
 
 ## Architecture Notes
 - **Single file** `index.html` — no build step, no npm, no bundler
-- **Tab switching:** `switchTab(name)` — toggles `.tab-panel.active`, matches button text
-- **Pitch tab:** `#tab-pitch` is `position:fixed; inset:90px 0 0 0` (sits above header height)
-- **Chart.js 4.4.0** loaded from CDN for P&L bar chart and consumer growth chart
-- **Color palette:** `--navy:#1F4E79`, `--blue:#2E75B6`, `--ltblue:#BDD7EE`, `--green:#70AD47`, `--orange:#ED7D31`
+- **Tab switching:** `switchTab(name)` — toggles `.tab-panel.active`
+- **Pitch tab:** `#tab-pitch` is `position:fixed; inset:90px 0 0 0`; iframe has `id="pitch-iframe"`
+- **Chart.js 4.4.0** loaded from CDN
+- **Color palette (index.html):** `--navy:#1F4E79`, `--blue:#2E75B6`, `--ltblue:#BDD7EE`, `--green:#70AD47`, `--orange:#ED7D31`
+- **Color palette (pitch-embed.html):** `--navy:#0A2540`, `--green:#00C896`, `--light:#F5F7FA`
 - **Strict rule:** NEVER use "yield", "interest", "APY" — always "Vaulta Rewards", "cycle reward rate", "estimated reward"
+
+## ⚠️ Known Issue to Fix Next Session
+**Slide 3 (Solution) overflow** — the two-column comparison layout is too tall for the viewport on typical screens. The nav bar dots overlap content at the bottom. Need to redesign slide 3 layout to be more compact — options:
+- Horizontal comparison table instead of two vertical flow-chain columns
+- Reduce the number of metric rows shown
+- Make the flow chains horizontal rather than vertical
+
+Previous attempt to fix by reducing padding/font-sizes made the visual quality worse. Approach should be a **layout change**, not just size reduction.
+
+**To verify fixes visually:** A `.claude/launch.json` exists at `C:\Projects\Vaulta-Pay-Model\.claude\launch.json` — use `preview_start("vaultapay")` then navigate to `http://localhost:5174/pitch-embed.html`, call `goTo(2)` in eval to jump to slide 3, then `preview_screenshot()` to verify before committing.
 
 ## How to Edit & Deploy
 ```
 # Edit locally
-C:\Projects\Vaulta-Pay-Model\index.html   ← main file
+C:\Projects\Vaulta-Pay-Model\index.html        ← main file
 C:\Projects\Vaulta-Pay-Model\pitch-embed.html  ← pitch deck
 
 # Commit and push
@@ -107,33 +137,26 @@ git add index.html pitch-embed.html
 git commit -m "your message"
 git push origin main
 ```
-GitHub Pages auto-deploys from `main` branch root (if Pages is enabled).
+GitHub Pages auto-deploys from `main` branch root.
 
-## GitHub Pages Setup (if not yet enabled)
-1. Go to: https://github.com/moazzamkhoja/Vaulta-Pay-Model/settings/pages
-2. Source → Deploy from a branch → `main` / `/ (root)` → Save
-3. Live URL: https://moazzamkhoja.github.io/Vaulta-Pay-Model/
-
-## Pending / Possible Next Steps
-- Confirm GitHub Pages is live and test all three tabs on the hosted URL
-- Add Vaulta Rewards rate to Benchmarks tab (consumer reward % vs competitor loyalty programs)
-- Add a "Funding Schedule" view showing seed / Series A / Series B raise amounts from the model
-- Possibly add a sensitivity table (2D: wallet size × merchant fee rate → EBITDA margin)
-- Consumer ACH withdrawal screen (in the mobile app — separate repo)
-
-## Commit History Summary
+## Commit History Summary (recent)
 | Commit | What changed |
 |---|---|
+| `2c1bd0f` | Fix slide overflow attempt + pitchReady handshake for dynamic updates |
+| `70357a8` | Save defaults to localStorage, keep URL clean as just ?owner=1 |
+| `14daaac` | Restore owner-only save button (hidden without ?owner=1) |
+| `439d93e` | Rebuild pitch deck: 14 slides, blockchain narrative, dynamic benchmarks |
 | `42e935a` | EBITDA margin row + 10-year trend table in Benchmarks |
 | `e2230b7` | Investor Pitch tab (pitch-embed.html, 8 slides) |
-| `da9699b` | Split Series A into Operations + Regulatory Capital in Funding Schedule |
-| `48edac2` | Benchmarks tab — live VaultaPay column vs Chime/Revolut/CashApp/MoneyLion/Stripe |
-| `0807b86` | Fix duplicate benefits constant bug |
-| `863d116` | Live Headcount & Salaries section |
-| `c264f6f` | T-bill allocation hardcoded to 100% (GENIUS Act) |
-| `15d6079` | Seed contingency buffer slider |
-| `e416d73` | Transaction rate moved to primary levers; consumer sleeve max 80% |
 | `d26e5a5` | Fix merchant T-bill double-counting bug |
+
+## Pending / Possible Next Steps
+- **Fix slide 3 overflow (priority)** — layout redesign, not font reduction
+- Confirm GitHub Pages is live and test all 14 slides on hosted URL
+- Add Vaulta Rewards rate to Benchmarks tab (consumer reward % vs competitor loyalty)
+- Add a "Funding Schedule" view showing seed / Series A / Series B raise amounts
+- Sensitivity table (2D: wallet size × merchant fee rate → EBITDA margin)
+- Consumer ACH withdrawal screen (separate app repo `C:\Projects\Vaulta`)
 
 ## Related Repo
 The **mobile app** lives at `C:\Projects\Vaulta` (`moazzamkhoja/Vaulta`, private). See `C:\Projects\Vaulta\NEXT_SESSION_PROMPT.md` for app session state. The two repos are independent — do not mix them.
