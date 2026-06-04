@@ -15,7 +15,7 @@ A standalone interactive HTML financial model + investor pitch deck for **Vaulta
 
 > ⚠️ There is a **separate** app repo at `C:\Projects\Vaulta` (`moazzamkhoja/Vaulta`). Do NOT make model changes there.
 
-## Current State (Session 20)
+## Current State (Session 21)
 
 ### Tab 1 — 📊 Financial Model
 Interactive 10-year DCF model. Sidebar has sliders; all KPIs and charts update instantly.
@@ -56,52 +56,32 @@ Interactive 10-year DCF model. Sidebar has sliders; all KPIs and charts update i
 - CAC: paid acquisition only — `baseCAC × cacTap(yr)` where cacTap declines 1.0→0.4 over phases
 - Referrals: tracked separately in opex as `cons × 1.5% × $5 × 12`
 
-**Key computed outputs (returned from `model()`):**
-`cons[], phases[], merch, totalRev, grossProfit, ebitda, opex, monthlyTbill, vaultSlv, consRwd, mFeeMo, netContrib, netAnnual, ltv3, ltvCac, cacPayback, effYield, seedRaise, serARaise, serBRaise, totalRaised, EV, raEV, beYear, baseCAC, varInfra`
-
-**Save as Default feature:**
-- Button hidden unless `?owner=1` in URL — only Moazzam sees it
-- On click: saves all 23 slider/input values to `localStorage` under key `vaultapay_defaults`
-- On load with `?owner=1`: reads localStorage and pre-fills inputs
-- Investors use the plain URL — always see hardcoded defaults, no save button
-
 ### Tab 2 — 📐 Benchmarks
-All VaultaPay cells are **live-linked to model sliders**. Three sections:
-
-**Unit Economics** (vs Chime, Revolut, Cash App, MoneyLion):
-- LTV:CAC (`bm_ltvcac`), CAC (`bm_cac`), Annual Net ARPU (`bm_arpu`), CAC Payback (`bm_payback`)
-
-**Revenue Model** (vs PayPal, Square/Block, Stripe, Interchange Avg):
-- Merchant Fee Rate (`bm_mfee`), Gross Margin (`bm_gm`), EBITDA Margin (`bm_ebitda_margin`)
-
-**EBITDA Margin 10-Year Trend (2016–2025):**
-- VaultaPay Yr1–5 targets (`bm_eb_yr1` through `bm_eb_yr5`) — live from model
+All VaultaPay cells are live-linked to model sliders.
 
 ### Tab 3 — 🎯 Investor Pitch
-Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck (rebuilt Session 20):
+Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck.
 
 | # | Slide | Notes |
 |---|---|---|
 | 1 | Cover | $2M / $8M pre / $10M post |
 | 2 | Problem | 3 cards: checking earns nothing, merchant fees, unbanked |
-| 3 | Solution | Side-by-side: 4-layer banking vs Solana; GENIUS Act + Solana explainers |
-| 4 | Why Now | GENIUS Act, CLARITY Act, Solana speed, consumer demand |
-| 5 | Consumer Flow | KYC → Load (ACH/cash) → QR Pay → Rewards after 3 txns |
-| 6 | Merchant Flow + T-Bill | KYB → accept → settle → rewards after 30 txns; T-bill 80/20 split diagram |
-| 7 | Market | Bottom-up bar sizing, TAM/SAM/SOM |
-| 8 | Benchmarks | **Live-linked** to model via postMessage |
-| 9 | Business Model | Consumer + merchant value, revenue streams, live unit economics |
+| 3 | Solution | Two-column: banking layers vs Solana; GENIUS Act explainer |
+| 4 | Why Now | 2×2 grid: GENIUS Act, CLARITY Act, Solana, Consumer demand |
+| 5 | Consumer Flow | KYC → Load → QR Pay → Rewards; vUSD explainer strip |
+| 6 | Merchant Flow + T-Bill | KYB → accept → settle → rewards; T-bill 80/20 split |
+| 7 | Market | Bottom-up bar sizing, TAM/SAM/SOM + Why VaultaPay Wins |
+| 8 | Benchmarks | Live-linked to model via postMessage |
+| 9 | Business Model | 2-col cards (Consumer/Merchant Value) + 3-tile Revenue Streams |
 | 10 | Competition | 7-feature table vs Venmo/Cash App/Zelle/Chime/Apple Pay |
 | 11 | GTM | Placeholder |
 | 12 | Team | Placeholder |
-| 13 | Traction + Seed Plan | Current state + 3 seed goals (prod app, 500-store LOI, 1K consumers) |
-| 14 | The Ask | $2M, dilution path Seed→A→B, return scenarios $50M–$500M exit |
+| 13 | Traction + Seed Plan | Current state + 3 seed goals |
+| 14 | The Ask | $2M, dilution path, return scenarios $50M–$500M exit |
 
 **Dynamic link (postMessage):**
 - iframe signals parent with `{ type: 'pitchReady' }` when loaded
-- parent calls `sendPitchData()` immediately on receiving pitchReady (no timeout)
-- `sendPitchData()` also called from `update()` if pitch tab is active
-- Fields sent: `ltvCac, cac, arpu, payback, mfee, gm, ebitda3, ltv3, mfee_mo, tbill_mo, contrib, beYear`
+- parent calls `sendPitchData()` immediately on receiving pitchReady
 - Dynamic IDs in pitch deck: `bm_ltvcac, bm_cac, bm_arpu, bm_payback, bm_mfee, bm_gm, bm_ebitda3, ue_cac, ue_ltv, ue_ltvcac, ue_payback, ue_mfee_mo, ue_tbill_mo, ue_contrib, be_year, s3_mfee, s6_mfee`
 
 **Navigation:** ← → keyboard arrows + dot clicks (14 dots).
@@ -115,15 +95,57 @@ Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck (rebuilt S
 - **Color palette (pitch-embed.html):** `--navy:#0A2540`, `--green:#00C896`, `--light:#F5F7FA`
 - **Strict rule:** NEVER use "yield", "interest", "APY" — always "Vaulta Rewards", "cycle reward rate", "estimated reward"
 
-## ⚠️ Known Issue to Fix Next Session
-**Slide 3 (Solution) overflow** — the two-column comparison layout is too tall for the viewport on typical screens. The nav bar dots overlap content at the bottom. Need to redesign slide 3 layout to be more compact — options:
-- Horizontal comparison table instead of two vertical flow-chain columns
-- Reduce the number of metric rows shown
-- Make the flow chains horizontal rather than vertical
+## Layout / CSS State (pitch-embed.html)
 
-Previous attempt to fix by reducing padding/font-sizes made the visual quality worse. Approach should be a **layout change**, not just size reduction.
+**Key spacing values:**
+- `.slide-inner` padding: `24px 48px 68px` (top/sides/bottom)
+- `#s14 .slide-inner` padding: `20px 48px 68px`
+- `.slide-body`: `flex:1; display:flex; gap:24px; align-items:stretch; min-height:0; overflow:hidden`
+- Nav bar clearance needed: **62px** from bottom (`bottom:22px` + ~40px tall)
 
-**To verify fixes visually:** A `.claude/launch.json` exists at `C:\Projects\Vaulta-Pay-Model\.claude\launch.json` — use `preview_start("vaultapay")` then navigate to `http://localhost:5174/pitch-embed.html`, call `goTo(2)` in eval to jump to slide 3, then `preview_screenshot()` to verify before committing.
+**Global card rule (prevents height-stretching):**
+```css
+.pcard, .wncard, .val-card, .rev-card, .seed-goal, .curr-state,
+.cap-panel, .ret-panel, .uof-panel, .be-row { align-self: start; width: 100%; box-sizing: border-box; }
+```
+
+**Slides with vertically-centered body content:**
+- Slides 5, 6, 9: `.slide-body` has `justify-content: center` inline
+
+**Slide 9 (Business Model):** Dark navy Unit Economics panel was removed. Now shows:
+- Top row: 2-col grid (Consumer Value card | Merchant Value card), `align-items: start`
+- Bottom: Revenue Streams card with 3 metric tiles (0.8% / 20% sleeve / Roadmap)
+- Hidden dynamic ID spans at bottom for postMessage
+
+## Preview Workflow (IMPORTANT — read PREVIEW_WORKFLOW.md for full details)
+
+1. Start server: `python -m http.server 4321 --directory "C:\Projects\Vaulta-Pay-Model"` (background)
+2. Navigate preview browser: `window.location.assign('http://localhost:4321/pitch-embed.html')`
+3. Verify: `document.title` should be `"VaultaPay — Seed Pitch Deck"`
+4. Navigate slides: `goTo(0)` through `goTo(13)` (0-indexed)
+5. **`preview_screenshot` DOES NOT WORK** — always times out. Use `preview_eval` measurements instead.
+6. Measure content vs nav bar:
+   ```js
+   (function() {
+     const navTop = window.innerHeight - 62;
+     goTo(slideIndex);
+     const els = document.getElementById('sN').querySelectorAll('.your-card-class');
+     const maxB = Math.max(...[...els].map(e => e.getBoundingClientRect().bottom));
+     return { maxBottom: Math.round(maxB), overflow: Math.round(maxB - navTop) };
+   })()
+   ```
+   `overflow > 0` = hidden behind nav (bad). `overflow < 0` = clearance (ok).
+
+**Measured content bottoms (viewport height = 720px, navTop = 658):**
+| Slide | Content bottom | Space below nav |
+|---|---|---|
+| 2 | 381 | 277px free |
+| 4 | 435 | 223px free |
+| 5 | ~436 | centered |
+| 6 | 574 | 84px free |
+| 9 | 501 | centered |
+| 13 | 438 | 220px free |
+| 14 | 652 | 6px clearance (tight) |
 
 ## How to Edit & Deploy
 ```
@@ -139,19 +161,9 @@ git push origin main
 ```
 GitHub Pages auto-deploys from `main` branch root.
 
-## Commit History Summary (recent)
-| Commit | What changed |
-|---|---|
-| `2c1bd0f` | Fix slide overflow attempt + pitchReady handshake for dynamic updates |
-| `70357a8` | Save defaults to localStorage, keep URL clean as just ?owner=1 |
-| `14daaac` | Restore owner-only save button (hidden without ?owner=1) |
-| `439d93e` | Rebuild pitch deck: 14 slides, blockchain narrative, dynamic benchmarks |
-| `42e935a` | EBITDA margin row + 10-year trend table in Benchmarks |
-| `e2230b7` | Investor Pitch tab (pitch-embed.html, 8 slides) |
-| `d26e5a5` | Fix merchant T-bill double-counting bug |
-
 ## Pending / Possible Next Steps
-- **Fix slide 3 overflow (priority)** — layout redesign, not font reduction
+- **Content review** (priority) — Moazzam reviewing all 14 slides for copy/content changes
+- **Adaptive font sizing** — slides 2 and 4 have 200+ px free; increase fonts proportionally using JS measurement + CSS scaling. Use preview measurements to verify before committing.
 - Confirm GitHub Pages is live and test all 14 slides on hosted URL
 - Add Vaulta Rewards rate to Benchmarks tab (consumer reward % vs competitor loyalty)
 - Add a "Funding Schedule" view showing seed / Series A / Series B raise amounts
