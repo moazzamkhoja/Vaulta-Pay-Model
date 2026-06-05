@@ -192,9 +192,16 @@ body {
   padding: 10px 10px; position: relative; text-align: center;
 }
 .hiw-step:not(:last-child)::after {
-  content: '→'; position: absolute; right: -8px; top: 20px;
+  content: '→'; position: absolute; right: -8px; top: 68px;
   font-size: 16px; color: var(--green); font-weight: 700; z-index: 2;
 }
+.hiw-phone {
+  width: 72px; height: 148px; border-radius: 12px;
+  overflow: hidden; margin-bottom: 10px; flex-shrink: 0;
+  border: 2px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.hiw-phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .step-num {
   width: 38px; height: 38px; border-radius: 50%;
   background: var(--navy); color: var(--green);
@@ -611,28 +618,28 @@ body {
     <div class="slide-body" style="flex-direction:column; gap:16px; justify-content:center;">
       <div class="hiw-flow">
         <div class="hiw-step">
+          <div class="hiw-phone"><img src="Signup.PNG" alt="Sign Up"></div>
           <div class="step-num">1</div>
           <h4>Sign Up + KYC</h4>
-          <p>Download app, verify identity with government-issued ID. No bank account or credit check required.</p>
-          <div class="step-detail">📋 Government ID required<br><span>Verified in under 2 minutes</span></div>
+          <p>Verify identity with a government-issued ID. No bank account or credit check required.</p>
         </div>
         <div class="hiw-step">
+          <div class="hiw-phone"><img src="AddFunds.PNG" alt="Add Funds"></div>
           <div class="step-num">2</div>
           <h4>Load Funds</h4>
-          <p>Deposit via ACH bank transfer or cash at a participating merchant location. vUSD minted 1:1 on Solana.</p>
-          <div class="step-detail">🏦 ACH bank transfer<br>💵 <span>Cash deposit at partner merchant</span></div>
+          <p>Deposit via ACH or cash at a partner location. vUSD minted 1:1 on Solana instantly.</p>
         </div>
         <div class="hiw-step">
+          <div class="hiw-phone"><img src="PaywithQRcode.PNG" alt="Pay"></div>
           <div class="step-num">3</div>
           <h4>Pay via QR Code</h4>
-          <p>Consumer opens app, generates a time-limited QR code. Merchant scans it, enters amount. Consumer approves in one tap — private key signs on-device.</p>
-          <div class="step-detail">📱 QR code (live today)<br>🖥️ <span>POS terminal (post-seed)</span></div>
+          <p>Show QR code at checkout. Merchant scans, consumer approves in one tap. Live today.</p>
         </div>
         <div class="hiw-step">
+          <div class="hiw-phone"><img src="EarnRewards.PNG" alt="Rewards"></div>
           <div class="step-num">4</div>
           <h4>Earn Vaulta Rewards</h4>
-          <p>After 3 qualifying transactions in a 90-day cycle, the consumer earns Vaulta Rewards on their full wallet balance from the T-bill float.</p>
-          <div class="step-detail">⭐ After <span>3 transactions</span><br>🔄 Every 90-day cycle</div>
+          <p>3 transactions unlocks rewards every 90-day cycle, funded by T-bill float on the full balance.</p>
         </div>
       </div>
       <!-- vUSD explainer strip -->
