@@ -595,8 +595,8 @@ body {
         <div class="wncard">
           <div class="wn-tag market">Market</div>
           <h3>Consumers Are Ready to Demand More</h3>
-          <p>76% of consumers say rewards are a top reason to choose a payment method (J.D. Power 2024). While Fed Funds rate is 4.8%, banks still offer 0.08% on checking — a 4.7% gap consumers are waking up to.</p>
-          <div class="wn-stat"><span>4.7%</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">gap between T-bill rate and checking account return</small></div>
+          <p>76% of consumers say rewards are a top reason to choose a payment method (J.D. Power 2024). Banks still offer 0.08% on checking — while VaultaPay users earn up to <strong><span id="s4_eff_yield">3.15%</span></strong> on their balance as Vaulta Rewards simply for transacting through the app.</p>
+          <div class="wn-stat"><span id="s4_eff_yield_stat">3.15%</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">Vaulta Rewards rate vs 0.08% checking</small></div>
         </div>
       </div>
     </div>
@@ -1157,6 +1157,7 @@ window.addEventListener('message', e => {
   const tbMoFmt    = d.tbill_mo!= null ? '$' + d.tbill_mo.toFixed(2)  : null;
   const contFmt    = d.contrib != null ? '$' + d.contrib.toFixed(2)   : null;
   const beYrFmt    = d.beYear  != null ? 'Year ' + d.beYear           : null;
+  const effYldFmt  = d.effYield!= null ? d.effYield.toFixed(2)        + '%'  : null;
 
   // Benchmarks tab
   set('bm_ltvcac',  ltvCacFmt);
@@ -1180,6 +1181,10 @@ window.addEventListener('message', e => {
   set('s3_mfee',  mfeeFmt);
   set('s3_mfee2', mfeeFmt);
   set('s6_mfee',  mfeeFmt);
+
+  // Slide 4 — dynamic yield rate
+  set('s4_eff_yield',      effYldFmt);
+  set('s4_eff_yield_stat', effYldFmt);
 
   // Ask slide break-even
   set('be_year', beYrFmt);
