@@ -937,24 +937,24 @@ const SAVED_INPUTS = [
   'i_sal_eng','i_sal_bd','i_sal_cs','i_sal_lead','i_sal_legal','i_sal_cyber','i_benefits'
 ];
 
-// On load: restore saved values from localStorage, show save button if owner
+// On load: restore saved values from localStorage; show save button only for owner
 (function() {
   const params = new URLSearchParams(location.search);
   if (params.get('owner') === '1') {
     document.getElementById('save-btn').style.display = 'flex';
-    const saved = localStorage.getItem('vaultapay_defaults');
-    if (saved) {
-      try {
-        const vals = JSON.parse(saved);
-        SAVED_INPUTS.forEach(id => {
-          if (vals[id] != null) {
-            const el = document.getElementById(id);
-            if (el) el.value = vals[id];
-          }
-        });
-        update();
-      } catch(e) {}
-    }
+  }
+  const saved = localStorage.getItem('vaultapay_defaults');
+  if (saved) {
+    try {
+      const vals = JSON.parse(saved);
+      SAVED_INPUTS.forEach(id => {
+        if (vals[id] != null) {
+          const el = document.getElementById(id);
+          if (el) el.value = vals[id];
+        }
+      });
+      update();
+    } catch(e) {}
   }
 })();
 
