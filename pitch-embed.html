@@ -650,59 +650,36 @@ body {
   </div>
 </div>
 
-<!-- ══ SLIDE 6: HOW IT WORKS — MERCHANT + T-BILL ENGINE ══ -->
+<!-- ══ SLIDE 6: HOW IT WORKS — MERCHANT ══ -->
 <div class="slide" id="s6">
   <div class="slide-inner">
     <div class="slide-label">Product</div>
-    <div class="slide-title">Merchant experience +<br><em>how Vaulta Rewards are funded</em></div>
-    <div class="slide-body" style="flex-direction:column; gap:14px; justify-content:center;">
-      <!-- Merchant flow -->
+    <div class="slide-title">Merchant experience —<br><em>start accepting payments today</em></div>
+    <div class="slide-body" style="flex-direction:column; gap:10px; justify-content:flex-start;">
       <div class="hiw-flow">
-        <div class="hiw-step" style="padding:12px 10px;">
+        <div class="hiw-step">
+          <div class="hiw-phone"><img src="screen-m-kyb.png" alt="KYB"></div>
           <div class="step-num">1</div>
           <h4>Register + KYB</h4>
           <p>Business registration, EIN, ID verification. Approved in under 24 hours.</p>
         </div>
-        <div class="hiw-step" style="padding:12px 10px;">
+        <div class="hiw-step">
+          <div class="hiw-phone"><img src="screen-m-accept.png" alt="Accept Payments"></div>
           <div class="step-num">2</div>
           <h4>Accept Payments</h4>
-          <p>Scan consumer QR codes. POS terminal integration coming post-seed.</p>
-          <div class="step-detail"><span id="s6_mfee">0.8%</span> flat fee<br>vs 2–3% card network</div>
+          <p>Scan consumer QR code at checkout. <span id="s6_mfee">0.8%</span> flat fee — vs 2–3% card networks.</p>
         </div>
-        <div class="hiw-step" style="padding:12px 10px;">
+        <div class="hiw-step">
+          <div class="hiw-phone"><img src="screen-m-settle.png" alt="Instant Settlement"></div>
           <div class="step-num">3</div>
           <h4>Instant Settlement</h4>
-          <p>Funds appear in merchant vUSD wallet in &lt;1 second. ACH withdrawal to bank anytime.</p>
+          <p>Funds hit merchant wallet in &lt;1 second on Solana. ACH withdrawal to bank anytime.</p>
         </div>
-        <div class="hiw-step" style="padding:12px 10px;">
+        <div class="hiw-step">
+          <div class="hiw-phone"><img src="screen-m-rewards.png" alt="Earn Rewards"></div>
           <div class="step-num">4</div>
           <h4>Earn Rewards Too</h4>
-          <p>After 30 transactions in a 90-day cycle, merchants earn Vaulta Rewards on their settlement balance.</p>
-          <div class="step-detail">⭐ After <span>30 transactions</span><br>🔄 Every 90-day cycle</div>
-        </div>
-      </div>
-
-      <!-- T-Bill engine -->
-      <div class="tbill-box">
-        <h4>The T-Bill Engine — How Vaulta Rewards Are Funded (GENIUS Act Compliant)</h4>
-        <div class="tbill-row">
-          <div class="tbill-node source">Consumer &amp; Merchant<br>Deposits (vUSD)</div>
-          <div class="tbill-arr">→</div>
-          <div class="tbill-node tbill">Vaulta Treasury<br>Short-Duration US T-Bills<br><small style="font-size:9px;opacity:0.7;">~4.8% annual return</small></div>
-          <div class="tbill-arr">→</div>
-          <div class="tbill-split">
-            <div class="tbill-node reward">80% → Vaulta Rewards<br><small style="font-size:9px;">Paid to consumers &amp; merchants each cycle</small></div>
-            <div class="tbill-node sleeve">20% → Vaulta Revenue<br><small style="font-size:9px;">Float income sleeve (recurring, zero marginal cost)</small></div>
-          </div>
-        </div>
-        <div style="display:flex;gap:32px;margin-top:4px;">
-          <div style="font-size:11px;color:rgba(255,255,255,0.45);">
-            Example: $1,000 avg wallet × 4.8% × 80% =
-            <strong style="color:var(--green);">$38.40/yr</strong> Vaulta Rewards per consumer
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-left:auto;">
-            Vaulta keeps: <strong style="color:rgba(255,255,255,0.65);">$9.60/yr</strong> per consumer from float — scales with deposits, zero incremental cost
-          </div>
+          <p>30 transactions per 90-day cycle unlocks Vaulta Rewards on the full settlement balance.</p>
         </div>
       </div>
     </div>
