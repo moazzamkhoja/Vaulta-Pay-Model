@@ -566,6 +566,11 @@
         <div class="ue-value" id="ue_arpu">—</div>
         <div class="ue-sub">net contribution per consumer per year</div>
       </div>
+      <div class="ue">
+        <div class="ue-label">Est. Reward on Spend</div>
+        <div class="ue-value" id="ue_reward_on_spend">—</div>
+        <div class="ue-sub">consumer reward ÷ annual txn rate</div>
+      </div>
     </div>
 
     <!-- Charts -->
@@ -754,7 +759,9 @@ function model() {
   const ltv3         = netAnnual*3;
   const ltvCac       = ltv3/baseCAC;
   const cacPayback   = netContrib>0 ? baseCAC/netContrib : 999;
-  const effYield     = tbRate*(1-cSleeve);
+  const effYield        = tbRate*(1-cSleeve);
+  const annualSpendRate = txnRate*12;
+  const rewardOnSpend   = annualSpendRate > 0 ? effYield/annualSpendRate : 0;
 
   // Raises
   const eb1=ebitda(1), eb2=ebitda(2);
@@ -775,7 +782,7 @@ function model() {
 
   return { cons, phases, merch, totalRev, grossProfit, ebitda, opex,
            monthlyTbill, vaultSlv, consRwd, mFeeMo, netContrib, netAnnual,
-           ltv3, ltvCac, cacPayback, effYield,
+           ltv3, ltvCac, cacPayback, effYield, rewardOnSpend,
            seedRaise, serARaise, serBRaise, totalRaised,
            EV, raEV, beYear, baseCAC, varInfra };
 }
@@ -811,9 +818,10 @@ function update() {
   document.getElementById('kpi_payback').textContent = m.cacPayback<900 ? m.cacPayback.toFixed(1)+' mo' : 'N/A';
 
   // UE strip
-  document.getElementById('ue_yield').textContent = fmtP2(m.effYield);
-  document.getElementById('ue_mfee').textContent  = fmtDf(m.mFeeMo);
-  document.getElementById('ue_arpu').textContent  = '$'+m.netAnnual.toFixed(2);
+  document.getElementById('ue_yield').textContent          = fmtP2(m.effYield);
+  document.getElementById('ue_mfee').textContent           = fmtDf(m.mFeeMo);
+  document.getElementById('ue_arpu').textContent           = '$'+m.netAnnual.toFixed(2);
+  document.getElementById('ue_reward_on_spend').textContent = fmtP2(m.rewardOnSpend);
 
   // P&L bar chart
   const years = ['2027','2028','2029','2030','2031','2032','2033','2034','2035','2036'];
