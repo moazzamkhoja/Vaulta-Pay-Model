@@ -726,7 +726,7 @@ body {
         <div style="background:var(--navy);border-radius:14px;padding:14px 16px;text-align:center;width:100%;box-sizing:border-box;">
           <div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:8px;">The Bridge</div>
           <div style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.6;">
-            0.8% fee<br>
+            <span id="s7_mfee">0.8%</span> merchant fee<br>
             &lt;1 sec settlement<br>
             T-bill float → users<br>
             No bank needed<br>
@@ -734,7 +734,7 @@ body {
           </div>
         </div>
         <div style="font-size:10px;color:var(--grey);text-align:center;line-height:1.5;">
-          Capture even <strong>0.1%</strong> of US card volume<br>= <strong style="color:var(--navy);">$960M</strong> revenue potential
+          Capture 1% of US card volume<br>at <span id="s7_mfee2">0.8%</span> fee = <strong style="color:var(--navy);" id="s7_rev_potential">$880M</strong> revenue
         </div>
         <div style="font-size:10px;color:var(--grey);text-align:center;line-height:1.5;">
           Even Visa now settling<br><strong style="color:var(--navy);">$4.5B/yr</strong> on stablecoin rails
@@ -1157,10 +1157,15 @@ window.addEventListener('message', e => {
   set('ue_tbill_mo', tbMoFmt);
   set('ue_contrib',  contFmt);
 
-  // Inline merchant fee mentions on slides 3 & 6
+  // Inline merchant fee mentions on slides 3, 6 & 7
   set('s3_mfee',  mfeeFmt);
   set('s3_mfee2', mfeeFmt);
   set('s6_mfee',  mfeeFmt);
+  set('s7_mfee',  mfeeFmt);
+  set('s7_mfee2', mfeeFmt);
+  // Slide 7 — revenue potential: 1% of $11T US card volume × fee rate
+  const revPotential = d.mfee != null ? '$' + (110 * d.mfee / 100).toFixed(0) + 'M' : null;
+  set('s7_rev_potential', revPotential);
 
   // Slide 4 — dynamic yield rate
   set('s4_eff_yield',      effYldFmt);
