@@ -11,11 +11,11 @@ A standalone interactive HTML financial model + investor pitch deck for **Vaulta
 - **GitHub Pages:** https://moazzamkhoja.github.io/Vaulta-Pay-Model/
 - **Owner link (Save as Default button visible):** https://moazzamkhoja.github.io/Vaulta-Pay-Model/?owner=1
 - **Local path:** `C:\Projects\Vaulta-Pay-Model\`
-- **Files:** `index.html` (model + benchmarks + pitch tabs), `pitch-embed.html` (14-slide pitch deck)
+- **Files:** `index.html` (model + benchmarks + pitch tabs), `pitch-embed.html` (13-slide pitch deck)
 
 > ⚠️ There is a **separate** app repo at `C:\Projects\Vaulta` (`moazzamkhoja/Vaulta`). Do NOT make model changes there.
 
-## Current State (Session 21)
+## Current State (Session 22)
 
 ### Tab 1 — 📊 Financial Model
 Interactive 10-year DCF model. Sidebar has sliders; all KPIs and charts update instantly.
@@ -56,11 +56,23 @@ Interactive 10-year DCF model. Sidebar has sliders; all KPIs and charts update i
 - CAC: paid acquisition only — `baseCAC × cacTap(yr)` where cacTap declines 1.0→0.4 over phases
 - Referrals: tracked separately in opex as `cons × 1.5% × $5 × 12`
 
+**Unit economics strip (Tab 1):**
+- Added: **Vaulta Reward per $ Spent** = `consRwd / (wallet × txnRate)` (monthly reward ÷ monthly spend)
+- Removed: Annual Net ARPU box
+
+**postMessage payload (index.html → pitch-embed.html):**
+```js
+{ ltvCac, cac, arpu, payback, mfee, gm, ebitda3 (Yr10), ltv3,
+  mfee_mo, tbill_mo, contrib, beYear, effYield, serARaise }
+```
+- `ebitda3` now calculated from **Year 10** (not Year 3) EBITDA margin
+- `serARaise` dynamically calculated from model burn/ramp
+
 ### Tab 2 — 📐 Benchmarks
 All VaultaPay cells are live-linked to model sliders.
 
 ### Tab 3 — 🎯 Investor Pitch
-Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck.
+Full-screen iframe loading `pitch-embed.html`. **13 slides** (Business Model slide removed in Session 22).
 
 | # | Slide | Notes |
 |---|---|---|
@@ -68,23 +80,76 @@ Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck.
 | 2 | Problem | 3 cards: checking earns nothing, merchant fees, unbanked |
 | 3 | Solution | Two-column: banking layers vs Solana; GENIUS Act explainer |
 | 4 | Why Now | 2×2 grid: GENIUS Act, CLARITY Act, Solana, Consumer demand |
-| 5 | Consumer Flow | KYC → Load → QR Pay → Rewards; vUSD explainer strip |
-| 6 | Merchant Flow + T-Bill | KYB → accept → settle → rewards; T-bill 80/20 split |
-| 7 | Market | Bottom-up bar sizing, TAM/SAM/SOM + Why VaultaPay Wins |
-| 8 | Benchmarks | Live-linked to model via postMessage |
-| 9 | Business Model | 2-col cards (Consumer/Merchant Value) + 3-tile Revenue Streams |
-| 10 | Competition | 7-feature table vs Venmo/Cash App/Zelle/Chime/Apple Pay |
-| 11 | GTM | Placeholder |
-| 12 | Team | Placeholder |
-| 13 | Traction + Seed Plan | Current state + 3 seed goals |
-| 14 | The Ask | $2M, dilution path, return scenarios $50M–$500M exit |
+| 5 | Consumer Flow | 4 phone screenshots: KYC → Load → QR Pay → Rewards (190×380px frames) |
+| 6 | Merchant Flow | 4 phone screenshots: KYB → Accept → Settle → Earn Rewards (same layout as slide 5) |
+| 7 | Market | **NEW**: Two-market collision story — Traditional Payments ($187B fees) × Stablecoin Economy ($300B+) → VaultaPay bridge |
+| 8 | Benchmarks | Unit Economics + Revenue Model + Funding Rounds tables, all live-linked |
+| 9 | Competition | 7-feature table vs Venmo/Cash App/Zelle/Chime/Apple Pay |
+| 10 | GTM | Placeholder |
+| 11 | Team | Placeholder |
+| 12 | Traction + Seed Plan | "Where We Are Today" (larger font) + 3 seed goals |
+| 13 | The Ask | $2M, dilution path (comp-avg: Series A 20%, Series B 16%), return scenarios |
 
-**Dynamic link (postMessage):**
-- iframe signals parent with `{ type: 'pitchReady' }` when loaded
-- parent calls `sendPitchData()` immediately on receiving pitchReady
-- Dynamic IDs in pitch deck: `bm_ltvcac, bm_cac, bm_arpu, bm_payback, bm_mfee, bm_gm, bm_ebitda3, ue_cac, ue_ltv, ue_ltvcac, ue_payback, ue_mfee_mo, ue_tbill_mo, ue_contrib, be_year, s3_mfee, s6_mfee`
+**Dynamic IDs in pitch deck (postMessage):**
+```
+bm_ltvcac, bm_cac, bm_arpu, bm_payback, bm_mfee, bm_gm, bm_ebitda3,
+ue_cac, ue_ltv, ue_ltvcac, ue_payback, ue_mfee_mo, ue_tbill_mo, ue_contrib,
+be_year, s3_mfee, s3_mfee2, s4_eff_yield, s4_eff_yield_stat,
+s6_mfee, s7_mfee, s7_mfee2, s7_rev_potential, fund_serA
+```
 
-**Navigation:** ← → keyboard arrows + dot clicks (14 dots).
+**Navigation:** ← → keyboard arrows + dot clicks (13 dots, auto-generated from `slides.length`).
+
+## Slide 5 & 6 — Phone Screenshots
+
+**CSS (same for both slides):**
+```css
+.hiw-phone { width: 190px; height: 380px; border-radius: 22px; overflow: hidden; }
+.hiw-phone img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+```
+
+**Key insight:** Original tall images (1179×2556) scale by WIDTH in object-fit:cover → full screen width shown, no horizontal clipping. Cropped/shorter images cause horizontal clipping — do NOT crop these images.
+
+**Image files (all in repo root):**
+| File | Slide | Step |
+|---|---|---|
+| screen-kyc.png | 5 | Sign Up + KYC |
+| screen-load.png | 5 | Load Funds |
+| screen-pay.png | 5 | Pay via QR Code |
+| screen-rewards.png | 5 | Earn Vaulta Rewards |
+| screen-m-kyb.png | 6 | Register + KYB |
+| screen-m-accept.png | 6 | Accept Payments |
+| screen-m-settle.png | 6 | Instant Settlement (Solana Explorer) |
+| screen-m-rewards.png | 6 | Earn Rewards Too |
+
+## Slide 7 — Market (redesigned Session 22)
+
+Three-column layout: Traditional Payments | VaultaPay Bridge | Stablecoin Economy
+
+**Data sources used:**
+- US merchant card fees: **$187B in 2024** (Nilson Report, record high)
+- Stablecoin supply: **$300B+**; volume: **$33T in 2025** (+72% YoY)
+- Stablecoin payments (actual commerce): only **$122B** annualized
+- Visa stablecoin settlement: **$4.5B/yr** annualized (Q4 FY2025)
+- Revenue potential: 1% of $11T US card volume × fee rate (dynamic)
+
+**Dynamic IDs:** `s7_mfee`, `s7_mfee2`, `s7_rev_potential`
+
+## Slide 8 — Benchmarks
+
+Three tables:
+1. **Unit Economics** — LTV:CAC, CAC, Annual Net ARPU, CAC Payback vs Chime/Revolut/Cash App/MoneyLion
+2. **Revenue Model** — Merchant Fee, Gross Margin (Yr5), EBITDA Margin (**Yr 10**) vs PayPal/Square/Stripe/Interchange
+3. **Funding Rounds** — Seed/$2M, Series A (dynamic from model), Series B/TBD vs Stripe/Chime/Revolut/Cash App
+
+## Slide 13 — The Ask
+
+Cap table dilution path uses **competitor averages**:
+- Series A: ~20% (Stripe 18%, Revolut 19%, Square 25%)
+- Series B: ~16% (Revolut 15%, Square 17%, Chime ~16%)
+- Post-full-dilution seed ownership: **13.4%** (was 12.8% with 20%/20%)
+
+Return scenarios at 13.4%: $50M→3.4x, $100M→6.7x, $250M→16.8x, $500M→33.5x
 
 ## Architecture Notes
 - **Single file** `index.html` — no build step, no npm, no bundler
@@ -109,22 +174,15 @@ Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck.
 .cap-panel, .ret-panel, .uof-panel, .be-row { align-self: start; width: 100%; box-sizing: border-box; }
 ```
 
-**Slides with vertically-centered body content:**
-- Slides 5, 6, 9: `.slide-body` has `justify-content: center` inline
-
-**Slide 9 (Business Model):** Dark navy Unit Economics panel was removed. Now shows:
-- Top row: 2-col grid (Consumer Value card | Merchant Value card), `align-items: start`
-- Bottom: Revenue Streams card with 3 metric tiles (0.8% / 20% sleeve / Roadmap)
-- Hidden dynamic ID spans at bottom for postMessage
-
 ## Preview Workflow (IMPORTANT — read PREVIEW_WORKFLOW.md for full details)
 
 1. Start server: `python -m http.server 4321 --directory "C:\Projects\Vaulta-Pay-Model"` (background)
 2. Navigate preview browser: `window.location.assign('http://localhost:4321/pitch-embed.html')`
 3. Verify: `document.title` should be `"VaultaPay — Seed Pitch Deck"`
-4. Navigate slides: `goTo(0)` through `goTo(13)` (0-indexed)
+4. Navigate slides: `goTo(0)` through `goTo(12)` (0-indexed, 13 slides total)
 5. **`preview_screenshot` DOES NOT WORK** — always times out. Use `preview_eval` measurements instead.
-6. Measure content vs nav bar:
+6. **Preview browser windowInnerWidth = 1px** — horizontal layout measurements are UNRELIABLE. Use math to verify horizontal fit; only trust vertical measurements.
+7. Measure content vs nav bar:
    ```js
    (function() {
      const navTop = window.innerHeight - 62;
@@ -135,17 +193,6 @@ Full-screen iframe loading `pitch-embed.html`. **14-slide** seed deck.
    })()
    ```
    `overflow > 0` = hidden behind nav (bad). `overflow < 0` = clearance (ok).
-
-**Measured content bottoms (viewport height = 720px, navTop = 658):**
-| Slide | Content bottom | Space below nav |
-|---|---|---|
-| 2 | 381 | 277px free |
-| 4 | 435 | 223px free |
-| 5 | ~436 | centered |
-| 6 | 574 | 84px free |
-| 9 | 501 | centered |
-| 13 | 438 | 220px free |
-| 14 | 652 | 6px clearance (tight) |
 
 ## How to Edit & Deploy
 ```
@@ -162,11 +209,10 @@ git push origin main
 GitHub Pages auto-deploys from `main` branch root.
 
 ## Pending / Possible Next Steps
-- **Content review** (priority) — Moazzam reviewing all 14 slides for copy/content changes
-- **Adaptive font sizing** — slides 2 and 4 have 200+ px free; increase fonts proportionally using JS measurement + CSS scaling. Use preview measurements to verify before committing.
-- Confirm GitHub Pages is live and test all 14 slides on hosted URL
+- **Slides 10 & 11 (GTM + Team)** — currently placeholders, need real content
+- **Slide content review** — slides 2, 3, 4, 9 (Competition) not reviewed this session
+- **Adaptive font sizing** — slides 2 and 4 have free vertical space; could increase fonts
 - Add Vaulta Rewards rate to Benchmarks tab (consumer reward % vs competitor loyalty)
-- Add a "Funding Schedule" view showing seed / Series A / Series B raise amounts
 - Sensitivity table (2D: wallet size × merchant fee rate → EBITDA margin)
 - Consumer ACH withdrawal screen (separate app repo `C:\Projects\Vaulta`)
 
