@@ -636,7 +636,7 @@ function sendPitchData() {
   if (!iframe || !iframe.contentWindow) return;
   const m = model();
   const gmYr5  = m.totalRev(5) > 0 ? m.grossProfit(5) / m.totalRev(5) : 0;
-  const eb3    = m.totalRev(3) > 0 ? m.ebitda(3)      / m.totalRev(3) : null;
+  const eb3    = m.totalRev(10) > 0 ? m.ebitda(10)    / m.totalRev(10) : null;
   iframe.contentWindow.postMessage({
     type: 'vaultaModelUpdate',
     data: {
