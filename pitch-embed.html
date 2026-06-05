@@ -787,7 +787,7 @@ body {
           <th>Stripe</th><th>Chime</th><th>Revolut</th><th>Cash App (Square)</th>
         </tr>
         <tr><td class="met">Seed</td><td class="vp">$2M</td><td>$2M</td><td>$3.8M</td><td>$2M</td><td>$10M</td></tr>
-        <tr><td class="met">Series A</td><td class="vp" style="color:var(--grey);font-style:italic;">TBD</td><td>$18M</td><td>$9.9M</td><td>$66M</td><td>$28M</td></tr>
+        <tr><td class="met">Series A</td><td class="vp" id="fund_serA">—</td><td>$18M</td><td>$9.9M</td><td>$66M</td><td>$28M</td></tr>
         <tr><td class="met">Series B</td><td class="vp" style="color:var(--grey);font-style:italic;">TBD</td><td>$80M</td><td>$18M</td><td>$250M</td><td>$100M</td></tr>
       </table>
     </div>
@@ -1148,6 +1148,7 @@ window.addEventListener('message', e => {
   const contFmt    = d.contrib != null ? '$' + d.contrib.toFixed(2)   : null;
   const beYrFmt    = d.beYear  != null ? 'Year ' + d.beYear           : null;
   const effYldFmt  = d.effYield!= null ? d.effYield.toFixed(2)        + '%'  : null;
+  const serAFmt    = d.serARaise != null ? '$' + (d.serARaise/1e6).toFixed(1) + 'M' : null;
 
   // Benchmarks tab
   set('bm_ltvcac',  ltvCacFmt);
@@ -1178,6 +1179,7 @@ window.addEventListener('message', e => {
 
   // Ask slide break-even
   set('be_year', beYrFmt);
+  set('fund_serA', serAFmt);
 });
 </script>
 </body>
