@@ -760,8 +760,7 @@ function model() {
   const ltvCac       = ltv3/baseCAC;
   const cacPayback   = netContrib>0 ? baseCAC/netContrib : 999;
   const effYield        = tbRate*(1-cSleeve);
-  const annualSpendRate = txnRate*12;
-  const rewardOnSpend   = annualSpendRate > 0 ? effYield/annualSpendRate : 0;
+  const rewardOnSpend   = txnRate > 0 ? effYield/txnRate : 0;
 
   // Raises
   const eb1=ebitda(1), eb2=ebitda(2);
