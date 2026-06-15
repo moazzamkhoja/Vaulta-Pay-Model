@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VaultaPay — Financial Model v5</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy:   #1F4E79;
+    --blue:   #2E75B6;
+    --ltblue: #BDD7EE;
+    --green:  #70AD47;
+    --orange: #ED7D31;
+    --grey:   #D9E1F2;
+    --dgrey:  #595959;
+    --bg:     #f0f4f8;
+    --card:   #ffffff;
+    --red:    #C00000;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: #222; font-size: 13px; }
+
+  header {
+    background: var(--navy); color: white;
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+  header span { font-size: 11px; opacity: 0.7; }
+  #save-btn {
+    display: none; align-items: center; gap: 7px;
+    background: rgba(0,200,150,0.15); border: 1px solid rgba(0,200,150,0.5);
+    color: #00C896; border-radius: 8px; padding: 7px 14px;
+    font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px;
+    transition: background 0.2s;
+  }
+  #save-btn:hover { background: rgba(0,200,150,0.28); }
+  #save-toast {
+    position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+    background: #00C896; color: #0A2540; font-size: 13px; font-weight: 700;
+    padding: 10px 22px; border-radius: 8px; z-index: 9999;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+
+  .layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; min-height: calc(100vh - 50px); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: #1a3a5c; color: white;
+    padding: 14px 13px; overflow-y: auto; max-height: calc(100vh - 50px);
+  }
+  .sidebar h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #7fb3d3; margin: 14px 0 7px; }
+  .sidebar h3:first-child { margin-top: 0; }
+
+  .slider-row { margin-bottom: 10px; }
+  .slider-row label { display: flex; justify-content: space-between; font-size: 11px; color: #c8dff0; margin-bottom: 3px; }
+  .slider-row label span { color: white; font-weight: 600; font-size: 12px; }
+  .slider-row .hint { font-size: 9px; color: #7fb3d3; margin-top: 1px; }
+  input[type=range] { width: 100%; accent-color: #4fc3f7; height: 4px; cursor: pointer; }
+
+  .targets-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-bottom: 4px; }
+  .target-box { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 7px 5px; text-align: center; }
+  .target-box .phase { font-size: 9px; text-transform: uppercase; color: #7fb3d3; margin-bottom: 2px; }
+  .target-box input[type=number] {
+    width: 100%; background: transparent; border: none; border-bottom: 1px solid #4fc3f7;
+    color: white; font-size: 13px; font-weight: 700; text-align: center; outline: none; padding: 2px 0;
+  }
+  .target-box .sub { font-size: 9px; color: #7fb3d3; margin-top: 2px; }
+  hr.div { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0; }
+
+  /* ── MAIN ── */
+  .main { padding: 14px; overflow-y: auto; max-height: calc(100vh - 50px); }
+
+  /* KPI row — 6 boxes */
+  .kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
+  .kpi {
+    background: var(--card); border-radius: 8px; padding: 11px 12px;
+    border-top: 3px solid var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .kpi.green  { border-top-color: var(--green); }
+  .kpi.orange { border-top-color: var(--orange); }
+  .kpi.navy   { border-top-color: var(--navy); background: var(--navy); color: white; }
+  .kpi.red    { border-top-color: var(--red); }
+  .kpi-label { font-size: 9px; color: var(--dgrey); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .kpi.navy .kpi-label { color: #adc8e0; }
+  .kpi-value { font-size: 18px; font-weight: 700; color: var(--navy); line-height: 1; }
+  .kpi.navy  .kpi-value { color: white; }
+  .kpi.green .kpi-value { color: var(--green); }
+  .kpi.orange .kpi-value { color: var(--orange); }
+  .kpi.red   .kpi-value { color: var(--red); }
+  .kpi-sub { font-size: 9px; color: var(--dgrey); margin-top: 3px; }
+  .kpi.navy .kpi-sub { color: #adc8e0; }
+
+  /* Unit economics strip — 3 items */
+  .ue-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .ue { background: var(--ltblue); border-radius: 6px; padding: 10px 12px; text-align: center; }
+  .ue-label { font-size: 9px; color: var(--navy); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+  .ue-value { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .ue-sub   { font-size: 9px; color: var(--dgrey); margin-top: 1px; }
+
+  /* Charts */
+  .charts-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .chart-card { background: var(--card); border-radius: 8px; padding: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .chart-card h4 { font-size: 10px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 9px; }
+  .chart-card canvas { max-height: 210px; }
+
+  /* Bottom row */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .table-card { background: var(--card); border-radius: 8px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .table-card h4 { font-size: 10px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { background: var(--grey); color: var(--navy); font-weight: 700; padding: 4px 7px; text-align: left; }
+  td { padding: 4px 7px; border-bottom: 1px solid #eef0f4; }
+  tr:last-child td { border-bottom: none; }
+  .pos  { color: var(--green); font-weight: 600; }
+  .neg  { color: var(--red); }
+  .bold { font-weight: 700; }
+
+  /* Detail box */
+  .detail-box { background: var(--grey); border-radius: 8px; padding: 12px; }
+  .detail-box h4 { font-size: 10px; color: var(--navy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .detail-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .dlabel { color: var(--dgrey); }
+  .detail-row .dval   { font-weight: 600; color: var(--navy); }
+
+  .sal-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+  .sal-row label { font-size: 11px; color: #c8dff0; flex: 1; }
+  .sal-input-wrap { display: flex; align-items: center; gap: 2px; font-size: 11px; color: #7fb3d3; }
+  .sal-input-wrap input[type=number] {
+    width: 80px; background: rgba(255,255,255,0.1); border: 1px solid #4fc3f7;
+    border-radius: 4px; color: white; font-size: 11px; font-weight: 600;
+    text-align: right; padding: 2px 4px; outline: none;
+  }
+  .sal-input-wrap input[type=number]:focus { background: rgba(255,255,255,0.18); }
+
+  .breakeven-badge {
+    display: inline-block; background: var(--green); color: white;
+    border-radius: 4px; padding: 1px 6px; font-size: 9px; font-weight: 700; margin-left: 5px;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    background: var(--navy); padding: 0 24px;
+    display: flex; gap: 4px; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .tab-btn {
+    padding: 8px 20px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55);
+    border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent;
+    letter-spacing: 0.4px; transition: color 0.15s;
+  }
+  .tab-btn.active { color: white; border-bottom-color: #4fc3f7; }
+  .tab-btn:hover  { color: rgba(255,255,255,0.85); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── BENCHMARKS TAB ── */
+  .bench-main { padding: 20px 24px; }
+  .bench-main h2 { font-size: 14px; color: var(--navy); font-weight: 700; margin-bottom: 4px; }
+  .bench-main .bench-sub { font-size: 11px; color: var(--dgrey); margin-bottom: 18px; }
+  .bench-section { margin-bottom: 28px; }
+  .bench-section h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 10px; border-bottom: 2px solid var(--ltblue); padding-bottom: 5px; }
+  .bench-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .bench-table th { background: var(--navy); color: white; padding: 7px 12px; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 0.4px; }
+  .bench-table th.metric-col { text-align: left; }
+  .bench-table th.vaulta-col { background: var(--blue); }
+  .bench-table td { padding: 8px 12px; border-bottom: 1px solid #eef0f4; text-align: center; }
+  .bench-table td.metric-col { text-align: left; font-weight: 600; color: var(--navy); }
+  .bench-table td.vaulta-col { background: #eef5fd; font-weight: 700; color: var(--blue); }
+  .bench-table tr:last-child td { border-bottom: none; }
+  .bench-table tr:hover td { background: #f7faff; }
+  .bench-table tr:hover td.vaulta-col { background: #ddeefa; }
+  .bench-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+  .pill-green  { background: #e6f4ea; color: #2e7d32; }
+  .pill-orange { background: #fff3e0; color: #e65100; }
+  .pill-grey   { background: #f0f0f0; color: #555; }
+  .source-note { font-size: 10px; color: #999; margin-top: 6px; font-style: italic; }
+
+  /* ── Pitch tab ── */
+  .tab-btn.pitch-btn { background: rgba(70,173,71,0.25); border-color: rgba(70,173,71,0.6); color: #a8e6a0; }
+  .tab-btn.pitch-btn:hover, .tab-btn.pitch-btn.active { background: rgba(70,173,71,0.45); color: white; border-color: rgba(70,173,71,0.9); }
+  #tab-pitch { position: fixed; inset: 90px 0 0 0; background: #111; z-index: 50; }
+  #tab-pitch iframe { width: 100%; height: 100%; border: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>VaultaPay — Interactive Financial Model v5</h1>
+  <span>Drag sliders — all outputs update instantly</span>
+  <button id="save-btn" onclick="saveDefaults()" title="Save current values as default URL">💾 Save as Default</button>
+</header>
+<div id="save-toast">✓ Settings saved — will reload automatically next time you open this link</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('model')">📊 Model</button>
+  <button class="tab-btn" onclick="switchTab('benchmarks')">📐 Benchmarks</button>
+  <button class="tab-btn pitch-btn" onclick="switchTab('pitch')">🎯 Investor Pitch</button>
+</div>
+
+<!-- ══ BENCHMARKS TAB ══ -->
+<div id="tab-benchmarks" class="tab-panel">
+  <div class="bench-main">
+    <h2>Industry Benchmarks &amp; Comparable Companies</h2>
+    <p class="bench-sub">VaultaPay column updates live from the model. Comparable data sourced from public filings, investor reports, and industry research.</p>
+
+    <!-- Unit Economics -->
+    <div class="bench-section">
+      <h3>Unit Economics</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col">Metric</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(live model)</span></th>
+            <th>Chime</th>
+            <th>Revolut</th>
+            <th>Cash App</th>
+            <th>MoneyLion</th>
+            <th>Industry Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-col">LTV : CAC</td>
+            <td class="vaulta-col" id="bm_ltvcac">—</td>
+            <td>3–4x</td>
+            <td>2.5x</td>
+            <td>4x+</td>
+            <td>2–3x</td>
+            <td><span class="bench-pill pill-green">≥ 3x target</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">CAC (Seed / Blended)</td>
+            <td class="vaulta-col" id="bm_cac">—</td>
+            <td>~$40</td>
+            <td>~$30</td>
+            <td>~$20</td>
+            <td>~$50</td>
+            <td><span class="bench-pill pill-grey">$20 – $80</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">Annual Net ARPU</td>
+            <td class="vaulta-col" id="bm_arpu">—</td>
+            <td>~$40</td>
+            <td>~$55</td>
+            <td>~$60</td>
+            <td>~$80</td>
+            <td><span class="bench-pill pill-grey">$40 – $80</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">CAC Payback</td>
+            <td class="vaulta-col" id="bm_payback">—</td>
+            <td>12–18 mo</td>
+            <td>10–14 mo</td>
+            <td>6–10 mo</td>
+            <td>12–18 mo</td>
+            <td><span class="bench-pill pill-green">&lt; 18 mo target</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-note">Sources: Chime S-1 filings (2021), Revolut Annual Report (2023), Block Inc. 10-K (2023), MoneyLion 10-K (2023)</p>
+    </div>
+
+    <!-- Revenue Model -->
+    <div class="bench-section">
+      <h3>Revenue Model</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col">Metric</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(live model)</span></th>
+            <th>PayPal</th>
+            <th>Square / Block</th>
+            <th>Stripe</th>
+            <th>Interchange Avg</th>
+            <th>Industry Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-col">Merchant Fee Rate</td>
+            <td class="vaulta-col" id="bm_mfee">—</td>
+            <td>0.5 – 2.0%</td>
+            <td>0.8 – 1.5%</td>
+            <td>1.4 – 2.9%</td>
+            <td>1.5 – 2.0%</td>
+            <td><span class="bench-pill pill-grey">0.5 – 2.9%</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">Gross Margin</td>
+            <td class="vaulta-col" id="bm_gm">—</td>
+            <td>~45%</td>
+            <td>~35%</td>
+            <td>~70%</td>
+            <td>—</td>
+            <td><span class="bench-pill pill-green">50 – 70% target</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">EBITDA Margin (current)</td>
+            <td class="vaulta-col" id="bm_ebitda_margin">—</td>
+            <td>~20% <span style="font-size:9px;color:#888">(stable 2016–24)</span></td>
+            <td>~4–9% <span style="font-size:9px;color:#888">(recovering; excl. Bitcoin vol.)</span></td>
+            <td>~17% <span style="font-size:9px;color:#888">(2025; private)</span></td>
+            <td>~65–70% <span style="font-size:9px;color:#888">(Visa/MC network premium)</span></td>
+            <td><span class="bench-pill pill-orange">15 – 25% at maturity</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-note">Sources: PayPal 10-K (2016–2024); Block Inc. 10-K (2016–2024, revenue incl. Bitcoin gross volume); Stripe via Sacra/public reports (2024–2025); Visa 10-K (2021–2025). EBITDA = Operating Income + D&A.</p>
+    </div>
+
+    <!-- EBITDA Margin 10-Year Trend -->
+    <div class="bench-section">
+      <h3>EBITDA Margin — 10-Year Trend (2016 – 2025)</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col" style="width:70px">Year</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(model target)</span></th>
+            <th>PayPal</th>
+            <th>Block / Square</th>
+            <th>Stripe<br><span style="font-weight:400;font-size:9px">(private)</span></th>
+            <th>Visa<br><span style="font-weight:400;font-size:9px">(network, not direct comp)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="metric-col">2016</td><td class="vaulta-col">Pre-rev.</td><td>21.3%</td><td><span class="bench-pill pill-grey">-7.8%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2017</td><td class="vaulta-col">Pre-rev.</td><td>22.4%</td><td><span class="bench-pill pill-grey">-0.8%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2018</td><td class="vaulta-col">Pre-rev.</td><td>19.2%</td><td><span class="bench-pill pill-grey">0.7%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2019</td><td class="vaulta-col">Pre-rev.</td><td>20.4%</td><td><span class="bench-pill pill-green">2.2%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2020</td><td class="vaulta-col">Pre-rev.</td><td>20.9%</td><td><span class="bench-pill pill-green">1.5%</span></td><td>—</td><td>—</td></tr>
+          <tr><td class="metric-col">2021</td><td class="vaulta-col">Yr 1 target: <span id="bm_eb_yr1">—</span></td><td>22.1%</td><td><span class="bench-pill pill-green">1.9%</span></td><td>Negative</td><td>68.9%</td></tr>
+          <tr><td class="metric-col">2022</td><td class="vaulta-col">Yr 2 target: <span id="bm_eb_yr2">—</span></td><td>18.5%</td><td><span class="bench-pill pill-grey">-5.0%</span></td><td>Negative</td><td>67.1%</td></tr>
+          <tr><td class="metric-col">2023</td><td class="vaulta-col">Yr 3 target: <span id="bm_eb_yr3">—</span></td><td>19.3%</td><td><span class="bench-pill pill-grey">-3.3%</span></td><td>~Breakeven</td><td>67.3%</td></tr>
+          <tr><td class="metric-col">2024</td><td class="vaulta-col">Yr 4 target: <span id="bm_eb_yr4">—</span></td><td>18.9%</td><td><span class="bench-pill pill-green">1.3%</span></td><td>~2%</td><td>68.5%</td></tr>
+          <tr><td class="metric-col">2025</td><td class="vaulta-col">Yr 5 target: <span id="bm_eb_yr5">—</span></td><td>20.9%</td><td><span class="bench-pill pill-green">3.9%</span></td><td>~17%</td><td>63.1%</td></tr>
+        </tbody>
+      </table>
+      <p class="source-note">Block/Square margins shown on total reported revenue (incl. Bitcoin gross volume). Adjusted fintech-only margins are materially higher (~5–12% range 2019–2024). Stripe figures are estimates from Sacra and press reports; company is private. VaultaPay shows model-implied EBITDA margin for each launch year (Year 1 = Seed phase).</p>
+    </div>
+
+    <!-- Growth & Scale -->
+    <div class="bench-section">
+      <h3>Growth &amp; Scale</h3>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th class="metric-col">Metric</th>
+            <th class="vaulta-col">VaultaPay<br><span style="font-weight:400;opacity:0.8">(live model)</span></th>
+            <th>Chime</th>
+            <th>Revolut</th>
+            <th>Cash App</th>
+            <th>Robinhood</th>
+            <th>Benchmark</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-col">EBITDA Positive (Year)</td>
+            <td class="vaulta-col" id="bm_breakeven">—</td>
+            <td>Yr 6</td>
+            <td>Yr 7</td>
+            <td>Yr 5</td>
+            <td>Yr 6</td>
+            <td><span class="bench-pill pill-orange">Yr 4–7 typical</span></td>
+          </tr>
+          <tr>
+            <td class="metric-col">3-Year LTV</td>
+            <td class="vaulta-col" id="bm_ltv">—</td>
+            <td>~$120</td>
+            <td>~$165</td>
+            <td>~$180</td>
+            <td>~$150</td>
+            <td><span class="bench-pill pill-grey">$100 – $200</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-note">Sources: Crunchbase, PitchBook, public S-1 and IPO filings. EBITDA timelines are approximate based on reported profitability milestones.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ PITCH TAB ══ -->
+<div id="tab-pitch" class="tab-panel">
+  <iframe id="pitch-iframe" src="pitch-embed.html"></iframe>
+</div>
+
+<div id="tab-model" class="tab-panel active">
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+
+    <h3>Consumer Targets</h3>
+    <div class="targets-row">
+      <div class="target-box">
+        <div class="phase">Seed</div>
+        <input type="number" id="i_seed" value="1000" min="100" max="10000" step="100" oninput="update()">
+        <div class="sub">consumers</div>
+      </div>
+      <div class="target-box">
+        <div class="phase">Series A</div>
+        <input type="number" id="i_serA" value="25000" min="1000" max="100000" step="1000" oninput="update()">
+        <div class="sub">consumers</div>
+      </div>
+      <div class="target-box">
+        <div class="phase">Series B</div>
+        <input type="number" id="i_serB" value="500000" min="50000" max="2000000" step="10000" oninput="update()">
+        <div class="sub">consumers</div>
+      </div>
+    </div>
+
+    <hr class="div">
+    <h3>Primary Levers</h3>
+
+    <div class="slider-row">
+      <label>Avg Wallet Balance <span id="lbl_wallet">$2,800</span></label>
+      <input type="range" id="i_wallet" min="500" max="8000" step="100" value="2800" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Monthly Transaction Rate <span id="lbl_txnrate">20%</span></label>
+      <div class="hint">% of balance flowing through as transactions/month — interacts with wallet size to drive merchant fee revenue</div>
+      <input type="range" id="i_txnrate" min="0.00" max="1.00" step="0.01" value="0.20" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Merchant Fee Rate <span id="lbl_mfee">0.80%</span></label>
+      <input type="range" id="i_mfee" min="0.001" max="0.03" step="0.0005" value="0.008" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Base CAC (Seed) <span id="lbl_cac">$60</span></label>
+      <input type="range" id="i_cac" min="10" max="200" step="5" value="60" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Consumer Sleeve (Vaulta keeps) <span id="lbl_sleeve">20%</span></label>
+      <input type="range" id="i_sleeve" min="0.05" max="0.80" step="0.01" value="0.20" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>Secondary Levers</h3>
+
+    <div class="slider-row">
+      <label>T-Bill Annual Rate <span id="lbl_tbrate">4.8%</span></label>
+      <input type="range" id="i_tbrate" min="0.01" max="0.10" step="0.002" value="0.048" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Merchant Sleeve % <span id="lbl_msleeve">25%</span></label>
+      <input type="range" id="i_msleeve" min="0.10" max="0.75" step="0.05" value="0.25" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Steady-State Growth (Yr7+) <span id="lbl_ssgrowth">25%</span></label>
+      <input type="range" id="i_ssgrowth" min="0.05" max="0.60" step="0.05" value="0.25" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Series B Raise <span id="lbl_serBraise">$15M</span></label>
+      <input type="range" id="i_serBraise" min="5000000" max="50000000" step="1000000" value="15000000" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Seed Contingency Buffer <span id="lbl_seedbuf">20%</span></label>
+      <div class="hint">Added on top of 18-month runway to cover unexpected costs</div>
+      <input type="range" id="i_seedbuf" min="0.00" max="0.75" step="0.05" value="0.20" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>Valuation Parameters</h3>
+
+    <div class="slider-row">
+      <label>WACC <span id="lbl_wacc">20%</span></label>
+      <input type="range" id="i_wacc" min="0.10" max="0.40" step="0.01" value="0.20" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Exit EBITDA Multiple <span id="lbl_exitm">10x</span></label>
+      <input type="range" id="i_exitm" min="3" max="20" step="1" value="10" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Survival Probability <span id="lbl_survival">35%</span></label>
+      <input type="range" id="i_survival" min="0.10" max="0.80" step="0.05" value="0.35" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>Headcount &amp; Salaries</h3>
+    <div class="hint" style="color:#7fb3d3;margin-bottom:8px;">Annual salary per role (excl. benefits loading)</div>
+
+    <div class="sal-row">
+      <label>Engineering</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_eng" value="150000" min="50000" max="400000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Business Dev (Sales)</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_bd" value="120000" min="50000" max="300000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Customer Service</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_cs" value="57000" min="30000" max="120000" step="1000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Leadership / Mgmt</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_lead" value="112000" min="50000" max="300000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Legal</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_legal" value="135000" min="50000" max="300000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Cybersecurity</label>
+      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_cyber" value="190000" min="80000" max="400000" step="5000" oninput="update()"><span>/yr</span></div>
+    </div>
+    <div class="sal-row">
+      <label>Benefits Loading</label>
+      <div class="sal-input-wrap"><span>&nbsp;</span><input type="number" id="i_benefits" value="25" min="0" max="50" step="1" oninput="update()"><span>%</span></div>
+    </div>
+
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- KPI row — 6 boxes -->
+    <div class="kpi-row">
+      <div class="kpi navy">
+        <div class="kpi-label">Enterprise Value</div>
+        <div class="kpi-value" id="kpi_ev">—</div>
+        <div class="kpi-sub">PV EBITDA + PV terminal</div>
+      </div>
+      <div class="kpi navy">
+        <div class="kpi-label">Risk-Adjusted EV</div>
+        <div class="kpi-value" id="kpi_raev">—</div>
+        <div class="kpi-sub">survival × stage discount</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">3-Year LTV</div>
+        <div class="kpi-value" id="kpi_ltv">—</div>
+        <div class="kpi-sub">per consumer (net contribution)</div>
+      </div>
+      <div id="kpi_ltvcac_card" class="kpi green">
+        <div class="kpi-label">LTV : CAC</div>
+        <div class="kpi-value" id="kpi_ltvcac">—</div>
+        <div class="kpi-sub">target ≥ 3.0x</div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-label">EBITDA Positive</div>
+        <div class="kpi-value" id="kpi_breakeven">—</div>
+        <div class="kpi-sub" id="kpi_breakeven_sub">first positive year</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">CAC Payback</div>
+        <div class="kpi-value" id="kpi_payback">—</div>
+        <div class="kpi-sub">months (seed phase)</div>
+      </div>
+    </div>
+
+    <!-- Unit economics strip — 3 items -->
+    <div class="ue-row">
+      <div class="ue">
+        <div class="ue-label">T-Bill Yield to Consumer</div>
+        <div class="ue-value" id="ue_yield">—</div>
+        <div class="ue-sub">annual rate on allocated balance</div>
+      </div>
+      <div class="ue">
+        <div class="ue-label">Merchant Fee / Consumer / Month</div>
+        <div class="ue-value" id="ue_mfee">—</div>
+        <div class="ue-sub">Vaulta revenue from transactions</div>
+      </div>
+      <div class="ue">
+        <div class="ue-label">Vaulta Reward per $ Spent</div>
+        <div class="ue-value" id="ue_reward_on_spend">—</div>
+        <div class="ue-sub">monthly reward ÷ monthly spend</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <h4>Revenue &amp; EBITDA by Year (2027–2036)</h4>
+        <canvas id="chart_pl"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Consumer Growth by Phase</h4>
+        <canvas id="chart_consumers"></canvas>
+      </div>
+    </div>
+
+    <!-- Bottom row: Funding | EBITDA table | Per-consumer detail -->
+    <div class="bottom-row">
+
+      <div class="table-card">
+        <h4>Funding Schedule</h4>
+        <table>
+          <thead><tr><th>Round</th><th>Amount</th></tr></thead>
+          <tbody id="tbl_raises"></tbody>
+        </table>
+      </div>
+
+      <div class="table-card">
+        <h4>EBITDA by Year</h4>
+        <table>
+          <thead><tr><th>Year</th><th>Phase</th><th>Revenue</th><th>EBITDA</th></tr></thead>
+          <tbody id="tbl_ebitda"></tbody>
+        </table>
+      </div>
+
+      <div class="detail-box">
+        <h4>Per Consumer Economics / Month</h4>
+        <div class="detail-row"><span class="dlabel">T-Bill income (gross)</span><span class="dval" id="det_tbill">—</span></div>
+        <div class="detail-row"><span class="dlabel">Consumer reward (passed through)</span><span class="dval" id="det_reward">—</span></div>
+        <div class="detail-row"><span class="dlabel">Annual consumer reward</span><span class="dval" id="det_reward_yr">—</span></div>
+        <div class="detail-row"><span class="dlabel">Vaulta T-bill sleeve</span><span class="dval" id="det_sleeve">—</span></div>
+        <div class="detail-row"><span class="dlabel">Merchant fee revenue</span><span class="dval" id="det_mfee">—</span></div>
+        <div class="detail-row"><span class="dlabel">Variable infra cost</span><span class="dval" id="det_infra">—</span></div>
+        <div class="detail-row" style="border-top:2px solid var(--navy);margin-top:4px;padding-top:4px">
+          <span class="dlabel" style="font-weight:700;color:var(--navy)">Net contribution</span>
+          <span class="dval" id="det_net">—</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div> <!-- end tab-model -->
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => { if(b.textContent.toLowerCase().includes(name)) b.classList.add('active'); });
+  if (name === 'pitch') setTimeout(sendPitchData, 150);
+}
+
+window.addEventListener('message', e => {
+  if (e.data && e.data.type === 'pitchReady') sendPitchData();
+});
+
+function sendPitchData() {
+  const iframe = document.getElementById('pitch-iframe');
+  if (!iframe || !iframe.contentWindow) return;
+  const m = model();
+  const gmYr5  = m.totalRev(5) > 0 ? m.grossProfit(5) / m.totalRev(5) : 0;
+  const eb3    = m.totalRev(10) > 0 ? m.ebitda(10)    / m.totalRev(10) : null;
+  iframe.contentWindow.postMessage({
+    type: 'vaultaModelUpdate',
+    data: {
+      ltvCac:   m.ltvCac,
+      cac:      m.baseCAC,
+      arpu:     m.netAnnual,
+      payback:  m.cacPayback < 900 ? m.cacPayback : null,
+      mfee:     +document.getElementById('i_mfee').value * 100,
+      gm:       gmYr5 * 100,
+      ebitda3:  eb3 != null ? eb3 * 100 : null,
+      ltv3:     m.ltv3,
+      mfee_mo:  m.mFeeMo,
+      tbill_mo: m.vaultSlv,
+      contrib:  m.netContrib,
+      beYear:   m.beYear,
+      effYield: m.effYield * 100,
+      serARaise: m.serARaise,
+    }
+  }, '*');
+}
+</script>
+
+<script>
+const fmtM  = v => Math.abs(v) >= 1e6 ? (v/1e6).toFixed(1)+'M' : (v/1e3).toFixed(0)+'K';
+const fmtD  = v => '$' + fmtM(v);
+const fmtDf = v => '$' + v.toFixed(2);
+const fmtP  = v => (v*100).toFixed(1)+'%';
+const fmtP2 = v => (v*100).toFixed(2)+'%';
+const fmtX  = v => v.toFixed(2)+'x';
+
+let chartPL = null, chartCons = null;
+
+function model() {
+  const seed     = +document.getElementById('i_seed').value;
+  const serA_tgt = +document.getElementById('i_serA').value;
+  const serB_tgt = +document.getElementById('i_serB').value;
+  const serA_yrs = 2, serB_yrs = 3;
+  const steady_g = +document.getElementById('i_ssgrowth').value;
+  const wallet   = +document.getElementById('i_wallet').value;
+  const tbDeploy = 1.0; // GENIUS Act: 100% of customer balances must be held in T-bills
+  const tbRate   = +document.getElementById('i_tbrate').value;
+  const cSleeve  = +document.getElementById('i_sleeve').value;
+  const mFeeRate = +document.getElementById('i_mfee').value;
+  const txnRate  = +document.getElementById('i_txnrate').value;
+  const baseCAC  = +document.getElementById('i_cac').value;
+  const mSleeve  = +document.getElementById('i_msleeve').value;
+  const WACC     = +document.getElementById('i_wacc').value;
+  const exitM    = +document.getElementById('i_exitm').value;
+  const termG    = 0.04;
+  const survival = +document.getElementById('i_survival').value;
+  const stageDsc = 0.65;
+  const serBRaise   = +document.getElementById('i_serBraise').value;
+  const seedContBuf = +document.getElementById('i_seedbuf').value;
+
+  const CPM=100, mSettle=5000, varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
+  const kycCost=2.50, GA=180000, GAGrowth=0.10, FCC=6000000, seedBuf=18, serABuf=18;
+  const csRatio=25000, chainPct=0.40, locsPerChain=50, bdDeals=8;
+  const engSal   = +document.getElementById('i_sal_eng').value;
+  const bdSal    = +document.getElementById('i_sal_bd').value;
+  const csSal    = +document.getElementById('i_sal_cs').value;
+  const leadSal  = +document.getElementById('i_sal_lead').value;
+  const legalSal = +document.getElementById('i_sal_legal').value;
+  const cyberSal = +document.getElementById('i_sal_cyber').value;
+  const benefits = +document.getElementById('i_benefits').value / 100;
+
+  const serAGrowth = Math.pow(serA_tgt/seed, 1/serA_yrs) - 1;
+  const serBGrowth = Math.pow(serB_tgt/serA_tgt, 1/serB_yrs) - 1;
+  const phases = ['Seed','Ser A','Ser A','Ser B','Ser B','Ser B','Steady','Steady','Steady','Steady'];
+
+  const cons = new Array(11).fill(0);
+  cons[1] = seed;
+  for (let yr=2; yr<=10; yr++) {
+    const rate = yr<=1+serA_yrs ? serAGrowth : yr<=1+serA_yrs+serB_yrs ? serBGrowth : steady_g;
+    cons[yr] = Math.round(cons[yr-1]*(1+rate));
+  }
+
+  const pv = (yr,sv,av,bv,tv) => yr===1?sv : yr<=1+serA_yrs?av : yr<=1+serA_yrs+serB_yrs?bv : tv;
+  const merch   = yr => Math.round(cons[yr]/CPM);
+  const newCons = yr => yr===1 ? cons[1] : Math.max(0, cons[yr]-cons[yr-1]);
+  const cacTap  = yr => pv(yr,1.0,0.8,0.6,0.4);
+
+  function payroll(yr) {
+    const eng=pv(yr,2,3,8,12), legal=pv(yr,0,1,3,4), lead=pv(yr,1,2,3,3);
+    const cyber=pv(yr,0.3,0.5,1,1);
+    const cs = Math.max(2, Math.ceil(cons[yr]/csRatio));
+    const nc = yr===1 ? Math.round(merch(yr)*chainPct/locsPerChain)
+             : Math.max(0, Math.round(merch(yr)*chainPct/locsPerChain) - Math.round(merch(yr-1)*chainPct/locsPerChain));
+    const bd = Math.max(pv(yr,0,1,2,2), Math.ceil(nc/bdDeals));
+    return (eng*engSal+legal*legalSal+lead*leadSal+cyber*cyberSal+cs*csSal+bd*bdSal)*(1+benefits);
+  }
+
+  const infraFix = yr => infraBase*Math.pow(1+infraGrowth,yr-1);
+  const infraVar = yr => cons[yr]*varInfra*12;
+  const mktg     = yr => newCons(yr)*baseCAC*cacTap(yr);
+  const refrl    = yr => cons[yr]*0.015*5.00*12;
+  const gaAmt    = yr => GA*Math.pow(1+GAGrowth,yr-1);
+  const legalRet = yr => pv(yr,5000,10000,18000,18000)*12;
+  const kyc      = yr => newCons(yr)*kycCost;
+  const fccAmt   = yr => yr===2?FCC:0;
+  const opex     = yr => payroll(yr)+mktg(yr)+refrl(yr)+infraFix(yr)+gaAmt(yr)+legalRet(yr)+kyc(yr)+fccAmt(yr);
+
+  const cTbillGross  = yr => cons[yr]*wallet*tbDeploy*tbRate;
+  const mTbillFull   = yr => merch(yr)*mSettle*tbDeploy*tbRate;
+  const mFeeRev      = yr => cons[yr]*wallet*txnRate*mFeeRate*12;
+  const totalRev     = yr => cTbillGross(yr)+mTbillFull(yr)+mFeeRev(yr);
+  const totalCOGS    = yr => cTbillGross(yr)*(1-cSleeve) + infraVar(yr) + mTbillFull(yr)*(1-mSleeve);
+  const grossProfit  = yr => totalRev(yr)-totalCOGS(yr);
+  const ebitda       = yr => grossProfit(yr)-opex(yr);
+
+  // Unit economics per consumer/month
+  const monthlyTbill = wallet*tbDeploy*tbRate/12;
+  const vaultSlv     = monthlyTbill*cSleeve;
+  const consRwd      = monthlyTbill*(1-cSleeve);
+  const mFeeMo       = wallet*txnRate*mFeeRate;
+  const netContrib   = vaultSlv+mFeeMo-varInfra;
+  const netAnnual    = netContrib*12;
+  const ltv3         = netAnnual*3;
+  const ltvCac       = ltv3/baseCAC;
+  const cacPayback   = netContrib>0 ? baseCAC/netContrib : 999;
+  const effYield        = tbRate*(1-cSleeve);
+  const rewardOnSpend   = txnRate > 0 ? consRwd/(wallet*txnRate) : 0;
+
+  // Raises
+  const eb1=ebitda(1), eb2=ebitda(2);
+  const seedRaise = Math.max(500000, Math.max(0,-eb1)*seedBuf/12 * (1+seedContBuf));
+  const serARaise = Math.max(1000000, Math.max(0,-(eb1+eb2)) + Math.max(0,-eb2)*serABuf/12);
+  const totalRaised = seedRaise+serARaise+serBRaise;
+
+  // DCF
+  let pvSum=0;
+  for (let yr=1;yr<=10;yr++) pvSum += ebitda(yr)/Math.pow(1+WACC,yr);
+  const eb10=ebitda(10);
+  const tvExit=eb10*exitM, tvGordon=WACC>termG?eb10*(1+termG)/(WACC-termG):0;
+  const pvTV=(tvExit+tvGordon)/2/Math.pow(1+WACC,10);
+  const EV=pvSum+pvTV, raEV=EV*survival*stageDsc;
+
+  let beYear=null;
+  for (let yr=1;yr<=10;yr++) if(ebitda(yr)>0){beYear=yr;break;}
+
+  return { cons, phases, merch, totalRev, grossProfit, ebitda, opex,
+           monthlyTbill, vaultSlv, consRwd, mFeeMo, netContrib, netAnnual,
+           ltv3, ltvCac, cacPayback, effYield, rewardOnSpend,
+           seedRaise, serARaise, serBRaise, totalRaised,
+           EV, raEV, beYear, baseCAC, varInfra };
+}
+
+function update() {
+  // Label updates
+  document.getElementById('lbl_wallet').textContent   = '$'+(+document.getElementById('i_wallet').value).toLocaleString();
+  document.getElementById('lbl_mfee').textContent     = fmtP2(+document.getElementById('i_mfee').value);
+  document.getElementById('lbl_cac').textContent      = '$'+(+document.getElementById('i_cac').value);
+  document.getElementById('lbl_sleeve').textContent   = fmtP(+document.getElementById('i_sleeve').value);
+  document.getElementById('lbl_tbrate').textContent   = fmtP2(+document.getElementById('i_tbrate').value);
+  document.getElementById('lbl_txnrate').textContent  = fmtP(+document.getElementById('i_txnrate').value);
+  document.getElementById('lbl_msleeve').textContent  = fmtP(+document.getElementById('i_msleeve').value);
+  document.getElementById('lbl_ssgrowth').textContent = fmtP(+document.getElementById('i_ssgrowth').value);
+  document.getElementById('lbl_serBraise').textContent= '$'+(+document.getElementById('i_serBraise').value/1e6).toFixed(0)+'M';
+  document.getElementById('lbl_seedbuf').textContent  = fmtP(+document.getElementById('i_seedbuf').value);
+  document.getElementById('lbl_wacc').textContent     = fmtP(+document.getElementById('i_wacc').value);
+  document.getElementById('lbl_exitm').textContent    = (+document.getElementById('i_exitm').value)+'x';
+  document.getElementById('lbl_survival').textContent = fmtP(+document.getElementById('i_survival').value);
+
+  const m = model();
+
+  // KPIs
+  document.getElementById('kpi_ev').textContent     = fmtD(m.EV);
+  document.getElementById('kpi_raev').textContent   = fmtD(m.raEV);
+  document.getElementById('kpi_ltv').textContent    = '$'+m.ltv3.toFixed(0);
+  document.getElementById('kpi_ltvcac').textContent = fmtX(m.ltvCac);
+  const ltvCard = document.getElementById('kpi_ltvcac_card');
+  ltvCard.className = 'kpi '+(m.ltvCac>=3?'green':m.ltvCac>=2?'orange':'red');
+
+  document.getElementById('kpi_breakeven').textContent    = m.beYear ? 'Year '+m.beYear : 'Not reached';
+  document.getElementById('kpi_breakeven_sub').textContent = m.beYear ? m.phases[m.beYear-1]+' phase' : 'within 10 years';
+  document.getElementById('kpi_payback').textContent = m.cacPayback<900 ? m.cacPayback.toFixed(1)+' mo' : 'N/A';
+
+  // UE strip
+  document.getElementById('ue_yield').textContent          = fmtP2(m.effYield);
+  document.getElementById('ue_mfee').textContent           = fmtDf(m.mFeeMo);
+  document.getElementById('ue_reward_on_spend').textContent = fmtP2(m.rewardOnSpend);
+
+  // P&L bar chart
+  const years = ['2027','2028','2029','2030','2031','2032','2033','2034','2035','2036'];
+  const revData=[], ebData=[];
+  for (let yr=1;yr<=10;yr++) {
+    revData.push(+(m.totalRev(yr)/1e6).toFixed(2));
+    ebData.push(+(m.ebitda(yr)/1e6).toFixed(2));
+  }
+  if (chartPL) chartPL.destroy();
+  chartPL = new Chart(document.getElementById('chart_pl'), {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [
+        { label: 'Revenue ($M)', data: revData, backgroundColor: 'rgba(46,117,182,0.75)', borderRadius: 3, order: 2 },
+        { label: 'EBITDA ($M)',  data: ebData,  backgroundColor: ebData.map(v=>v>=0?'rgba(112,173,71,0.85)':'rgba(192,0,0,0.75)'), borderRadius: 3, order: 1 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { font:{size:10}, boxWidth:12 } },
+        tooltip: { callbacks: { label: ctx => ' $'+ctx.parsed.y.toFixed(1)+'M' } }
+      },
+      scales: {
+        y: { ticks: { callback: v=>'$'+v+'M', font:{size:9} }, grid:{color:'#eee'} },
+        x: { ticks: { font:{size:9} } }
+      }
+    }
+  });
+
+  // Consumer chart
+  const consData=[], colors=[];
+  const pc = {'Seed':'#2E75B6','Ser A':'#4472C4','Ser B':'#70AD47','Steady':'#ED7D31'};
+  for (let yr=1;yr<=10;yr++) { consData.push(Math.round(m.cons[yr]/1000)); colors.push(pc[m.phases[yr-1]]||'#999'); }
+  if (chartCons) chartCons.destroy();
+  chartCons = new Chart(document.getElementById('chart_consumers'), {
+    type: 'bar',
+    data: { labels: years, datasets: [{ label:'Consumers (K)', data:consData, backgroundColor:colors, borderRadius:3 }] },
+    options: {
+      responsive:true, maintainAspectRatio:true,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toFixed(0)+'K consumers'}} },
+      scales: { y:{ticks:{callback:v=>v+'K',font:{size:9}},grid:{color:'#eee'}}, x:{ticks:{font:{size:9}}} }
+    }
+  });
+
+  // Funding table
+  const serAOps = Math.max(0, m.serARaise - 6000000);
+  const serAFCC = 6000000;
+  document.getElementById('tbl_raises').innerHTML = [
+    ['Seed', m.seedRaise, ''],
+    ['Series A — Operations', serAOps, ''],
+    ['Series A — Regulatory Capital', serAFCC, 'non-risk, balance sheet'],
+    ['Series B', m.serBRaise, ''],
+    ['Total', m.totalRaised, '']
+  ].map(([r,a,note],i)=>`<tr>
+    <td class="${i===4?'bold':''}">${r}${note?` <span style="font-size:9px;color:#999;font-weight:400">(${note})</span>`:''}</td>
+    <td class="${i===4?'bold pos':'pos'}">${fmtD(a)}</td>
+  </tr>`).join('');
+
+  // EBITDA table
+  let html='';
+  for (let yr=1;yr<=10;yr++) {
+    const eb=m.ebitda(yr), rev=m.totalRev(yr);
+    const be = m.beYear===yr ? '<span class="breakeven-badge">✓</span>' : '';
+    html+=`<tr>
+      <td>${2026+yr}${be}</td>
+      <td style="font-size:10px;color:#888">${m.phases[yr-1]}</td>
+      <td>${fmtD(rev)}</td>
+      <td class="${eb>=0?'pos':'neg'}">${fmtD(eb)}</td>
+    </tr>`;
+  }
+  document.getElementById('tbl_ebitda').innerHTML = html;
+
+  // Detail box
+  document.getElementById('det_tbill').textContent     = fmtDf(m.monthlyTbill);
+  document.getElementById('det_reward').textContent    = fmtDf(m.consRwd);
+  document.getElementById('det_reward_yr').textContent = '$'+(m.consRwd*12).toFixed(2)+'/yr';
+  document.getElementById('det_sleeve').textContent    = fmtDf(m.vaultSlv);
+  document.getElementById('det_mfee').textContent      = fmtDf(m.mFeeMo);
+  document.getElementById('det_infra').textContent     = '-$'+m.varInfra.toFixed(2);
+  document.getElementById('det_net').textContent       = fmtDf(m.netContrib);
+
+  // ── Benchmarks tab — live VaultaPay column ──
+  const gmYr5 = m.totalRev(5)>0 ? (m.grossProfit(5)/m.totalRev(5)) : 0;
+  document.getElementById('bm_ltvcac').innerHTML   = `<span class="bench-pill ${m.ltvCac>=3?'pill-green':m.ltvCac>=2?'pill-orange':'pill-grey'}">${fmtX(m.ltvCac)}</span>`;
+  document.getElementById('bm_cac').textContent    = '$'+m.baseCAC.toFixed(0)+' (seed)';
+  document.getElementById('bm_arpu').textContent   = '$'+m.netAnnual.toFixed(0)+'/yr';
+  document.getElementById('bm_payback').innerHTML  = `<span class="bench-pill ${m.cacPayback<=18?'pill-green':'pill-orange'}">${m.cacPayback<900?m.cacPayback.toFixed(1)+' mo':'N/A'}</span>`;
+  document.getElementById('bm_mfee').textContent   = fmtP2(+document.getElementById('i_mfee').value);
+  document.getElementById('bm_gm').innerHTML       = `<span class="bench-pill ${gmYr5>=0.5?'pill-green':gmYr5>=0.35?'pill-orange':'pill-grey'}">${fmtP(gmYr5)} (Yr5)</span>`;
+  document.getElementById('bm_breakeven').innerHTML= m.beYear ? `<span class="bench-pill ${m.beYear<=6?'pill-green':'pill-orange'}">Year ${m.beYear}</span>` : '<span class="bench-pill pill-grey">10yr+</span>';
+  document.getElementById('bm_ltv').textContent    = '$'+m.ltv3.toFixed(0);
+
+  // EBITDA margin — current (Yr 5) and 10-year trend cells
+  const ebMgn = yr => m.totalRev(yr) > 0 ? m.ebitda(yr) / m.totalRev(yr) : null;
+  const fmtEb = yr => {
+    const v = ebMgn(yr);
+    if (v === null) return '—';
+    const pct = (v * 100).toFixed(1) + '%';
+    const cls = v >= 0.15 ? 'pill-green' : v >= 0 ? 'pill-orange' : 'pill-grey';
+    return `<span class="bench-pill ${cls}">${pct}</span>`;
+  };
+  document.getElementById('bm_ebitda_margin').innerHTML = fmtEb(5); // Yr 5 as "current" target
+  document.getElementById('bm_eb_yr1').innerHTML = fmtEb(1);
+  document.getElementById('bm_eb_yr2').innerHTML = fmtEb(2);
+  document.getElementById('bm_eb_yr3').innerHTML = fmtEb(3);
+  document.getElementById('bm_eb_yr4').innerHTML = fmtEb(4);
+  document.getElementById('bm_eb_yr5').innerHTML = fmtEb(5);
+
+  if (document.getElementById('tab-pitch').classList.contains('active')) sendPitchData();
+}
+
+// ── All saveable input IDs ──
+const SAVED_INPUTS = [
+  'i_seed','i_serA','i_serB',
+  'i_wallet','i_txnrate','i_mfee','i_cac','i_sleeve','i_tbrate',
+  'i_msleeve','i_ssgrowth','i_serBraise','i_seedbuf',
+  'i_wacc','i_exitm','i_survival',
+  'i_sal_eng','i_sal_bd','i_sal_cs','i_sal_lead','i_sal_legal','i_sal_cyber','i_benefits'
+];
+
+// On load: restore saved values from localStorage; show save button only for owner
+(function() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('owner') === '1') {
+    document.getElementById('save-btn').style.display = 'flex';
+  }
+  const saved = localStorage.getItem('vaultapay_defaults');
+  if (saved) {
+    try {
+      const vals = JSON.parse(saved);
+      SAVED_INPUTS.forEach(id => {
+        if (vals[id] != null) {
+          const el = document.getElementById(id);
+          if (el) el.value = vals[id];
+        }
+      });
+      update();
+    } catch(e) {}
+  }
+})();
+
+function saveDefaults() {
+  const vals = {};
+  SAVED_INPUTS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) vals[id] = el.value;
+  });
+  localStorage.setItem('vaultapay_defaults', JSON.stringify(vals));
+  const toast = document.getElementById('save-toast');
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.opacity = '0'; }, 2800);
+}
+
+update();
+</script>
+</body>
+</html>
