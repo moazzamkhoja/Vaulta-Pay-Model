@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VaultaPay — Financial Model v5</title>
+<title>VaultaPay — Financial Model v6 (Bill-Pay)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
@@ -186,7 +186,7 @@
 <body>
 
 <header>
-  <h1>VaultaPay — Interactive Financial Model v5</h1>
+  <h1>VaultaPay — Interactive Financial Model v6 · Bill-Pay</h1>
   <span>Drag sliders — all outputs update instantly</span>
   <button id="save-btn" onclick="saveDefaults()" title="Save current values as default URL">💾 Save as Default</button>
 </header>
@@ -412,40 +412,78 @@
     </div>
 
     <hr class="div">
-    <h3>Primary Levers</h3>
+    <h3>Consumer — Primary Levers</h3>
 
     <div class="slider-row">
-      <label>Avg Wallet Balance <span id="lbl_wallet">$2,800</span></label>
-      <input type="range" id="i_wallet" min="500" max="8000" step="100" value="2800" oninput="update()">
+      <label>Monthly Inflow (take-home) <span id="lbl_inflow">$4,500</span></label>
+      <div class="hint">Money loaded into the wallet per consumer/month (median renter-household take-home)</div>
+      <input type="range" id="i_inflow" min="1000" max="12000" step="100" value="4500" oninput="update()">
     </div>
     <div class="slider-row">
-      <label>Monthly Transaction Rate <span id="lbl_txnrate">20%</span></label>
-      <div class="hint">% of balance flowing through as transactions/month — interacts with wallet size to drive merchant fee revenue</div>
-      <input type="range" id="i_txnrate" min="0.00" max="1.00" step="0.01" value="0.20" oninput="update()">
+      <label>Bill-Payment % of Inflow <span id="lbl_billpct">33%</span></label>
+      <div class="hint">Share of inflow paid as rent + utilities through the platform — drives merchant float</div>
+      <input type="range" id="i_billpct" min="0.05" max="0.80" step="0.01" value="0.33" oninput="update()">
     </div>
     <div class="slider-row">
-      <label>Merchant Fee Rate <span id="lbl_mfee">0.80%</span></label>
-      <input type="range" id="i_mfee" min="0.001" max="0.03" step="0.0005" value="0.008" oninput="update()">
+      <label>Consumer Retained Balance <span id="lbl_retbal">$1,500</span></label>
+      <div class="hint">Avg balance left in wallet to earn rewards — drives consumer float</div>
+      <input type="range" id="i_retbal" min="0" max="8000" step="100" value="1500" oninput="update()">
     </div>
     <div class="slider-row">
-      <label>Base CAC (Seed) <span id="lbl_cac">$60</span></label>
-      <input type="range" id="i_cac" min="10" max="200" step="5" value="60" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Consumer Sleeve (Vaulta keeps) <span id="lbl_sleeve">20%</span></label>
+      <label>Float Sleeve (Vaulta keeps) <span id="lbl_sleeve">20%</span></label>
+      <div class="hint">Vaulta's cut of T-bill float; rest paid out as Vaulta Rewards (both sides)</div>
       <input type="range" id="i_sleeve" min="0.05" max="0.80" step="0.01" value="0.20" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>Merchant &amp; Acquisition</h3>
+
+    <div class="slider-row">
+      <label>Merchant Retention % of Collections <span id="lbl_mretain">25%</span></label>
+      <div class="hint">Share of bill collections merchants park with Vaulta as avg balance (rest disbursed)</div>
+      <input type="range" id="i_mretain" min="0" max="1.0" step="0.05" value="0.25" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Consumers per Merchant <span id="lbl_cpm">200</span></label>
+      <div class="hint">Avg units per apartment community; utilities push this far higher — drives merchant count &amp; BD</div>
+      <input type="range" id="i_cpm" min="20" max="2000" step="10" value="200" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Merchant Acquisition Cost <span id="lbl_merchacq">$3,000</span></label>
+      <div class="hint">Sales effort to sign one merchant; ÷ consumers-per-merchant → most of blended CAC</div>
+      <input type="range" id="i_merchacq" min="500" max="20000" step="250" value="3000" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Consumer Marketing / Consumer <span id="lbl_consmktg">$8</span></label>
+      <input type="range" id="i_consmktg" min="0" max="100" step="1" value="8" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>Fees (flat / payment) &amp; Churn</h3>
+
+    <div class="slider-row">
+      <label>Consumer Fee / Bill Payment <span id="lbl_confee">$0.50</span></label>
+      <input type="range" id="i_confee" min="0" max="5" step="0.10" value="0.50" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Merchant Fee / Bill Payment <span id="lbl_mfeeflat">$0.50</span></label>
+      <input type="range" id="i_mfeeflat" min="0" max="5" step="0.10" value="0.50" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Consumer Churn (annual) <span id="lbl_cchurn">20%</span></label>
+      <input type="range" id="i_cchurn" min="0" max="0.50" step="0.01" value="0.20" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Merchant Churn (annual) <span id="lbl_mchurn">8%</span></label>
+      <input type="range" id="i_mchurn" min="0" max="0.40" step="0.01" value="0.08" oninput="update()">
     </div>
 
     <hr class="div">
     <h3>Secondary Levers</h3>
 
     <div class="slider-row">
-      <label>T-Bill Annual Rate <span id="lbl_tbrate">4.8%</span></label>
-      <input type="range" id="i_tbrate" min="0.01" max="0.10" step="0.002" value="0.048" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Merchant Sleeve % <span id="lbl_msleeve">25%</span></label>
-      <input type="range" id="i_msleeve" min="0.10" max="0.75" step="0.05" value="0.25" oninput="update()">
+      <label>T-Bill Annual Rate <span id="lbl_tbrate">3.7%</span></label>
+      <input type="range" id="i_tbrate" min="0.01" max="0.08" step="0.001" value="0.037" oninput="update()">
     </div>
     <div class="slider-row">
       <label>Steady-State Growth (Yr7+) <span id="lbl_ssgrowth">25%</span></label>
@@ -530,7 +568,7 @@
       <div class="kpi green">
         <div class="kpi-label">3-Year LTV</div>
         <div class="kpi-value" id="kpi_ltv">—</div>
-        <div class="kpi-sub">per consumer (net contribution)</div>
+        <div class="kpi-sub">per consumer · 3-yr churn-adj NPV</div>
       </div>
       <div id="kpi_ltvcac_card" class="kpi green">
         <div class="kpi-label">LTV : CAC</div>
@@ -552,19 +590,19 @@
     <!-- Unit economics strip — 3 items -->
     <div class="ue-row">
       <div class="ue">
-        <div class="ue-label">T-Bill Yield to Consumer</div>
+        <div class="ue-label">Reward Rate to Consumer</div>
         <div class="ue-value" id="ue_yield">—</div>
-        <div class="ue-sub">annual rate on allocated balance</div>
+        <div class="ue-sub">annual rate on retained balance</div>
       </div>
       <div class="ue">
-        <div class="ue-label">Merchant Fee / Consumer / Month</div>
+        <div class="ue-label">Vaulta Net / Consumer / Month</div>
         <div class="ue-value" id="ue_mfee">—</div>
-        <div class="ue-sub">Vaulta revenue from transactions</div>
+        <div class="ue-sub">float sleeve + fees − infra</div>
       </div>
       <div class="ue">
-        <div class="ue-label">Vaulta Reward per $ Spent</div>
+        <div class="ue-label">Blended CAC / Consumer</div>
         <div class="ue-value" id="ue_reward_on_spend">—</div>
-        <div class="ue-sub">monthly reward ÷ monthly spend</div>
+        <div class="ue-sub">merchant-led acquisition</div>
       </div>
     </div>
 
@@ -601,11 +639,11 @@
 
       <div class="detail-box">
         <h4>Per Consumer Economics / Month</h4>
-        <div class="detail-row"><span class="dlabel">T-Bill income (gross)</span><span class="dval" id="det_tbill">—</span></div>
+        <div class="detail-row"><span class="dlabel">Consumer float income (gross)</span><span class="dval" id="det_tbill">—</span></div>
         <div class="detail-row"><span class="dlabel">Consumer reward (passed through)</span><span class="dval" id="det_reward">—</span></div>
-        <div class="detail-row"><span class="dlabel">Annual consumer reward</span><span class="dval" id="det_reward_yr">—</span></div>
-        <div class="detail-row"><span class="dlabel">Vaulta T-bill sleeve</span><span class="dval" id="det_sleeve">—</span></div>
-        <div class="detail-row"><span class="dlabel">Merchant fee revenue</span><span class="dval" id="det_mfee">—</span></div>
+        <div class="detail-row"><span class="dlabel">Vaulta sleeve — consumer float</span><span class="dval" id="det_sleeve">—</span></div>
+        <div class="detail-row"><span class="dlabel">Vaulta sleeve — merchant float</span><span class="dval" id="det_merchslv">—</span></div>
+        <div class="detail-row"><span class="dlabel">Transaction fees (Vaulta)</span><span class="dval" id="det_fee">—</span></div>
         <div class="detail-row"><span class="dlabel">Variable infra cost</span><span class="dval" id="det_infra">—</span></div>
         <div class="detail-row" style="border-top:2px solid var(--navy);margin-top:4px;padding-top:4px">
           <span class="dlabel" style="font-weight:700;color:var(--navy)">Net contribution</span>
@@ -644,12 +682,12 @@ function sendPitchData() {
       cac:      m.baseCAC,
       arpu:     m.netAnnual,
       payback:  m.cacPayback < 900 ? m.cacPayback : null,
-      mfee:     +document.getElementById('i_mfee').value * 100,
+      mfee:     +document.getElementById('i_mfeeflat').value,
       gm:       gmYr5 * 100,
       ebitda3:  eb3 != null ? eb3 * 100 : null,
       ltv3:     m.ltv3,
-      mfee_mo:  m.mFeeMo,
-      tbill_mo: m.vaultSlv,
+      mfee_mo:  m.feeMo,
+      tbill_mo: m.vaultConsSlv,
       contrib:  m.netContrib,
       beYear:   m.beYear,
       effYield: m.effYield * 100,
@@ -670,37 +708,52 @@ const fmtX  = v => v.toFixed(2)+'x';
 let chartPL = null, chartCons = null;
 
 function model() {
-  const seed     = +document.getElementById('i_seed').value;
-  const serA_tgt = +document.getElementById('i_serA').value;
-  const serB_tgt = +document.getElementById('i_serB').value;
-  const serA_yrs = 2, serB_yrs = 3;
-  const steady_g = +document.getElementById('i_ssgrowth').value;
-  const wallet   = +document.getElementById('i_wallet').value;
-  const tbDeploy = 1.0; // GENIUS Act: 100% of customer balances must be held in T-bills
-  const tbRate   = +document.getElementById('i_tbrate').value;
-  const cSleeve  = +document.getElementById('i_sleeve').value;
-  const mFeeRate = +document.getElementById('i_mfee').value;
-  const txnRate  = +document.getElementById('i_txnrate').value;
-  const baseCAC  = +document.getElementById('i_cac').value;
-  const mSleeve  = +document.getElementById('i_msleeve').value;
-  const WACC     = +document.getElementById('i_wacc').value;
-  const exitM    = +document.getElementById('i_exitm').value;
-  const termG    = 0.04;
-  const survival = +document.getElementById('i_survival').value;
-  const stageDsc = 0.65;
-  const serBRaise   = +document.getElementById('i_serBraise').value;
-  const seedContBuf = +document.getElementById('i_seedbuf').value;
+  const g = id => +document.getElementById(id).value;
 
-  const CPM=100, mSettle=5000, varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
+  // Targets & growth
+  const seed     = g('i_seed');
+  const serA_tgt = g('i_serA');
+  const serB_tgt = g('i_serB');
+  const serA_yrs = 2, serB_yrs = 3;
+  const steady_g = g('i_ssgrowth');
+
+  // Consumer levers
+  const inflow   = g('i_inflow');    // monthly take-home loaded into wallet
+  const billPct  = g('i_billpct');   // % of inflow paid as bills via platform
+  const retBal   = g('i_retbal');    // avg consumer retained balance
+  const sleeve   = g('i_sleeve');    // float sleeve Vaulta keeps (both sides)
+  const tbRate   = g('i_tbrate');
+  const tbDeploy = 1.0; // GENIUS Act: 100% of balances held in T-bills
+
+  // Merchant & acquisition levers
+  const mRetain  = g('i_mretain');   // % of collections parked with Vaulta (avg balance)
+  const CPM      = g('i_cpm');       // consumers per merchant
+  const merchAcq = g('i_merchacq');  // cost to acquire one merchant
+  const consMktg = g('i_consmktg');  // direct consumer marketing per consumer
+
+  // Fees (flat per bill payment) & churn
+  const conFee   = g('i_confee');
+  const merchFee = g('i_mfeeflat');
+  const BILLS_PER_MO = 3;            // rent (1) + utilities (~2) per consumer/month
+  const cChurn   = g('i_cchurn');    // consumer annual churn
+  const mChurn   = g('i_mchurn');    // merchant annual churn
+
+  // Valuation
+  const WACC     = g('i_wacc');
+  const exitM    = g('i_exitm');
+  const termG    = 0.04;
+  const survival = g('i_survival');
+  const stageDsc = 0.65;
+  const serBRaise   = g('i_serBraise');
+  const seedContBuf = g('i_seedbuf');
+
+  // Fixed cost constants
+  const varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
   const kycCost=2.50, GA=180000, GAGrowth=0.10, FCC=6000000, seedBuf=18, serABuf=18;
-  const csRatio=25000, chainPct=0.40, locsPerChain=50, bdDeals=8;
-  const engSal   = +document.getElementById('i_sal_eng').value;
-  const bdSal    = +document.getElementById('i_sal_bd').value;
-  const csSal    = +document.getElementById('i_sal_cs').value;
-  const leadSal  = +document.getElementById('i_sal_lead').value;
-  const legalSal = +document.getElementById('i_sal_legal').value;
-  const cyberSal = +document.getElementById('i_sal_cyber').value;
-  const benefits = +document.getElementById('i_benefits').value / 100;
+  const csRatio=25000, bdDeals=8;
+  const engSal=g('i_sal_eng'), bdSal=g('i_sal_bd'), csSal=g('i_sal_cs'),
+        leadSal=g('i_sal_lead'), legalSal=g('i_sal_legal'), cyberSal=g('i_sal_cyber');
+  const benefits = g('i_benefits') / 100;
 
   const serAGrowth = Math.pow(serA_tgt/seed, 1/serA_yrs) - 1;
   const serBGrowth = Math.pow(serB_tgt/serA_tgt, 1/serB_yrs) - 1;
@@ -714,23 +767,30 @@ function model() {
   }
 
   const pv = (yr,sv,av,bv,tv) => yr===1?sv : yr<=1+serA_yrs?av : yr<=1+serA_yrs+serB_yrs?bv : tv;
-  const merch   = yr => Math.round(cons[yr]/CPM);
-  const newCons = yr => yr===1 ? cons[1] : Math.max(0, cons[yr]-cons[yr-1]);
-  const cacTap  = yr => pv(yr,1.0,0.8,0.6,0.4);
+  const merch    = yr => Math.max(1, Math.round(cons[yr]/CPM));
+  const newCons  = yr => yr===1 ? cons[1]  : Math.max(0, cons[yr]-cons[yr-1]);
+  const newMerch = yr => yr===1 ? merch(1) : Math.max(0, merch(yr)-merch(yr-1));
+  const cacTap   = yr => pv(yr,1.0,0.8,0.6,0.4);
 
+  // Per-consumer monthly bill volume flowing to merchants
+  const billMo = inflow*billPct;                       // $/consumer/month paid as bills
+  // Average balances earning float
+  const consBalAll  = yr => cons[yr]*retBal;            // total consumer retained balance
+  const merchBalAll = yr => cons[yr]*billMo*mRetain;    // total merchant balance parked
+
+  // Payroll — BD now scales with merchant count (few, large merchants)
   function payroll(yr) {
     const eng=pv(yr,2,3,8,12), legal=pv(yr,0,1,3,4), lead=pv(yr,1,2,3,3);
     const cyber=pv(yr,0.3,0.5,1,1);
     const cs = Math.max(2, Math.ceil(cons[yr]/csRatio));
-    const nc = yr===1 ? Math.round(merch(yr)*chainPct/locsPerChain)
-             : Math.max(0, Math.round(merch(yr)*chainPct/locsPerChain) - Math.round(merch(yr-1)*chainPct/locsPerChain));
-    const bd = Math.max(pv(yr,0,1,2,2), Math.ceil(nc/bdDeals));
+    const bd = Math.max(pv(yr,0,1,2,2), Math.ceil(newMerch(yr)/bdDeals));
     return (eng*engSal+legal*legalSal+lead*leadSal+cyber*cyberSal+cs*csSal+bd*bdSal)*(1+benefits);
   }
 
   const infraFix = yr => infraBase*Math.pow(1+infraGrowth,yr-1);
   const infraVar = yr => cons[yr]*varInfra*12;
-  const mktg     = yr => newCons(yr)*baseCAC*cacTap(yr);
+  // Acquisition: merchant-led (merchant acq ÷ portfolio + light consumer marketing), efficiency taper
+  const mktg     = yr => (newMerch(yr)*merchAcq + newCons(yr)*consMktg)*cacTap(yr);
   const refrl    = yr => cons[yr]*0.015*5.00*12;
   const gaAmt    = yr => GA*Math.pow(1+GAGrowth,yr-1);
   const legalRet = yr => pv(yr,5000,10000,18000,18000)*12;
@@ -738,26 +798,37 @@ function model() {
   const fccAmt   = yr => yr===2?FCC:0;
   const opex     = yr => payroll(yr)+mktg(yr)+refrl(yr)+infraFix(yr)+gaAmt(yr)+legalRet(yr)+kyc(yr)+fccAmt(yr);
 
-  const cTbillGross  = yr => cons[yr]*wallet*tbDeploy*tbRate;
-  const mTbillFull   = yr => merch(yr)*mSettle*tbDeploy*tbRate;
-  const mFeeRev      = yr => cons[yr]*wallet*txnRate*mFeeRate*12;
-  const totalRev     = yr => cTbillGross(yr)+mTbillFull(yr)+mFeeRev(yr);
-  const totalCOGS    = yr => cTbillGross(yr)*(1-cSleeve) + infraVar(yr) + mTbillFull(yr)*(1-mSleeve);
-  const grossProfit  = yr => totalRev(yr)-totalCOGS(yr);
-  const ebitda       = yr => grossProfit(yr)-opex(yr);
+  // Revenue: gross float on both balance pools + flat transaction fees
+  const consFloatGross  = yr => consBalAll(yr)*tbDeploy*tbRate;
+  const merchFloatGross = yr => merchBalAll(yr)*tbDeploy*tbRate;
+  const feeRev          = yr => cons[yr]*BILLS_PER_MO*(conFee+merchFee)*12;
+  const totalRev        = yr => consFloatGross(yr)+merchFloatGross(yr)+feeRev(yr);
+  // COGS: rewards paid out (1-sleeve) of both float streams + variable infra
+  const totalCOGS       = yr => (consFloatGross(yr)+merchFloatGross(yr))*(1-sleeve) + infraVar(yr);
+  const grossProfit     = yr => totalRev(yr)-totalCOGS(yr);
+  const ebitda          = yr => grossProfit(yr)-opex(yr);
 
   // Unit economics per consumer/month
-  const monthlyTbill = wallet*tbDeploy*tbRate/12;
-  const vaultSlv     = monthlyTbill*cSleeve;
-  const consRwd      = monthlyTbill*(1-cSleeve);
-  const mFeeMo       = wallet*txnRate*mFeeRate;
-  const netContrib   = vaultSlv+mFeeMo-varInfra;
+  const consFloatMo  = retBal*tbDeploy*tbRate/12;        // gross consumer float
+  const consRwd      = consFloatMo*(1-sleeve);            // paid to consumer as reward
+  const vaultConsSlv = consFloatMo*sleeve;                // Vaulta keeps (consumer float)
+  const merchFloatMo = billMo*mRetain*tbDeploy*tbRate/12; // gross merchant float (per-consumer)
+  const vaultMerchSlv= merchFloatMo*sleeve;               // Vaulta keeps (merchant float)
+  const feeMo        = BILLS_PER_MO*(conFee+merchFee);    // Vaulta fee revenue / consumer / month
+  const netContrib   = vaultConsSlv+vaultMerchSlv+feeMo-varInfra;
   const netAnnual    = netContrib*12;
-  const ltv3         = netAnnual*3;
-  const ltvCac       = ltv3/baseCAC;
-  const cacPayback   = netContrib>0 ? baseCAC/netContrib : 999;
-  const effYield        = tbRate*(1-cSleeve);
-  const rewardOnSpend   = txnRate > 0 ? consRwd/(wallet*txnRate) : 0;
+
+  // Blended CAC per consumer (merchant-led): merchant cost ÷ portfolio + consumer marketing
+  const baseCAC = merchAcq/CPM + consMktg;
+
+  // LTV — 3-year, churn-adjusted, NPV at WACC (end-of-year)
+  let ltv3 = 0;
+  for (let t=1; t<=3; t++) ltv3 += netAnnual*Math.pow(1-cChurn, t-1)/Math.pow(1+WACC, t);
+  const ltvCac     = baseCAC>0 ? ltv3/baseCAC : 0;
+  const cacPayback = netContrib>0 ? baseCAC/netContrib : 999;
+
+  const effYield      = tbRate*(1-sleeve);                // reward rate to consumer
+  const rewardOnSpend = billMo>0 ? consRwd/billMo : 0;    // monthly reward ÷ monthly bills
 
   // Raises
   const eb1=ebitda(1), eb2=ebitda(2);
@@ -776,28 +847,38 @@ function model() {
   let beYear=null;
   for (let yr=1;yr<=10;yr++) if(ebitda(yr)>0){beYear=yr;break;}
 
-  return { cons, phases, merch, totalRev, grossProfit, ebitda, opex,
-           monthlyTbill, vaultSlv, consRwd, mFeeMo, netContrib, netAnnual,
-           ltv3, ltvCac, cacPayback, effYield, rewardOnSpend,
+  return { cons, phases, merch, newMerch, totalRev, grossProfit, ebitda, opex,
+           consFloatGross, merchFloatGross, feeRev,
+           consFloatMo, consRwd, vaultConsSlv, merchFloatMo, vaultMerchSlv, feeMo,
+           netContrib, netAnnual, ltv3, ltvCac, cacPayback, baseCAC,
+           effYield, rewardOnSpend, billMo, mRetain, cChurn, mChurn,
            seedRaise, serARaise, serBRaise, totalRaised,
-           EV, raEV, beYear, baseCAC, varInfra };
+           EV, raEV, beYear, varInfra };
 }
 
 function update() {
   // Label updates
-  document.getElementById('lbl_wallet').textContent   = '$'+(+document.getElementById('i_wallet').value).toLocaleString();
-  document.getElementById('lbl_mfee').textContent     = fmtP2(+document.getElementById('i_mfee').value);
-  document.getElementById('lbl_cac').textContent      = '$'+(+document.getElementById('i_cac').value);
-  document.getElementById('lbl_sleeve').textContent   = fmtP(+document.getElementById('i_sleeve').value);
-  document.getElementById('lbl_tbrate').textContent   = fmtP2(+document.getElementById('i_tbrate').value);
-  document.getElementById('lbl_txnrate').textContent  = fmtP(+document.getElementById('i_txnrate').value);
-  document.getElementById('lbl_msleeve').textContent  = fmtP(+document.getElementById('i_msleeve').value);
-  document.getElementById('lbl_ssgrowth').textContent = fmtP(+document.getElementById('i_ssgrowth').value);
-  document.getElementById('lbl_serBraise').textContent= '$'+(+document.getElementById('i_serBraise').value/1e6).toFixed(0)+'M';
-  document.getElementById('lbl_seedbuf').textContent  = fmtP(+document.getElementById('i_seedbuf').value);
-  document.getElementById('lbl_wacc').textContent     = fmtP(+document.getElementById('i_wacc').value);
-  document.getElementById('lbl_exitm').textContent    = (+document.getElementById('i_exitm').value)+'x';
-  document.getElementById('lbl_survival').textContent = fmtP(+document.getElementById('i_survival').value);
+  const gv = id => +document.getElementById(id).value;
+  const setL = (id,txt) => document.getElementById(id).textContent = txt;
+  setL('lbl_inflow',   '$'+gv('i_inflow').toLocaleString());
+  setL('lbl_billpct',  fmtP(gv('i_billpct')));
+  setL('lbl_retbal',   '$'+gv('i_retbal').toLocaleString());
+  setL('lbl_sleeve',   fmtP(gv('i_sleeve')));
+  setL('lbl_mretain',  fmtP(gv('i_mretain')));
+  setL('lbl_cpm',      gv('i_cpm').toLocaleString());
+  setL('lbl_merchacq', '$'+gv('i_merchacq').toLocaleString());
+  setL('lbl_consmktg', '$'+gv('i_consmktg'));
+  setL('lbl_confee',   '$'+gv('i_confee').toFixed(2));
+  setL('lbl_mfeeflat', '$'+gv('i_mfeeflat').toFixed(2));
+  setL('lbl_cchurn',   fmtP(gv('i_cchurn')));
+  setL('lbl_mchurn',   fmtP(gv('i_mchurn')));
+  setL('lbl_tbrate',   fmtP2(gv('i_tbrate')));
+  setL('lbl_ssgrowth', fmtP(gv('i_ssgrowth')));
+  setL('lbl_serBraise','$'+(gv('i_serBraise')/1e6).toFixed(0)+'M');
+  setL('lbl_seedbuf',  fmtP(gv('i_seedbuf')));
+  setL('lbl_wacc',     fmtP(gv('i_wacc')));
+  setL('lbl_exitm',    gv('i_exitm')+'x');
+  setL('lbl_survival', fmtP(gv('i_survival')));
 
   const m = model();
 
@@ -814,9 +895,9 @@ function update() {
   document.getElementById('kpi_payback').textContent = m.cacPayback<900 ? m.cacPayback.toFixed(1)+' mo' : 'N/A';
 
   // UE strip
-  document.getElementById('ue_yield').textContent          = fmtP2(m.effYield);
-  document.getElementById('ue_mfee').textContent           = fmtDf(m.mFeeMo);
-  document.getElementById('ue_reward_on_spend').textContent = fmtP2(m.rewardOnSpend);
+  document.getElementById('ue_yield').textContent           = fmtP2(m.effYield);
+  document.getElementById('ue_mfee').textContent            = fmtDf(m.netContrib);
+  document.getElementById('ue_reward_on_spend').textContent = '$'+m.baseCAC.toFixed(2);
 
   // P&L bar chart
   const years = ['2027','2028','2029','2030','2031','2032','2033','2034','2035','2036'];
@@ -893,21 +974,21 @@ function update() {
   document.getElementById('tbl_ebitda').innerHTML = html;
 
   // Detail box
-  document.getElementById('det_tbill').textContent     = fmtDf(m.monthlyTbill);
-  document.getElementById('det_reward').textContent    = fmtDf(m.consRwd);
-  document.getElementById('det_reward_yr').textContent = '$'+(m.consRwd*12).toFixed(2)+'/yr';
-  document.getElementById('det_sleeve').textContent    = fmtDf(m.vaultSlv);
-  document.getElementById('det_mfee').textContent      = fmtDf(m.mFeeMo);
-  document.getElementById('det_infra').textContent     = '-$'+m.varInfra.toFixed(2);
-  document.getElementById('det_net').textContent       = fmtDf(m.netContrib);
+  document.getElementById('det_tbill').textContent    = fmtDf(m.consFloatMo);
+  document.getElementById('det_reward').textContent   = fmtDf(m.consRwd);
+  document.getElementById('det_sleeve').textContent   = fmtDf(m.vaultConsSlv);
+  document.getElementById('det_merchslv').textContent = fmtDf(m.vaultMerchSlv);
+  document.getElementById('det_fee').textContent      = fmtDf(m.feeMo);
+  document.getElementById('det_infra').textContent    = '-$'+m.varInfra.toFixed(2);
+  document.getElementById('det_net').textContent      = fmtDf(m.netContrib);
 
   // ── Benchmarks tab — live VaultaPay column ──
   const gmYr5 = m.totalRev(5)>0 ? (m.grossProfit(5)/m.totalRev(5)) : 0;
   document.getElementById('bm_ltvcac').innerHTML   = `<span class="bench-pill ${m.ltvCac>=3?'pill-green':m.ltvCac>=2?'pill-orange':'pill-grey'}">${fmtX(m.ltvCac)}</span>`;
-  document.getElementById('bm_cac').textContent    = '$'+m.baseCAC.toFixed(0)+' (seed)';
+  document.getElementById('bm_cac').textContent    = '$'+m.baseCAC.toFixed(0)+' (blended)';
   document.getElementById('bm_arpu').textContent   = '$'+m.netAnnual.toFixed(0)+'/yr';
   document.getElementById('bm_payback').innerHTML  = `<span class="bench-pill ${m.cacPayback<=18?'pill-green':'pill-orange'}">${m.cacPayback<900?m.cacPayback.toFixed(1)+' mo':'N/A'}</span>`;
-  document.getElementById('bm_mfee').textContent   = fmtP2(+document.getElementById('i_mfee').value);
+  document.getElementById('bm_mfee').textContent   = '$'+gv('i_mfeeflat').toFixed(2)+' / payment';
   document.getElementById('bm_gm').innerHTML       = `<span class="bench-pill ${gmYr5>=0.5?'pill-green':gmYr5>=0.35?'pill-orange':'pill-grey'}">${fmtP(gmYr5)} (Yr5)</span>`;
   document.getElementById('bm_breakeven').innerHTML= m.beYear ? `<span class="bench-pill ${m.beYear<=6?'pill-green':'pill-orange'}">Year ${m.beYear}</span>` : '<span class="bench-pill pill-grey">10yr+</span>';
   document.getElementById('bm_ltv').textContent    = '$'+m.ltv3.toFixed(0);
@@ -934,8 +1015,10 @@ function update() {
 // ── All saveable input IDs ──
 const SAVED_INPUTS = [
   'i_seed','i_serA','i_serB',
-  'i_wallet','i_txnrate','i_mfee','i_cac','i_sleeve','i_tbrate',
-  'i_msleeve','i_ssgrowth','i_serBraise','i_seedbuf',
+  'i_inflow','i_billpct','i_retbal','i_sleeve',
+  'i_mretain','i_cpm','i_merchacq','i_consmktg',
+  'i_confee','i_mfeeflat','i_cchurn','i_mchurn',
+  'i_tbrate','i_ssgrowth','i_serBraise','i_seedbuf',
   'i_wacc','i_exitm','i_survival',
   'i_sal_eng','i_sal_bd','i_sal_cs','i_sal_lead','i_sal_legal','i_sal_cyber','i_benefits'
 ];
