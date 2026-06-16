@@ -57,6 +57,10 @@
   .slider-row label span { color: white; font-weight: 600; font-size: 12px; }
   .slider-row .hint { font-size: 9px; color: #7fb3d3; margin-top: 1px; }
   input[type=range] { width: 100%; accent-color: #4fc3f7; height: 4px; cursor: pointer; }
+  .grid-in { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid #4fc3f7; border-radius: 4px; color: #fff; font-size: 11px; font-weight: 600; text-align: center; padding: 2px 0; outline: none; }
+  .grid-in:focus { background: rgba(255,255,255,0.2); }
+  .deal-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr; gap: 4px; align-items: center; font-size: 9px; color: #7fb3d3; }
+  .deal-grid .rlabel { color: #c8dff0; font-size: 10px; }
 
   .targets-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-bottom: 4px; }
   .target-box { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 7px 5px; text-align: center; }
@@ -176,6 +180,20 @@
   .pill-grey   { background: #f0f0f0; color: #555; }
   .source-note { font-size: 10px; color: #999; margin-top: 6px; font-style: italic; }
 
+  /* ── Financials (P&L) table ── */
+  .pl-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .pl-table th { background: var(--navy); color: #fff; padding: 6px 9px; text-align: right; font-size: 10px; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+  .pl-table th:first-child { text-align: left; }
+  .pl-table td { padding: 5px 9px; text-align: right; border-bottom: 1px solid #eef0f4; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pl-table td:first-child { text-align: left; color: #333; }
+  .pl-table tr.section td { background: #eaf0f6; font-weight: 700; color: var(--navy); text-transform: uppercase; font-size: 9px; letter-spacing: 0.6px; }
+  .pl-table tr.indent td:first-child { padding-left: 20px; color: #555; }
+  .pl-table tr.subtotal td { font-weight: 700; border-top: 1px solid var(--navy); border-bottom: 2px solid var(--navy); color: var(--navy); }
+  .pl-table tr.total td { font-weight: 700; background: var(--navy); color: #fff; }
+  .pl-table td.neg { color: var(--red); }
+  .pl-table tr:hover td { background: #f5f9ff; }
+  .pl-table tr.section:hover td, .pl-table tr.total:hover td { background: inherit; }
+
   /* ── Pitch tab ── */
   .tab-btn.pitch-btn { background: rgba(70,173,71,0.25); border-color: rgba(70,173,71,0.6); color: #a8e6a0; }
   .tab-btn.pitch-btn:hover, .tab-btn.pitch-btn.active { background: rgba(70,173,71,0.45); color: white; border-color: rgba(70,173,71,0.9); }
@@ -194,8 +212,33 @@
 
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('model')">📊 Model</button>
+  <button class="tab-btn" onclick="switchTab('financials')">📒 Financials</button>
   <button class="tab-btn" onclick="switchTab('benchmarks')">📐 Benchmarks</button>
   <button class="tab-btn pitch-btn" onclick="switchTab('pitch')">🎯 Investor Pitch</button>
+</div>
+
+<!-- ══ FINANCIALS TAB (line-item P&L) ══ -->
+<div id="tab-financials" class="tab-panel">
+  <div class="bench-main">
+    <h2>Income Statement — 10-Year P&amp;L</h2>
+    <p class="bench-sub">Every revenue and cost line, by year. Updates live from the model sliders. All figures in $ thousands unless noted.</p>
+    <div style="overflow-x:auto;">
+      <table class="pl-table" id="pl_table"></table>
+    </div>
+    <p class="source-note">Vaulta Rewards = the share of T-bill float paid out to consumers and merchants (COGS). Regulatory capital ($6M, GENIUS Act reserve) is a balance-sheet item and is excluded from the P&amp;L. EBITDA excludes D&amp;A, interest, and taxes.</p>
+
+    <h2 style="margin-top:26px;">Headcount by Function</h2>
+    <p class="bench-sub">Employees by area, by year. Compliance/BSA-AML cost is carried within G&amp;A (not payroll); shown here for the org picture.</p>
+    <div style="overflow-x:auto;">
+      <table class="pl-table" id="hc_table"></table>
+    </div>
+
+    <h2 style="margin-top:26px;">Seed — Use of Funds</h2>
+    <p class="bench-sub">The Seed raise funds Year-1 net burn plus a contingency buffer. (Regulatory capital is raised separately at Series A as a balance-sheet item.)</p>
+    <div style="overflow-x:auto;max-width:520px;">
+      <table class="pl-table" id="seed_table"></table>
+    </div>
+  </div>
 </div>
 
 <!-- ══ BENCHMARKS TAB ══ -->
@@ -392,37 +435,44 @@
   <!-- ══ SIDEBAR ══ -->
   <div class="sidebar">
 
-    <h3>Consumer Targets</h3>
-    <div class="targets-row">
-      <div class="target-box">
-        <div class="phase">Seed</div>
-        <input type="number" id="i_seed" value="1000" min="100" max="10000" step="100" oninput="update()">
-        <div class="sub">consumers</div>
-      </div>
-      <div class="target-box">
-        <div class="phase">Series A</div>
-        <input type="number" id="i_serA" value="25000" min="1000" max="100000" step="1000" oninput="update()">
-        <div class="sub">consumers</div>
-      </div>
-      <div class="target-box">
-        <div class="phase">Series B</div>
-        <input type="number" id="i_serB" value="500000" min="50000" max="2000000" step="10000" oninput="update()">
-        <div class="sub">consumers</div>
-      </div>
+    <h3>① Fees &amp; Pricing — biggest value driver</h3>
+
+    <div class="slider-row">
+      <label>Merchant Fee / Bill Payment <span id="lbl_mfeeflat">$2.00</span></label>
+      <div class="hint">~50% of the $3.95 incumbents charge; slide to $0 for "free-if-balance" deals</div>
+      <input type="range" id="i_mfeeflat" min="0" max="8" step="0.25" value="2.00" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Consumer Fee / Bill Payment <span id="lbl_confee">$0.00</span></label>
+      <div class="hint">Free to consumer (Bilt-style); slide up if you want to charge renters</div>
+      <input type="range" id="i_confee" min="0" max="5" step="0.10" value="0.00" oninput="update()">
     </div>
 
     <hr class="div">
-    <h3>Consumer — Primary Levers</h3>
+    <h3>② Deal Targets — Enterprise &amp; Local (per round)</h3>
+    <div class="hint" style="margin-bottom:8px;">New merchants signed during each round. Enterprise phases in at Series A.</div>
+    <div class="deal-grid">
+      <div></div><div style="text-align:center">Seed</div><div style="text-align:center">Ser A</div><div style="text-align:center">Ser B</div><div style="text-align:center">Steady</div>
+      <div class="rlabel">Local</div>
+      <input type="number" id="i_loc_seed"   class="grid-in" value="5"   min="0" max="500"   step="1" oninput="update()">
+      <input type="number" id="i_loc_serA"   class="grid-in" value="15"  min="0" max="2000"  step="1" oninput="update()">
+      <input type="number" id="i_loc_serB"   class="grid-in" value="45"  min="0" max="5000"  step="1" oninput="update()">
+      <input type="number" id="i_loc_steady" class="grid-in" value="120" min="0" max="10000" step="1" oninput="update()">
+      <div class="rlabel">Enterprise</div>
+      <input type="number" id="i_ent_seed"   class="grid-in" value="0"  min="0" max="100" step="1" oninput="update()">
+      <input type="number" id="i_ent_serA"   class="grid-in" value="2"  min="0" max="100" step="1" oninput="update()">
+      <input type="number" id="i_ent_serB"   class="grid-in" value="8"  min="0" max="200" step="1" oninput="update()">
+      <input type="number" id="i_ent_steady" class="grid-in" value="20" min="0" max="500" step="1" oninput="update()">
+    </div>
+    <div class="hint" style="margin-top:6px;">Deals spread evenly across each round's years; round lengths: Seed 1yr, Ser A 2yr, Ser B 3yr, Steady 4yr.</div>
+
+    <hr class="div">
+    <h3>③ Balances, Float &amp; Retention</h3>
 
     <div class="slider-row">
-      <label>Monthly Inflow (take-home) <span id="lbl_inflow">$4,500</span></label>
-      <div class="hint">Money loaded into the wallet per consumer/month (median renter-household take-home)</div>
-      <input type="range" id="i_inflow" min="1000" max="12000" step="100" value="4500" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Bill-Payment % of Inflow <span id="lbl_billpct">33%</span></label>
-      <div class="hint">Share of inflow paid as rent + utilities through the platform — drives merchant float</div>
-      <input type="range" id="i_billpct" min="0.05" max="0.80" step="0.01" value="0.33" oninput="update()">
+      <label>Merchant Retention % of Collections <span id="lbl_mretain">25%</span></label>
+      <div class="hint">Share of bill collections merchants park with Vaulta as avg balance (rest disbursed)</div>
+      <input type="range" id="i_mretain" min="0" max="1.0" step="0.05" value="0.25" oninput="update()">
     </div>
     <div class="slider-row">
       <label>Consumer Retained Balance <span id="lbl_retbal">$1,500</span></label>
@@ -434,41 +484,76 @@
       <div class="hint">Vaulta's cut of T-bill float; rest paid out as Vaulta Rewards (both sides)</div>
       <input type="range" id="i_sleeve" min="0.05" max="0.80" step="0.01" value="0.20" oninput="update()">
     </div>
-
-    <hr class="div">
-    <h3>Merchant &amp; Acquisition</h3>
-
     <div class="slider-row">
-      <label>Merchant Retention % of Collections <span id="lbl_mretain">25%</span></label>
-      <div class="hint">Share of bill collections merchants park with Vaulta as avg balance (rest disbursed)</div>
-      <input type="range" id="i_mretain" min="0" max="1.0" step="0.05" value="0.25" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Consumers per Merchant <span id="lbl_cpm">200</span></label>
-      <div class="hint">Avg units per apartment community; utilities push this far higher — drives merchant count &amp; BD</div>
-      <input type="range" id="i_cpm" min="20" max="2000" step="10" value="200" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Merchant Acquisition Cost <span id="lbl_merchacq">$3,000</span></label>
-      <div class="hint">Sales effort to sign one merchant; ÷ consumers-per-merchant → most of blended CAC</div>
-      <input type="range" id="i_merchacq" min="500" max="20000" step="250" value="3000" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Consumer Marketing / Consumer <span id="lbl_consmktg">$8</span></label>
-      <input type="range" id="i_consmktg" min="0" max="100" step="1" value="8" oninput="update()">
+      <label>Adoption Rate (of signed customers) <span id="lbl_adopt">50%</span></label>
+      <div class="hint">% of a signed merchant's customers who become active users — feeds CAC</div>
+      <input type="range" id="i_adopt" min="0.05" max="1.0" step="0.05" value="0.50" oninput="update()">
     </div>
 
     <hr class="div">
-    <h3>Fees (flat / payment) &amp; Churn</h3>
+    <h3>④ Marketing &amp; G&amp;A</h3>
 
     <div class="slider-row">
-      <label>Consumer Fee / Bill Payment <span id="lbl_confee">$0.50</span></label>
-      <input type="range" id="i_confee" min="0" max="5" step="0.10" value="0.50" oninput="update()">
+      <label>Brand Marketing (% of revenue) <span id="lbl_mktgpct">8%</span></label>
+      <div class="hint">Awareness/brand — serves whole base; in opex but NOT in CAC. Chime ~31% pure-D2C; we're leaner B2B2C</div>
+      <input type="range" id="i_mktgpct" min="0" max="0.30" step="0.01" value="0.08" oninput="update()">
     </div>
     <div class="slider-row">
-      <label>Merchant Fee / Bill Payment <span id="lbl_mfeeflat">$0.50</span></label>
-      <input type="range" id="i_mfeeflat" min="0" max="5" step="0.10" value="0.50" oninput="update()">
+      <label>Customer Activation <span id="lbl_activation">$25</span></label>
+      <div class="hint">Sign-up incentives / in-building activation per NEW customer — counts in CAC</div>
+      <input type="range" id="i_activation" min="0" max="150" step="5" value="25" oninput="update()">
     </div>
+    <div class="slider-row">
+      <label>G&amp;A (% of revenue) <span id="lbl_gapct">10%</span></label>
+      <div class="hint">Finance, HR, office, insurance, audit + compliance/AML; min $400k/yr floor</div>
+      <input type="range" id="i_gapct" min="0" max="0.30" step="0.01" value="0.10" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>⑤ Consumer Inflow</h3>
+
+    <div class="slider-row">
+      <label>Monthly Inflow (take-home) <span id="lbl_inflow">$4,500</span></label>
+      <div class="hint">Money loaded into the wallet per consumer/month (median renter-household take-home)</div>
+      <input type="range" id="i_inflow" min="1000" max="12000" step="100" value="4500" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Bill-Payment % of Inflow <span id="lbl_billpct">33%</span></label>
+      <div class="hint">Share of inflow paid as rent + utilities through the platform — drives merchant float</div>
+      <input type="range" id="i_billpct" min="0.05" max="0.80" step="0.01" value="0.33" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>⑥ Segment Economics (set once)</h3>
+
+    <div class="slider-row">
+      <label>Local Customers / Merchant <span id="lbl_loc_cpm">200</span></label>
+      <input type="range" id="i_loc_cpm" min="20" max="1000" step="10" value="200" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Local Deals / BD / yr <span id="lbl_loc_deals">8</span></label>
+      <input type="range" id="i_loc_deals" min="1" max="20" step="1" value="8" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Local BD Salary <span id="lbl_loc_sal">$80,000</span></label>
+      <input type="range" id="i_loc_sal" min="40000" max="160000" step="5000" value="80000" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Enterprise Customers / Merchant <span id="lbl_ent_cpm">50,000</span></label>
+      <input type="range" id="i_ent_cpm" min="5000" max="500000" step="5000" value="50000" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Enterprise Deals / BD / yr <span id="lbl_ent_deals">2</span></label>
+      <input type="range" id="i_ent_deals" min="1" max="10" step="1" value="2" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Enterprise BD Salary (+ bonus) <span id="lbl_ent_sal">$200,000</span></label>
+      <input type="range" id="i_ent_sal" min="100000" max="400000" step="10000" value="200000" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>⑦ Churn, Rates &amp; Funding</h3>
+
     <div class="slider-row">
       <label>Consumer Churn (annual) <span id="lbl_cchurn">20%</span></label>
       <input type="range" id="i_cchurn" min="0" max="0.50" step="0.01" value="0.20" oninput="update()">
@@ -477,30 +562,18 @@
       <label>Merchant Churn (annual) <span id="lbl_mchurn">8%</span></label>
       <input type="range" id="i_mchurn" min="0" max="0.40" step="0.01" value="0.08" oninput="update()">
     </div>
-
-    <hr class="div">
-    <h3>Secondary Levers</h3>
-
     <div class="slider-row">
       <label>T-Bill Annual Rate <span id="lbl_tbrate">3.7%</span></label>
       <input type="range" id="i_tbrate" min="0.01" max="0.08" step="0.001" value="0.037" oninput="update()">
     </div>
     <div class="slider-row">
-      <label>Steady-State Growth (Yr7+) <span id="lbl_ssgrowth">25%</span></label>
-      <input type="range" id="i_ssgrowth" min="0.05" max="0.60" step="0.05" value="0.25" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Series B Raise <span id="lbl_serBraise">$15M</span></label>
-      <input type="range" id="i_serBraise" min="5000000" max="50000000" step="1000000" value="15000000" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Seed Contingency Buffer <span id="lbl_seedbuf">20%</span></label>
-      <div class="hint">Added on top of 18-month runway to cover unexpected costs</div>
+      <label>Round Contingency Buffer <span id="lbl_seedbuf">20%</span></label>
+      <div class="hint">Added on top of phase burn to cover unexpected costs</div>
       <input type="range" id="i_seedbuf" min="0.00" max="0.75" step="0.05" value="0.20" oninput="update()">
     </div>
 
     <hr class="div">
-    <h3>Valuation Parameters</h3>
+    <h3>⑧ Valuation Parameters</h3>
 
     <div class="slider-row">
       <label>WACC <span id="lbl_wacc">20%</span></label>
@@ -516,16 +589,12 @@
     </div>
 
     <hr class="div">
-    <h3>Headcount &amp; Salaries</h3>
+    <h3>⑨ Headcount &amp; Salaries (set once)</h3>
     <div class="hint" style="color:#7fb3d3;margin-bottom:8px;">Annual salary per role (excl. benefits loading)</div>
 
     <div class="sal-row">
       <label>Engineering</label>
       <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_eng" value="150000" min="50000" max="400000" step="5000" oninput="update()"><span>/yr</span></div>
-    </div>
-    <div class="sal-row">
-      <label>Business Dev (Sales)</label>
-      <div class="sal-input-wrap"><span>$</span><input type="number" id="i_sal_bd" value="120000" min="50000" max="300000" step="5000" oninput="update()"><span>/yr</span></div>
     </div>
     <div class="sal-row">
       <label>Customer Service</label>
@@ -630,9 +699,9 @@
       </div>
 
       <div class="table-card">
-        <h4>EBITDA by Year</h4>
+        <h4>P&amp;L by Year (customers · merchants · revenue · EBITDA)</h4>
         <table>
-          <thead><tr><th>Year</th><th>Phase</th><th>Revenue</th><th>EBITDA</th></tr></thead>
+          <thead><tr><th>Yr</th><th>Phase</th><th>Cust</th><th>Merch</th><th>Rev</th><th>EBITDA</th></tr></thead>
           <tbody id="tbl_ebitda"></tbody>
         </table>
       </div>
@@ -649,6 +718,10 @@
           <span class="dlabel" style="font-weight:700;color:var(--navy)">Net contribution</span>
           <span class="dval" id="det_net">—</span>
         </div>
+        <div style="border-top:1px dashed #aab;margin-top:8px;padding-top:6px;font-size:9px;color:var(--dgrey);text-transform:uppercase;letter-spacing:0.4px">Company @ Year 10</div>
+        <div class="detail-row"><span class="dlabel">Merchants (Local + Enterprise)</span><span class="dval" id="det_merch">—</span></div>
+        <div class="detail-row"><span class="dlabel">Total headcount</span><span class="dval" id="det_heads">—</span></div>
+        <div class="detail-row"><span class="dlabel">Customers / employee</span><span class="dval" id="det_custemp">—</span></div>
       </div>
 
     </div>
@@ -710,14 +783,7 @@ let chartPL = null, chartCons = null;
 function model() {
   const g = id => +document.getElementById(id).value;
 
-  // Targets & growth
-  const seed     = g('i_seed');
-  const serA_tgt = g('i_serA');
-  const serB_tgt = g('i_serB');
-  const serA_yrs = 2, serB_yrs = 3;
-  const steady_g = g('i_ssgrowth');
-
-  // Consumer levers
+  // Consumer per-customer levers
   const inflow   = g('i_inflow');    // monthly take-home loaded into wallet
   const billPct  = g('i_billpct');   // % of inflow paid as bills via platform
   const retBal   = g('i_retbal');    // avg consumer retained balance
@@ -725,11 +791,11 @@ function model() {
   const tbRate   = g('i_tbrate');
   const tbDeploy = 1.0; // GENIUS Act: 100% of balances held in T-bills
 
-  // Merchant & acquisition levers
+  // Merchant float + marketing
   const mRetain  = g('i_mretain');   // % of collections parked with Vaulta (avg balance)
-  const CPM      = g('i_cpm');       // consumers per merchant
-  const merchAcq = g('i_merchacq');  // cost to acquire one merchant
-  const consMktg = g('i_consmktg');  // direct consumer marketing per consumer
+  const brandPct   = g('i_mktgpct');     // brand marketing as % of revenue (opex, NOT in CAC)
+  const activation = g('i_activation');  // activation $ per new customer (in CAC)
+  const gaPct    = g('i_gapct');     // G&A as % of revenue (min $400k/yr floor)
 
   // Fees (flat per bill payment) & churn
   const conFee   = g('i_confee');
@@ -738,73 +804,98 @@ function model() {
   const cChurn   = g('i_cchurn');    // consumer annual churn
   const mChurn   = g('i_mchurn');    // merchant annual churn
 
+  // Sales segments — deal targets per round + economics
+  const adopt    = g('i_adopt');     // % of a signed merchant's customers who become active
+  const locDeals=g('i_loc_deals'), locCPM=g('i_loc_cpm'), locSal=g('i_loc_sal');
+  const entDeals=g('i_ent_deals'), entCPM=g('i_ent_cpm'), entSal=g('i_ent_sal');
+  // New merchants signed during each round [Seed, SerA, SerB, Steady]
+  const locDeal = [g('i_loc_seed'), g('i_loc_serA'), g('i_loc_serB'), g('i_loc_steady')];
+  const entDeal = [g('i_ent_seed'), g('i_ent_serA'), g('i_ent_serB'), g('i_ent_steady')];
+
   // Valuation
   const WACC     = g('i_wacc');
   const exitM    = g('i_exitm');
   const termG    = 0.04;
   const survival = g('i_survival');
   const stageDsc = 0.65;
-  const serBRaise   = g('i_serBraise');
   const seedContBuf = g('i_seedbuf');
 
-  // Fixed cost constants
+  // Fixed cost constants (non-sales)
   const varInfra=0.50, infraBase=6000*12, infraGrowth=0.15;
-  const kycCost=2.50, GA=180000, GAGrowth=0.10, FCC=6000000, seedBuf=18, serABuf=18;
-  const csRatio=25000, bdDeals=8;
-  const engSal=g('i_sal_eng'), bdSal=g('i_sal_bd'), csSal=g('i_sal_cs'),
+  const kycCost=2.50, GA=180000, GAGrowth=0.10, seedBuf=18, serABuf=18;
+  const csRatio=30000;               // customers per CS rep (scales with customers)
+  const engSal=g('i_sal_eng'), csSal=g('i_sal_cs'),
         leadSal=g('i_sal_lead'), legalSal=g('i_sal_legal'), cyberSal=g('i_sal_cyber');
   const benefits = g('i_benefits') / 100;
 
-  const serAGrowth = Math.pow(serA_tgt/seed, 1/serA_yrs) - 1;
-  const serBGrowth = Math.pow(serB_tgt/serA_tgt, 1/serB_yrs) - 1;
   const phases = ['Seed','Ser A','Ser A','Ser B','Ser B','Ser B','Steady','Steady','Steady','Steady'];
+  const pv = (yr,sv,av,bv,tv) => yr===1?sv : yr<=3?av : yr<=6?bv : tv;
 
+  // New merchants signed per year = round's deals ÷ round length (Seed 1 / SerA 2 / SerB 3 / Steady 4 yrs)
+  const newLoc = yr => yr===1 ? locDeal[0] : yr<=3 ? locDeal[1]/2 : yr<=6 ? locDeal[2]/3 : locDeal[3]/4;
+  const newEnt = yr => yr===1 ? entDeal[0] : yr<=3 ? entDeal[1]/2 : yr<=6 ? entDeal[2]/3 : entDeal[3]/4;
+
+  // Cumulative merchants, net of merchant churn
+  const locMerch = new Array(11).fill(0), entMerch = new Array(11).fill(0);
+  for (let yr=1; yr<=10; yr++) {
+    locMerch[yr] = (yr>1?locMerch[yr-1]*(1-mChurn):0) + newLoc(yr);
+    entMerch[yr] = (yr>1?entMerch[yr-1]*(1-mChurn):0) + newEnt(yr);
+  }
+  const merch = yr => Math.round(locMerch[yr] + entMerch[yr]);
+
+  // BD headcount derived from new deals ÷ productivity (whole hires)
+  const locBD = yr => newLoc(yr)>0 ? Math.ceil(newLoc(yr)/locDeals) : 0;
+  const entBD = yr => newEnt(yr)>0 ? Math.ceil(newEnt(yr)/entDeals) : 0;
+
+  // Active customers = merchants × customers-per-merchant × adoption
   const cons = new Array(11).fill(0);
-  cons[1] = seed;
-  for (let yr=2; yr<=10; yr++) {
-    const rate = yr<=1+serA_yrs ? serAGrowth : yr<=1+serA_yrs+serB_yrs ? serBGrowth : steady_g;
-    cons[yr] = Math.round(cons[yr-1]*(1+rate));
-  }
+  for (let yr=1; yr<=10; yr++) cons[yr] = Math.round((locMerch[yr]*locCPM + entMerch[yr]*entCPM)*adopt);
+  const newCons = yr => yr===1 ? cons[1] : Math.max(0, cons[yr]-cons[yr-1]);
 
-  const pv = (yr,sv,av,bv,tv) => yr===1?sv : yr<=1+serA_yrs?av : yr<=1+serA_yrs+serB_yrs?bv : tv;
-  const merch    = yr => Math.max(1, Math.round(cons[yr]/CPM));
-  const newCons  = yr => yr===1 ? cons[1]  : Math.max(0, cons[yr]-cons[yr-1]);
-  const newMerch = yr => yr===1 ? merch(1) : Math.max(0, merch(yr)-merch(yr-1));
-  const cacTap   = yr => pv(yr,1.0,0.8,0.6,0.4);
+  // Per-consumer monthly bill volume + average balances earning float
+  const billMo = inflow*billPct;
+  const consBalAll  = yr => cons[yr]*retBal;
+  const merchBalAll = yr => cons[yr]*billMo*mRetain;
 
-  // Per-consumer monthly bill volume flowing to merchants
-  const billMo = inflow*billPct;                       // $/consumer/month paid as bills
-  // Average balances earning float
-  const consBalAll  = yr => cons[yr]*retBal;            // total consumer retained balance
-  const merchBalAll = yr => cons[yr]*billMo*mRetain;    // total merchant balance parked
+  // Sales cost = BD heads × loaded comp (per segment); marketing = % of sales
+  const salesCost = yr => (locBD(yr)*locSal + entBD(yr)*entSal)*(1+benefits);
+  const brand          = yr => totalRev(yr)*brandPct;   // brand/awareness — opex only (declared below; called after init)
+  const activationCost = yr => newCons(yr)*activation;  // acquisition — in CAC and opex
 
-  // Payroll — BD now scales with merchant count (few, large merchants)
-  function payroll(yr) {
-    const eng=pv(yr,2,3,8,12), legal=pv(yr,0,1,3,4), lead=pv(yr,1,2,3,3);
-    const cyber=pv(yr,0.3,0.5,1,1);
-    const cs = Math.max(2, Math.ceil(cons[yr]/csRatio));
-    const bd = Math.max(pv(yr,0,1,2,2), Math.ceil(newMerch(yr)/bdDeals));
-    return (eng*engSal+legal*legalSal+lead*leadSal+cyber*cyberSal+cs*csSal+bd*bdSal)*(1+benefits);
-  }
+  // Headcount by function: engineering (lean, AI-leveraged fixed ramp), CS (scales w/ customers), rest phase-based
+  const engHeads   = yr => pv(yr,4,8,15,25);          // leaner — AI development leverage
+  const csHeads    = yr => Math.max(2, Math.ceil(cons[yr]/csRatio));
+  const mgmtHeads  = yr => pv(yr,1,2,3,3);            // leadership / management
+  const legalHeads = yr => pv(yr,0,1,3,4);            // in-house legal
+  const cyberHeads = yr => pv(yr,0.3,0.5,1,1);        // security
+  const compHeads  = yr => pv(yr,1,1,2,3);            // compliance / BSA-AML (cost carried in G&A)
+  const engCost   = yr => engHeads(yr)*engSal*(1+benefits);
+  const csCost    = yr => csHeads(yr)*csSal*(1+benefits);
+  const otherPay  = yr => (legalHeads(yr)*legalSal + mgmtHeads(yr)*leadSal + cyberHeads(yr)*cyberSal)*(1+benefits);
+  const payroll   = yr => engCost(yr)+csCost(yr)+otherPay(yr);
+  // Total headcount (incl. compliance, whose cost sits in G&A) — for customers/employee sanity check
+  const heads = yr => engHeads(yr) + mgmtHeads(yr) + legalHeads(yr) + Math.round(cyberHeads(yr)) + compHeads(yr) + csHeads(yr) + locBD(yr) + entBD(yr);
 
   const infraFix = yr => infraBase*Math.pow(1+infraGrowth,yr-1);
   const infraVar = yr => cons[yr]*varInfra*12;
-  // Acquisition: merchant-led (merchant acq ÷ portfolio + light consumer marketing), efficiency taper
-  const mktg     = yr => (newMerch(yr)*merchAcq + newCons(yr)*consMktg)*cacTap(yr);
   const refrl    = yr => cons[yr]*0.015*5.00*12;
-  const gaAmt    = yr => GA*Math.pow(1+GAGrowth,yr-1);
+  const gaAmt    = yr => Math.max(400000, gaPct*totalRev(yr));  // % of revenue, $400k floor (incl. compliance)
   const legalRet = yr => pv(yr,5000,10000,18000,18000)*12;
   const kyc      = yr => newCons(yr)*kycCost;
-  const fccAmt   = yr => yr===2?FCC:0;
-  const opex     = yr => payroll(yr)+mktg(yr)+refrl(yr)+infraFix(yr)+gaAmt(yr)+legalRet(yr)+kyc(yr)+fccAmt(yr);
+  // FCC ($6M regulatory capital) is a balance-sheet raise, NOT a P&L expense — excluded from opex
+  const opex     = yr => payroll(yr)+salesCost(yr)+brand(yr)+activationCost(yr)+refrl(yr)+infraFix(yr)+gaAmt(yr)+legalRet(yr)+kyc(yr);
 
-  // Revenue: gross float on both balance pools + flat transaction fees
+  // Float: Vaulta earns gross T-bill income on balances, pays most back as Vaulta Rewards.
+  // NET-REVENUE presentation (bank/fintech standard): revenue = fees + net interest margin (the sleeve);
+  // rewards are netted out, not a COGS line. Gross float & rewards kept as memo items.
   const consFloatGross  = yr => consBalAll(yr)*tbDeploy*tbRate;
   const merchFloatGross = yr => merchBalAll(yr)*tbDeploy*tbRate;
+  const consFloatNet    = yr => consFloatGross(yr)*sleeve;
+  const merchFloatNet   = yr => merchFloatGross(yr)*sleeve;
+  const rewardsPayout   = yr => (consFloatGross(yr)+merchFloatGross(yr))*(1-sleeve); // memo: paid to users
   const feeRev          = yr => cons[yr]*BILLS_PER_MO*(conFee+merchFee)*12;
-  const totalRev        = yr => consFloatGross(yr)+merchFloatGross(yr)+feeRev(yr);
-  // COGS: rewards paid out (1-sleeve) of both float streams + variable infra
-  const totalCOGS       = yr => (consFloatGross(yr)+merchFloatGross(yr))*(1-sleeve) + infraVar(yr);
+  const totalRev        = yr => feeRev(yr)+consFloatNet(yr)+merchFloatNet(yr);
+  const totalCOGS       = yr => infraVar(yr);   // only variable infra; rewards netted from revenue
   const grossProfit     = yr => totalRev(yr)-totalCOGS(yr);
   const ebitda          = yr => grossProfit(yr)-opex(yr);
 
@@ -818,8 +909,10 @@ function model() {
   const netContrib   = vaultConsSlv+vaultMerchSlv+feeMo-varInfra;
   const netAnnual    = netContrib*12;
 
-  // Blended CAC per consumer (merchant-led): merchant cost ÷ portfolio + consumer marketing
-  const baseCAC = merchAcq/CPM + consMktg;
+  // Blended CAC per consumer = total acquisition spend (sales + marketing) ÷ total new customers (10-yr)
+  let totAcq=0, totNew=0;
+  for (let yr=1; yr<=10; yr++) { totAcq += salesCost(yr)+activationCost(yr); totNew += newCons(yr); }
+  const baseCAC = totNew>0 ? totAcq/totNew : 0;
 
   // LTV — 3-year, churn-adjusted, NPV at WACC (end-of-year)
   let ltv3 = 0;
@@ -829,12 +922,15 @@ function model() {
 
   const effYield      = tbRate*(1-sleeve);                // reward rate to consumer
   const rewardOnSpend = billMo>0 ? consRwd/billMo : 0;    // monthly reward ÷ monthly bills
+  const custPerEmp    = heads(10)>0 ? cons[10]/heads(10) : 0;
 
-  // Raises
-  const eb1=ebitda(1), eb2=ebitda(2);
-  const seedRaise = Math.max(500000, Math.max(0,-eb1)*seedBuf/12 * (1+seedContBuf));
-  const serARaise = Math.max(1000000, Math.max(0,-(eb1+eb2)) + Math.max(0,-eb2)*serABuf/12);
-  const totalRaised = seedRaise+serARaise+serBRaise;
+  // Raises — each round funds its phase's net burn + contingency (a profitable phase → ~$0)
+  const phaseBurn = (y0,y1) => { let s=0; for(let y=y0;y<=y1;y++) s+=ebitda(y); return s; };
+  const regCapital = 6000000; // GENIUS Act reserve — balance sheet, raised at Series A
+  const seedRaise = Math.max(500000, Math.max(0,-phaseBurn(1,1))*(1+seedContBuf));
+  const serARaise = Math.max(0, -phaseBurn(2,3))*(1+seedContBuf);
+  const serBRaise = Math.max(0, -phaseBurn(4,6))*(1+seedContBuf);
+  const totalRaised = seedRaise + serARaise + serBRaise + regCapital;
 
   // DCF
   let pvSum=0;
@@ -847,12 +943,16 @@ function model() {
   let beYear=null;
   for (let yr=1;yr<=10;yr++) if(ebitda(yr)>0){beYear=yr;break;}
 
-  return { cons, phases, merch, newMerch, totalRev, grossProfit, ebitda, opex,
-           consFloatGross, merchFloatGross, feeRev,
+  return { cons, phases, merch, locMerch, entMerch, locBD, entBD, heads, custPerEmp,
+           engHeads, csHeads, mgmtHeads, legalHeads, cyberHeads, compHeads,
+           totalRev, grossProfit, ebitda, opex, salesCost, brand, activationCost,
+           consFloatGross, merchFloatGross, consFloatNet, merchFloatNet, feeRev,
+           rewardsPayout, infraVar, totalCOGS,
+           engCost, csCost, otherPay, payroll, refrl, infraFix, gaAmt, legalRet, kyc,
            consFloatMo, consRwd, vaultConsSlv, merchFloatMo, vaultMerchSlv, feeMo,
            netContrib, netAnnual, ltv3, ltvCac, cacPayback, baseCAC,
            effYield, rewardOnSpend, billMo, mRetain, cChurn, mChurn,
-           seedRaise, serARaise, serBRaise, totalRaised,
+           seedRaise, serARaise, serBRaise, regCapital, totalRaised,
            EV, raEV, beYear, varInfra };
 }
 
@@ -864,17 +964,22 @@ function update() {
   setL('lbl_billpct',  fmtP(gv('i_billpct')));
   setL('lbl_retbal',   '$'+gv('i_retbal').toLocaleString());
   setL('lbl_sleeve',   fmtP(gv('i_sleeve')));
+  setL('lbl_loc_deals', gv('i_loc_deals'));
+  setL('lbl_loc_cpm',   gv('i_loc_cpm').toLocaleString());
+  setL('lbl_loc_sal',   '$'+gv('i_loc_sal').toLocaleString());
+  setL('lbl_ent_deals', gv('i_ent_deals'));
+  setL('lbl_ent_cpm',   gv('i_ent_cpm').toLocaleString());
+  setL('lbl_ent_sal',   '$'+gv('i_ent_sal').toLocaleString());
+  setL('lbl_adopt',    fmtP(gv('i_adopt')));
   setL('lbl_mretain',  fmtP(gv('i_mretain')));
-  setL('lbl_cpm',      gv('i_cpm').toLocaleString());
-  setL('lbl_merchacq', '$'+gv('i_merchacq').toLocaleString());
-  setL('lbl_consmktg', '$'+gv('i_consmktg'));
+  setL('lbl_mktgpct',  fmtP(gv('i_mktgpct')));
+  setL('lbl_activation', '$'+gv('i_activation'));
+  setL('lbl_gapct',    fmtP(gv('i_gapct')));
   setL('lbl_confee',   '$'+gv('i_confee').toFixed(2));
   setL('lbl_mfeeflat', '$'+gv('i_mfeeflat').toFixed(2));
   setL('lbl_cchurn',   fmtP(gv('i_cchurn')));
   setL('lbl_mchurn',   fmtP(gv('i_mchurn')));
   setL('lbl_tbrate',   fmtP2(gv('i_tbrate')));
-  setL('lbl_ssgrowth', fmtP(gv('i_ssgrowth')));
-  setL('lbl_serBraise','$'+(gv('i_serBraise')/1e6).toFixed(0)+'M');
   setL('lbl_seedbuf',  fmtP(gv('i_seedbuf')));
   setL('lbl_wacc',     fmtP(gv('i_wacc')));
   setL('lbl_exitm',    gv('i_exitm')+'x');
@@ -945,21 +1050,19 @@ function update() {
     }
   });
 
-  // Funding table
-  const serAOps = Math.max(0, m.serARaise - 6000000);
-  const serAFCC = 6000000;
+  // Funding table — each round funds its phase burn; reg capital is a separate balance-sheet raise
   document.getElementById('tbl_raises').innerHTML = [
-    ['Seed', m.seedRaise, ''],
-    ['Series A — Operations', serAOps, ''],
-    ['Series A — Regulatory Capital', serAFCC, 'non-risk, balance sheet'],
-    ['Series B', m.serBRaise, ''],
+    ['Seed', m.seedRaise, 'phase burn + buffer'],
+    ['Series A — Operations', m.serARaise, 'phase burn + buffer'],
+    ['Series A — Regulatory Capital', m.regCapital, 'non-risk, balance sheet'],
+    ['Series B', m.serBRaise, 'phase burn + buffer'],
     ['Total', m.totalRaised, '']
   ].map(([r,a,note],i)=>`<tr>
     <td class="${i===4?'bold':''}">${r}${note?` <span style="font-size:9px;color:#999;font-weight:400">(${note})</span>`:''}</td>
     <td class="${i===4?'bold pos':'pos'}">${fmtD(a)}</td>
   </tr>`).join('');
 
-  // EBITDA table
+  // P&L by year — customers, merchants, revenue, EBITDA
   let html='';
   for (let yr=1;yr<=10;yr++) {
     const eb=m.ebitda(yr), rev=m.totalRev(yr);
@@ -967,6 +1070,8 @@ function update() {
     html+=`<tr>
       <td>${2026+yr}${be}</td>
       <td style="font-size:10px;color:#888">${m.phases[yr-1]}</td>
+      <td>${fmtM(m.cons[yr])}</td>
+      <td>${m.merch(yr).toLocaleString()}</td>
       <td>${fmtD(rev)}</td>
       <td class="${eb>=0?'pos':'neg'}">${fmtD(eb)}</td>
     </tr>`;
@@ -981,6 +1086,9 @@ function update() {
   document.getElementById('det_fee').textContent      = fmtDf(m.feeMo);
   document.getElementById('det_infra').textContent    = '-$'+m.varInfra.toFixed(2);
   document.getElementById('det_net').textContent      = fmtDf(m.netContrib);
+  document.getElementById('det_merch').textContent    = Math.round(m.locMerch[10]+m.entMerch[10]).toLocaleString()+' ('+Math.round(m.locMerch[10]).toLocaleString()+' local + '+Math.round(m.entMerch[10]).toLocaleString()+' ent)';
+  document.getElementById('det_heads').textContent    = Math.round(m.heads(10)).toLocaleString();
+  document.getElementById('det_custemp').textContent  = Math.round(m.custPerEmp).toLocaleString();
 
   // ── Benchmarks tab — live VaultaPay column ──
   const gmYr5 = m.totalRev(5)>0 ? (m.grossProfit(5)/m.totalRev(5)) : 0;
@@ -1009,18 +1117,117 @@ function update() {
   document.getElementById('bm_eb_yr4').innerHTML = fmtEb(4);
   document.getElementById('bm_eb_yr5').innerHTML = fmtEb(5);
 
+  renderPL(m);
+
   if (document.getElementById('tab-pitch').classList.contains('active')) sendPitchData();
+}
+
+// ── Line-item P&L (Financials tab) ──
+function renderPL(m) {
+  const el = document.getElementById('pl_table');
+  if (!el) return;
+  const yrs = []; for (let y=1;y<=10;y++) yrs.push(2026+y);
+  const k = v => { const t = Math.round(v/1000); return t<0 ? '('+Math.abs(t).toLocaleString()+')' : (t===0 ? '0' : t.toLocaleString()); };
+  const row = (label, fn, cls='') => {
+    let tds=''; for (let y=1;y<=10;y++){ const v=fn(y); tds += `<td class="${v<0?'neg':''}">${k(v)}</td>`; }
+    return `<tr class="${cls}"><td>${label}</td>${tds}</tr>`;
+  };
+  const cntRow = (label, fn, cls='indent') => {
+    let tds=''; for (let y=1;y<=10;y++) tds += `<td>${Math.round(fn(y)).toLocaleString()}</td>`;
+    return `<tr class="${cls}"><td>${label}</td>${tds}</tr>`;
+  };
+  const blank = `<tr class="section"><td>{T}</td>${'<td></td>'.repeat(10)}</tr>`;
+  const head = '<thead><tr><th>($000s)</th>'+yrs.map(y=>`<th>${y}</th>`).join('')+'</tr></thead>';
+  let b = '';
+  b += blank.replace('{T}','Revenue (net)');
+  b += row('Transaction fees', m.feeRev, 'indent');
+  b += row('Net float income — consumer', m.consFloatNet, 'indent');
+  b += row('Net float income — merchant', m.merchFloatNet, 'indent');
+  b += row('Total revenue', m.totalRev, 'subtotal');
+  b += blank.replace('{T}','Cost of revenue');
+  b += row('Variable infrastructure', y=>-m.infraVar(y), 'indent');
+  b += row('Gross profit', m.grossProfit, 'subtotal');
+  b += blank.replace('{T}','Operating expenses');
+  b += row('Engineering', y=>-m.engCost(y), 'indent');
+  b += row('Customer service', y=>-m.csCost(y), 'indent');
+  b += row('Other payroll (legal/lead/cyber)', y=>-m.otherPay(y), 'indent');
+  b += row('Sales — business development', y=>-m.salesCost(y), 'indent');
+  b += row('Customer activation (acquisition)', y=>-m.activationCost(y), 'indent');
+  b += row('Brand marketing', y=>-m.brand(y), 'indent');
+  b += row('Referrals', y=>-m.refrl(y), 'indent');
+  b += row('Infrastructure (fixed)', y=>-m.infraFix(y), 'indent');
+  b += row('G&amp;A', y=>-m.gaAmt(y), 'indent');
+  b += row('Legal retainer', y=>-m.legalRet(y), 'indent');
+  b += row('KYC / onboarding', y=>-m.kyc(y), 'indent');
+  b += row('Total operating expenses', y=>-m.opex(y), 'subtotal');
+  b += row('EBITDA', m.ebitda, 'total');
+  b += blank.replace('{T}','Memo — float economics (netted from revenue above)');
+  b += row('Gross T-bill income on balances', y=>m.consFloatGross(y)+m.merchFloatGross(y), 'indent');
+  b += row('Vaulta Rewards paid to users', y=>-m.rewardsPayout(y), 'indent');
+  b += blank.replace('{T}','Operating metrics (count)');
+  b += cntRow('Active customers', y=>m.cons[y]);
+  b += cntRow('Merchants', y=>m.merch(y));
+  b += cntRow('Total headcount', y=>m.heads(y));
+  el.innerHTML = head + '<tbody>'+b+'</tbody>';
+
+  // Headcount by function
+  const hc = document.getElementById('hc_table');
+  if (hc) {
+    const hhead = '<thead><tr><th>Function</th>'+yrs.map(y=>`<th>${y}</th>`).join('')+'</tr></thead>';
+    let h = '';
+    h += cntRow('Engineering', y=>m.engHeads(y));
+    h += cntRow('Management', y=>m.mgmtHeads(y));
+    h += cntRow('Legal', y=>m.legalHeads(y));
+    h += cntRow('Compliance / AML', y=>m.compHeads(y));
+    h += cntRow('Cybersecurity', y=>m.cyberHeads(y));
+    h += cntRow('Customer Service', y=>m.csHeads(y));
+    h += cntRow('Sales — BD (Local)', y=>m.locBD(y));
+    h += cntRow('Sales — BD (Enterprise)', y=>m.entBD(y));
+    h += `<tr class="total"><td>Total</td>${yrs.map((_,i)=>`<td>${Math.round(m.heads(i+1)).toLocaleString()}</td>`).join('')}</tr>`;
+    hc.innerHTML = hhead + '<tbody>'+h+'</tbody>';
+  }
+
+  // Seed — Use of Funds (Year-1 burn + contingency)
+  const sf = document.getElementById('seed_table');
+  if (sf) {
+    const items = [
+      ['Engineering ('+m.engHeads(1)+' FTE)',                   m.engCost(1)],
+      ['G&amp;A + compliance',                                  m.gaAmt(1)],
+      ['Other payroll (legal / leadership / cyber)',            m.otherPay(1)],
+      ['Customer service',                                      m.csCost(1)],
+      ['Sales — business development',                          m.salesCost(1)],
+      ['Infrastructure (fixed)',                                m.infraFix(1)],
+      ['Legal retainer',                                        m.legalRet(1)],
+      ['Customer activation',                                   m.activationCost(1)],
+      ['Brand marketing',                                       m.brand(1)],
+      ['Infrastructure (variable)',                             m.infraVar(1)],
+      ['KYC / onboarding',                                      m.kyc(1)],
+      ['Referrals',                                             m.refrl(1)]
+    ];
+    const totalCosts = items.reduce((a,[,v])=>a+v,0);
+    const rev = m.totalRev(1), burn = -m.ebitda(1), buffer = m.seedRaise - burn;
+    let s = '<thead><tr><th>Use of Funds</th><th>$000s</th></tr></thead><tbody>';
+    items.forEach(([l,v]) => { s += `<tr class="indent"><td>${l}</td><td>${k(v)}</td></tr>`; });
+    s += `<tr class="subtotal"><td>Total Year-1 operating costs</td><td>${k(totalCosts)}</td></tr>`;
+    s += `<tr class="indent"><td>Less: Year-1 revenue</td><td>(${Math.round(rev/1000).toLocaleString()})</td></tr>`;
+    s += `<tr class="subtotal"><td>Net cash burn (Year 1)</td><td>${k(burn)}</td></tr>`;
+    s += `<tr class="indent"><td>Contingency buffer</td><td>${k(buffer)}</td></tr>`;
+    s += `<tr class="total"><td>Seed raise</td><td>${k(m.seedRaise)}</td></tr>`;
+    sf.innerHTML = s + '</tbody>';
+  }
 }
 
 // ── All saveable input IDs ──
 const SAVED_INPUTS = [
-  'i_seed','i_serA','i_serB',
   'i_inflow','i_billpct','i_retbal','i_sleeve',
-  'i_mretain','i_cpm','i_merchacq','i_consmktg',
+  'i_loc_seed','i_loc_serA','i_loc_serB','i_loc_steady',
+  'i_ent_seed','i_ent_serA','i_ent_serB','i_ent_steady',
+  'i_loc_deals','i_loc_cpm','i_loc_sal','i_ent_deals','i_ent_cpm','i_ent_sal',
+  'i_adopt','i_mretain','i_mktgpct','i_activation','i_gapct',
   'i_confee','i_mfeeflat','i_cchurn','i_mchurn',
-  'i_tbrate','i_ssgrowth','i_serBraise','i_seedbuf',
+  'i_tbrate','i_seedbuf',
   'i_wacc','i_exitm','i_survival',
-  'i_sal_eng','i_sal_bd','i_sal_cs','i_sal_lead','i_sal_legal','i_sal_cyber','i_benefits'
+  'i_sal_eng','i_sal_cs','i_sal_lead','i_sal_legal','i_sal_cyber','i_benefits'
 ];
 
 // On load: restore saved values from localStorage; show save button only for owner
