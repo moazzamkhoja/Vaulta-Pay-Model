@@ -467,7 +467,25 @@
     <div class="hint" style="margin-top:6px;">Deals spread evenly across each round's years; round lengths: Seed 1yr, Ser A 2yr, Ser B 3yr, Steady 4yr.</div>
 
     <hr class="div">
-    <h3>③ Balances, Float &amp; Retention</h3>
+    <h3>③ Customers / Merchant &amp; Adoption — scale drivers</h3>
+
+    <div class="slider-row">
+      <label>Enterprise Customers / Merchant <span id="lbl_ent_cpm">50,000</span></label>
+      <div class="hint">Units/accounts per enterprise win (EQR 83k, Greystar 800k) — biggest EV lever</div>
+      <input type="range" id="i_ent_cpm" min="5000" max="500000" step="5000" value="50000" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Local Customers / Merchant <span id="lbl_loc_cpm">200</span></label>
+      <input type="range" id="i_loc_cpm" min="20" max="1000" step="10" value="200" oninput="update()">
+    </div>
+    <div class="slider-row">
+      <label>Adoption Rate (of signed customers) <span id="lbl_adopt">50%</span></label>
+      <div class="hint">% of a signed merchant's customers who become active users — feeds CAC</div>
+      <input type="range" id="i_adopt" min="0.05" max="1.0" step="0.05" value="0.50" oninput="update()">
+    </div>
+
+    <hr class="div">
+    <h3>④ Balances, Float &amp; Retention</h3>
 
     <div class="slider-row">
       <label>Merchant Retention % of Collections <span id="lbl_mretain">25%</span></label>
@@ -484,14 +502,9 @@
       <div class="hint">Vaulta's cut of T-bill float; rest paid out as Vaulta Rewards (both sides)</div>
       <input type="range" id="i_sleeve" min="0.05" max="0.80" step="0.01" value="0.20" oninput="update()">
     </div>
-    <div class="slider-row">
-      <label>Adoption Rate (of signed customers) <span id="lbl_adopt">50%</span></label>
-      <div class="hint">% of a signed merchant's customers who become active users — feeds CAC</div>
-      <input type="range" id="i_adopt" min="0.05" max="1.0" step="0.05" value="0.50" oninput="update()">
-    </div>
 
     <hr class="div">
-    <h3>④ Marketing &amp; G&amp;A</h3>
+    <h3>⑤ Marketing &amp; G&amp;A</h3>
 
     <div class="slider-row">
       <label>Brand Marketing (% of revenue) <span id="lbl_mktgpct">8%</span></label>
@@ -510,7 +523,7 @@
     </div>
 
     <hr class="div">
-    <h3>⑤ Consumer Inflow</h3>
+    <h3>⑥ Consumer Inflow</h3>
 
     <div class="slider-row">
       <label>Monthly Inflow (take-home) <span id="lbl_inflow">$4,500</span></label>
@@ -524,12 +537,8 @@
     </div>
 
     <hr class="div">
-    <h3>⑥ Segment Economics (set once)</h3>
+    <h3>⑦ Sales Productivity &amp; Comp (set once)</h3>
 
-    <div class="slider-row">
-      <label>Local Customers / Merchant <span id="lbl_loc_cpm">200</span></label>
-      <input type="range" id="i_loc_cpm" min="20" max="1000" step="10" value="200" oninput="update()">
-    </div>
     <div class="slider-row">
       <label>Local Deals / BD / yr <span id="lbl_loc_deals">8</span></label>
       <input type="range" id="i_loc_deals" min="1" max="20" step="1" value="8" oninput="update()">
@@ -537,10 +546,6 @@
     <div class="slider-row">
       <label>Local BD Salary <span id="lbl_loc_sal">$80,000</span></label>
       <input type="range" id="i_loc_sal" min="40000" max="160000" step="5000" value="80000" oninput="update()">
-    </div>
-    <div class="slider-row">
-      <label>Enterprise Customers / Merchant <span id="lbl_ent_cpm">50,000</span></label>
-      <input type="range" id="i_ent_cpm" min="5000" max="500000" step="5000" value="50000" oninput="update()">
     </div>
     <div class="slider-row">
       <label>Enterprise Deals / BD / yr <span id="lbl_ent_deals">2</span></label>
@@ -552,7 +557,7 @@
     </div>
 
     <hr class="div">
-    <h3>⑦ Churn, Rates &amp; Funding</h3>
+    <h3>⑧ Churn, Rates &amp; Funding</h3>
 
     <div class="slider-row">
       <label>Consumer Churn (annual) <span id="lbl_cchurn">20%</span></label>
@@ -573,7 +578,7 @@
     </div>
 
     <hr class="div">
-    <h3>⑧ Valuation Parameters</h3>
+    <h3>⑨ Valuation Parameters</h3>
 
     <div class="slider-row">
       <label>WACC <span id="lbl_wacc">20%</span></label>
@@ -589,7 +594,7 @@
     </div>
 
     <hr class="div">
-    <h3>⑨ Headcount &amp; Salaries (set once)</h3>
+    <h3>⑩ Headcount &amp; Salaries (set once)</h3>
     <div class="hint" style="color:#7fb3d3;margin-bottom:8px;">Annual salary per role (excl. benefits loading)</div>
 
     <div class="sal-row">
