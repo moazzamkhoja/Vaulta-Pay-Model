@@ -195,16 +195,20 @@ body {
   content: '→'; position: absolute; right: -8px; top: 68px;
   font-size: 16px; color: var(--green); font-weight: 700; z-index: 2;
 }
+/* Phone frame aspect is pinned to the iPhone Pro screenshot size (1179×2556).
+   object-fit:contain guarantees the FULL screenshot shows — never cropped.
+   To swap screenshots: re-capture on an iPhone Pro (or any 1179×2556 / 9:19.5
+   device) and the new images drop in with a perfect fit, no CSS changes. */
 .hiw-phone {
-  width: 190px; height: 380px; border-radius: 22px;
+  height: 380px; aspect-ratio: 1179 / 2556; border-radius: 22px;
   overflow: hidden; margin-bottom: 8px; flex-shrink: 0;
-  border: 2px solid var(--border);
+  border: 2px solid var(--border); background: #000;
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 .hiw-phone img {
   width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  object-fit: contain;
+  object-position: center;
 }
 .step-num {
   width: 38px; height: 38px; border-radius: 50%;
@@ -451,14 +455,14 @@ body {
     </svg>
   </div>
   <h1>Vault<span>a</span>Pay</h1>
-  <p class="tagline">Blockchain-native payments — lower merchant fees, real consumer rewards, no bank required</p>
+  <p class="tagline">The blockchain bill-pay portal — free bill pay for renters, lower fees for operators, rewards on every dollar</p>
   <div class="cover-pill">● Seed Round · 2026</div>
   <div class="raise-badge">
-    <div class="item"><div class="val">$<span>2M</span></div><div class="lbl">Raising</div></div>
+    <div class="item"><div class="val">$<span>2.1M</span></div><div class="lbl">Raising (Seed)</div></div>
     <div class="divider-v"></div>
-    <div class="item"><div class="val">$<span>8M</span></div><div class="lbl">Pre-Money</div></div>
+    <div class="item"><div class="val"><span id="cv_be">Year 4</span></div><div class="lbl">Break-even</div></div>
     <div class="divider-v"></div>
-    <div class="item"><div class="val">$<span>10M</span></div><div class="lbl">Post-Money</div></div>
+    <div class="item"><div class="val"><span id="cv_ltvcac">3.8×</span></div><div class="lbl">LTV : CAC</div></div>
   </div>
 </div>
 
@@ -466,26 +470,26 @@ body {
 <div class="slide" id="s2">
   <div class="slide-inner">
     <div class="slide-label">The Problem</div>
-    <div class="slide-title">The payment system is broken.<br><em>Banks win. Everyone else pays.</em></div>
+    <div class="slide-title">Rent and utilities are the two biggest bills —<br><em>and the most expensive to pay.</em></div>
     <div class="slide-body">
       <div class="problem-cards">
         <div class="pcard">
+          <div><div class="icon">🧾</div>
+          <h3>Renters Pay to Pay</h3>
+          <p>Paying rent or a utility bill online carries a <strong>$2–$3.95 convenience fee</strong> per payment (or 2.5–3.5% on card). On rent + utilities every month, that's a recurring tax on the largest checks a household writes.</p></div>
+          <div class="stat"><span>$2–$3.95</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">convenience fee per bill payment</small></div>
+        </div>
+        <div class="pcard">
           <div><div class="icon">🏦</div>
-          <h3>Your Money Works for the Bank, Not You</h3>
-          <p>Banks borrow your checking balance at 0.08% and lend it out at 7–24%. The layered banking system has no mechanism to pass any of that return back to depositors.</p></div>
-          <div class="stat"><span>$4.7T</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">in US checking accounts earning near zero</small></div>
+          <h3>Checking Earns ~0%</h3>
+          <p>The ~$2,000 a household parks in checking to cover rent + utilities earns essentially nothing — banks hold the float and keep the T-bill income for themselves.</p></div>
+          <div class="stat"><span>~0%</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">earned on rent/utility float in checking</small></div>
         </div>
         <div class="pcard">
-          <div><div class="icon">💸</div>
-          <h3>Merchants Pay 2–3% to Get Paid</h3>
-          <p>Visa, Mastercard, issuing banks, and acquiring banks each take a cut — a 4-layer system built for the 1970s. Small merchants processing $500K/yr hand over $10K–$15K in fees.</p></div>
-          <div class="stat"><span>$160B</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">paid in US card network fees annually</small></div>
-        </div>
-        <div class="pcard">
-          <div><div class="icon">🚫</div>
-          <h3>22 Million Americans Are Locked Out</h3>
-          <p>Unbanked and underbanked consumers can't access rewards programs, earn on their balances, or participate in digital payments on equal terms. A phone is their only bank.</p></div>
-          <div class="stat"><span>22M</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">unbanked / underbanked Americans</small></div>
+          <div><div class="icon">🏢</div>
+          <h3>Operators Pay &amp; Get Nothing</h3>
+          <p>Apartment operators and utilities pay processing costs and SaaS fees to collect, sit on large parked balances between cycles, and earn <strong>nothing</strong> on that float. Bilt processes <strong>$45B+/yr</strong> in rent — proof the volume is enormous.</p></div>
+          <div class="stat"><span>$45B+</span><br><small style="font-size:12px;font-weight:400;color:var(--grey)">annual US rent volume on Bilt alone</small></div>
         </div>
       </div>
     </div>
@@ -496,30 +500,28 @@ body {
 <div class="slide" id="s3">
   <div class="slide-inner">
     <div class="slide-label">The Solution</div>
-    <div class="slide-title">Replace 4 layers of banking<br>with <em>one blockchain</em></div>
+    <div class="slide-title">Pay rent &amp; utilities on stablecoin rails —<br><em>free to the renter, cheaper for the operator</em></div>
     <div class="slide-body" style="flex-direction:column; gap:16px;">
 
       <!-- Flow chains -->
       <div class="sol-flows">
         <div class="sol-flow-row old">
           <span class="sol-flow-lbl">Old Way</span>
-          <div class="fnode old">Consumer</div>
+          <div class="fnode old">Renter (+$2–3.95 fee)</div>
           <span class="farr">→</span>
-          <div class="fnode old">Issuing Bank</div>
+          <div class="fnode old">Bank / Card Rails</div>
           <span class="farr">→</span>
-          <div class="fnode old">Visa / MC</div>
+          <div class="fnode old">Processor + SaaS</div>
           <span class="farr">→</span>
-          <div class="fnode old">Acquiring Bank</div>
-          <span class="farr">→</span>
-          <div class="fnode old">Merchant</div>
+          <div class="fnode old">Operator / Utility</div>
         </div>
         <div class="sol-flow-row new">
           <span class="sol-flow-lbl">VaultaPay</span>
-          <div class="fnode new">Consumer (vUSD wallet)</div>
+          <div class="fnode new">Renter — $0 (vUSD wallet)</div>
           <span class="farr new">——————————→</span>
           <div class="fnode new">Solana Blockchain</div>
           <span class="farr new">——————————→</span>
-          <div class="fnode new">Merchant (vUSD wallet)</div>
+          <div class="fnode new">Operator / Utility (vUSD)</div>
         </div>
       </div>
 
@@ -527,28 +529,28 @@ body {
       <table class="sol-table">
         <tr>
           <th style="text-align:left; width:28%;">Metric</th>
-          <th>Old Way (4 layers)</th>
-          <th class="new-h">VaultaPay (Blockchain)</th>
+          <th>Old Way (fees + SaaS)</th>
+          <th class="new-h">VaultaPay (Bill-Pay Portal)</th>
         </tr>
         <tr>
-          <td class="metric-col">Intermediaries</td>
-          <td class="bad">4 layers</td>
-          <td class="good">1 (blockchain)</td>
+          <td class="metric-col">Renter Pays</td>
+          <td class="bad">$2–$3.95 per bill</td>
+          <td class="good">$0 — free</td>
         </tr>
         <tr>
-          <td class="metric-col">Merchant Fee</td>
-          <td class="bad">2–3%</td>
-          <td class="good" id="s3_mfee">0.80%</td>
+          <td class="metric-col">Operator / Utility Pays</td>
+          <td class="bad">processing + SaaS/unit</td>
+          <td class="good" id="s3_mfee">$2 flat / payment</td>
         </tr>
         <tr>
           <td class="metric-col">Settlement Time</td>
           <td class="bad">1–3 days</td>
-          <td class="good">&lt;1 second</td>
+          <td class="good">&lt;1 second (Solana)</td>
         </tr>
         <tr>
-          <td class="metric-col">Consumer Rewards</td>
-          <td class="bad">None (checking accts)</td>
-          <td class="good">✓ Every 90-day cycle</td>
+          <td class="metric-col">Rewards on Balances</td>
+          <td class="bad">None — bank keeps float</td>
+          <td class="good">✓ Both sides earn Vaulta Rewards</td>
         </tr>
         <tr>
           <td class="metric-col">Bank Account Required</td>
@@ -556,21 +558,21 @@ body {
           <td class="good">No</td>
         </tr>
         <tr>
-          <td class="metric-col">Network Tx Cost</td>
-          <td class="bad">~$0.30+</td>
-          <td class="good">$0.0005</td>
+          <td class="metric-col">P2P Transfers</td>
+          <td class="bad">often fee'd / slow</td>
+          <td class="good">Free &amp; instant</td>
         </tr>
       </table>
 
       <!-- Enablers -->
       <div class="sol-enablers-row">
         <div class="sol-enabler">
-          <div class="eicon">⚖️</div>
-          <div><h5>GENIUS Act (2025) — Why Rewards Are Legal</h5><p>First US federal law authorizing stablecoins to hold T-bill reserves. Vaulta passes float income back as Vaulta Rewards — legally compliant from day one.</p></div>
+          <div class="eicon">🏠</div>
+          <div><h5>"Bilt, but on-chain"</h5><p>Bilt proved rent-as-a-platform is worth $10B — but the renter is locked to a card and the operator still pays. VaultaPay is free to the renter, cheaper for the operator, and rewards both sides.</p></div>
         </div>
         <div class="sol-enabler">
-          <div class="eicon">⚡</div>
-          <div><h5>Solana — Why Merchant Fees Can Be <span id="s3_mfee2">0.80%</span></h5><p>$0.0005/tx makes blockchain settlement 600x cheaper than card processing — enabling sub-1% fees that are still profitable at scale.</p></div>
+          <div class="eicon">⚖️</div>
+          <div><h5>GENIUS Act — Why Rewards Are Legal</h5><p>First US federal law authorizing stablecoins to hold T-bill reserves. VaultaPay passes float income back as Vaulta Rewards — compliant from day one. Solana settlement at $0.0005/tx makes a $2 flat fee profitable.</p></div>
         </div>
       </div>
 
@@ -582,32 +584,32 @@ body {
 <div class="slide" id="s4">
   <div class="slide-inner">
     <div class="slide-label">Why Now</div>
-    <div class="slide-title">Regulation, technology, and consumer<br>behavior are <em>converging</em></div>
+    <div class="slide-title">Regulation, rails, and a $10B proof point<br>are <em>converging</em></div>
     <div class="slide-body" style="align-items:stretch;">
       <div class="whynow-grid" style="width:100%;">
         <div class="wncard">
           <div class="wn-tag law">Legislation</div>
           <h3>GENIUS Act — Signed 2025</h3>
-          <p>First US federal law defining stablecoin reserve requirements. Stablecoins backed by T-bills are now legally recognized — the regulatory foundation for VaultaPay's Vaulta Rewards model. Without this, passing float income to consumers was legally ambiguous.</p>
+          <p>First US federal law defining stablecoin reserve requirements. T-bill-backed stablecoins are now legally recognized — the foundation for VaultaPay's Vaulta Rewards model. Without it, passing float income back was legally ambiguous.</p>
           <div class="wn-stat">$<span>200B+</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">total stablecoin supply, growing 40% YoY</small></div>
         </div>
         <div class="wncard">
           <div class="wn-tag law">Legislation</div>
           <h3>CLARITY Act — In Progress</h3>
-          <p>Pending legislation that establishes clear legal classification for digital assets across the US regulatory landscape. Passage removes the final ambiguity holding back institutional adoption of blockchain-settled payments at scale.</p>
+          <p>Pending legislation that establishes clear legal classification for digital assets. Passage removes the final ambiguity holding back institutional adoption of blockchain-settled payments at scale.</p>
           <div class="wn-stat"><span>2026</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">expected legislative window for passage</small></div>
         </div>
         <div class="wncard">
           <div class="wn-tag tech">Technology</div>
           <h3>Solana — Production-Ready at Scale</h3>
-          <p>65,000 TPS, sub-400ms finality, $0.0005 per transaction. The infrastructure to displace card networks now exists and is battle-tested in production. This was not true 3 years ago.</p>
+          <p>65,000 TPS, sub-400ms finality, $0.0005 per transaction. The rails to settle rent and utilities instantly and near-free now exist and are battle-tested in production. This was not true 3 years ago.</p>
           <div class="wn-stat"><span>600x</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">cheaper per tx than card network processing</small></div>
         </div>
         <div class="wncard">
           <div class="wn-tag market">Market</div>
-          <h3>Consumers Are Ready to Demand More</h3>
-          <p>76% of consumers say rewards are a top reason to choose a payment method (J.D. Power 2024). Banks still offer 0.08% on checking — while VaultaPay users earn up to <strong><span id="s4_eff_yield">3.15%</span></strong> on their balance as Vaulta Rewards simply for transacting through the app.</p>
-          <div class="wn-stat"><span id="s4_eff_yield_stat">3.15%</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">Vaulta Rewards rate vs 0.08% checking</small></div>
+          <h3>Bilt Proved Rent-as-a-Platform</h3>
+          <p>Bilt hit a <strong>$10B valuation</strong> turning rent into a rewards platform — but renters are locked to a card and operators still pay. The category is validated; the on-chain, free-to-renter, cheaper-to-operator version is open. Renters still earn <strong><span id="s4_eff_yield">2.96%</span></strong> Vaulta Rewards vs 0.08% checking.</p>
+          <div class="wn-stat">$<span>10B</span><br><small style="font-size:11px;font-weight:400;color:var(--grey)">Bilt valuation — rent platform, proven</small></div>
         </div>
       </div>
     </div>
@@ -617,8 +619,8 @@ body {
 <!-- ══ SLIDE 5: HOW IT WORKS — CONSUMER ══ -->
 <div class="slide" id="s5">
   <div class="slide-inner">
-    <div class="slide-label">Product</div>
-    <div class="slide-title">Consumer experience —<br><em>open an account in minutes</em></div>
+    <div class="slide-label">Product · Consumer</div>
+    <div class="slide-title">Renter experience —<br><em>pay rent &amp; utilities for free</em></div>
     <div class="slide-body" style="flex-direction:column; gap:10px; justify-content:flex-start;">
       <div class="hiw-flow">
         <div class="hiw-step">
@@ -636,14 +638,14 @@ body {
         <div class="hiw-step">
           <div class="hiw-phone"><img src="screen-pay.png" alt="Pay"></div>
           <div class="step-num">3</div>
-          <h4>Pay via QR Code</h4>
-          <p>Show QR code at checkout. Merchant scans, consumer approves in one tap. Live today.</p>
+          <h4>Pay Rent &amp; Utilities</h4>
+          <p>Pay your apartment operator or utility in one tap — <strong>$0 fee</strong>. P2P transfers are free too.</p>
         </div>
         <div class="hiw-step">
           <div class="hiw-phone"><img src="screen-rewards.png" alt="Rewards"></div>
           <div class="step-num">4</div>
           <h4>Earn Vaulta Rewards</h4>
-          <p>3 transactions unlocks rewards every 90-day cycle, funded by T-bill float on the full balance.</p>
+          <p>Idle balances earn Vaulta Rewards each 90-day cycle, funded by T-bill float — checking pays ~0%.</p>
         </div>
       </div>
     </div>
@@ -653,33 +655,33 @@ body {
 <!-- ══ SLIDE 6: HOW IT WORKS — MERCHANT ══ -->
 <div class="slide" id="s6">
   <div class="slide-inner">
-    <div class="slide-label">Product</div>
-    <div class="slide-title">Merchant experience —<br><em>start accepting payments today</em></div>
+    <div class="slide-label">Product · Merchant</div>
+    <div class="slide-title">Operator experience —<br><em>collect rent &amp; utilities for less</em></div>
     <div class="slide-body" style="flex-direction:column; gap:10px; justify-content:flex-start;">
       <div class="hiw-flow">
         <div class="hiw-step">
           <div class="hiw-phone"><img src="screen-m-kyb.png" alt="KYB"></div>
           <div class="step-num">1</div>
           <h4>Register + KYB</h4>
-          <p>Business registration, EIN, ID verification. Approved in under 24 hours.</p>
+          <p>Apartment operator or utility onboards — EIN + ID verification. Approved in under 24 hours.</p>
         </div>
         <div class="hiw-step">
           <div class="hiw-phone"><img src="screen-m-accept.png" alt="Accept Payments"></div>
           <div class="step-num">2</div>
-          <h4>Accept Payments</h4>
-          <p>Scan consumer QR code at checkout. <span id="s6_mfee">0.8%</span> flat fee — vs 2–3% card networks.</p>
+          <h4>Collect Payments</h4>
+          <p>Residents pay rent &amp; utilities in-app. Just <strong><span id="s6_mfee">$2</span> flat</strong> per payment — ~half the $3.95 incumbents charge, and below Bilt's % on a typical rent.</p>
         </div>
         <div class="hiw-step">
           <div class="hiw-phone"><img src="screen-m-settle.png" alt="Instant Settlement"></div>
           <div class="step-num">3</div>
           <h4>Instant Settlement</h4>
-          <p>Funds hit merchant wallet in &lt;1 second on Solana. ACH withdrawal to bank anytime.</p>
+          <p>Funds hit the operator wallet in &lt;1 second on Solana. ACH withdrawal to bank anytime.</p>
         </div>
         <div class="hiw-step">
           <div class="hiw-phone"><img src="screen-m-rewards.png" alt="Earn Rewards"></div>
           <div class="step-num">4</div>
           <h4>Earn Rewards Too</h4>
-          <p>30 transactions per 90-day cycle unlocks Vaulta Rewards on the full settlement balance.</p>
+          <p>Vaulta Rewards on parked balances between cycles — float that earned nothing now works for the operator.</p>
         </div>
       </div>
     </div>
@@ -690,148 +692,122 @@ body {
 <div class="slide" id="s7">
   <div class="slide-inner">
     <div class="slide-label">Market Opportunity</div>
-    <div class="slide-title">Two markets colliding —<br><em>VaultaPay is the bridge</em></div>
+    <div class="slide-title">Two-sided and huge —<br><em>every operator brings tens of thousands of payers</em></div>
     <div class="slide-body" style="gap:16px; align-items:stretch;">
 
-      <!-- LEFT: Payments market -->
+      <!-- LEFT: Apartments -->
       <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
-        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--navy);text-transform:uppercase;opacity:.5;">Traditional Payments</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--navy);text-transform:uppercase;opacity:.5;">🏢 Apartment Operators</div>
         <div style="background:white;border-radius:12px;padding:16px 18px;border:1px solid var(--border);flex:1;">
-          <div style="font-size:36px;font-weight:800;color:var(--navy);line-height:1;">$187B</div>
-          <div style="font-size:12px;color:var(--grey);margin-top:2px;margin-bottom:14px;">extracted from US merchants in card fees — 2024 record (Nilson Report)</div>
+          <div style="font-size:36px;font-weight:800;color:var(--navy);line-height:1;">$45B+</div>
+          <div style="font-size:12px;color:var(--grey);margin-top:2px;margin-bottom:14px;">US rent processed on Bilt alone each year — avg rent ~$1,750/mo</div>
           <div style="display:flex;flex-direction:column;gap:8px;">
             <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">Avg merchant rate</span>
-              <span style="font-size:12px;font-weight:700;color:#c0392b;">2.9%</span>
+              <span style="font-size:12px;color:var(--grey);">Greystar</span>
+              <span style="font-size:12px;font-weight:700;color:var(--navy);">~800,000 units</span>
             </div>
             <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">Settlement time</span>
-              <span style="font-size:12px;font-weight:700;color:#c0392b;">1–3 days</span>
+              <span style="font-size:12px;color:var(--grey);">Asset Living / Equity Res.</span>
+              <span style="font-size:12px;font-weight:700;color:var(--navy);">291k / 83k</span>
             </div>
             <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">T-bill float earned by</span>
-              <span style="font-size:12px;font-weight:700;color:#c0392b;">Banks only</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">Rewards returned to users</span>
-              <span style="font-size:12px;font-weight:700;color:#c0392b;">$0</span>
+              <span style="font-size:12px;color:var(--grey);">NMHC Top 50 operators</span>
+              <span style="font-size:12px;font-weight:700;color:var(--green);">~20% of all US units</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- CENTER: VaultaPay bridge -->
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-width:160px;">
-        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--green);text-transform:uppercase;opacity:.8;">VaultaPay</div>
-        <div style="background:var(--navy);border-radius:14px;padding:14px 16px;text-align:center;width:100%;box-sizing:border-box;">
-          <div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:8px;">The Bridge</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.6;">
-            <span id="s7_mfee">0.8%</span> merchant fee<br>
-            &lt;1 sec settlement<br>
-            T-bill float → users<br>
-            No bank needed<br>
-            GENIUS Act ✓
+      <!-- CENTER: bottom-up -->
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-width:172px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--green);text-transform:uppercase;opacity:.8;">Bottom-up</div>
+        <div style="background:var(--navy);border-radius:14px;padding:16px;text-align:center;width:100%;box-sizing:border-box;">
+          <div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:8px;">One Enterprise Win</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.7;">
+            50,000 units<br>× 50% adoption<br>= 25,000 active payers<br>
+            <span style="color:var(--green);font-weight:700;">≈ <span id="s7_onedeal">$2.0M</span> net rev / yr</span>
           </div>
         </div>
         <div style="font-size:10px;color:var(--grey);text-align:center;line-height:1.5;">
-          Capture 1% of US card volume<br>at <span id="s7_mfee2">0.8%</span> fee = <strong style="color:var(--navy);" id="s7_rev_potential">$880M</strong> revenue
-        </div>
-        <div style="font-size:10px;color:var(--grey);text-align:center;line-height:1.5;">
-          Even Visa now settling<br><strong style="color:var(--navy);">$4.5B/yr</strong> on stablecoin rails
+          Sign operators &amp; utilities;<br>each <strong style="color:var(--navy);">funnels its residents</strong><br>(the Bilt playbook)
         </div>
       </div>
 
-      <!-- RIGHT: Stablecoin market -->
+      <!-- RIGHT: Utilities -->
       <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
-        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--navy);text-transform:uppercase;opacity:.5;">Stablecoin Economy</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--navy);text-transform:uppercase;opacity:.5;">💡 Utilities</div>
         <div style="background:white;border-radius:12px;padding:16px 18px;border:1px solid var(--border);flex:1;">
-          <div style="font-size:36px;font-weight:800;color:var(--navy);line-height:1;">$300B+</div>
-          <div style="font-size:12px;color:var(--grey);margin-top:2px;margin-bottom:14px;">stablecoin supply in 2025 — $33T in transaction volume, +72% YoY</div>
+          <div style="font-size:36px;font-weight:800;color:var(--navy);line-height:1;">~56,000</div>
+          <div style="font-size:12px;color:var(--grey);margin-top:2px;margin-bottom:14px;">US billers: ~52k water systems + ~3k electric + ~1.4k gas — utilities avg ~$412/mo</div>
           <div style="display:flex;flex-direction:column;gap:8px;">
             <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">Settlement time (Solana)</span>
-              <span style="font-size:12px;font-weight:700;color:var(--green);">&lt;1 second</span>
+              <span style="font-size:12px;color:var(--grey);">Community water systems</span>
+              <span style="font-size:12px;font-weight:700;color:var(--navy);">~52,000</span>
             </div>
             <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">Reserve backing</span>
-              <span style="font-size:12px;font-weight:700;color:var(--green);">US T-bills (1:1)</span>
+              <span style="font-size:12px;color:var(--grey);">Paymentus (one biller hub)</span>
+              <span style="font-size:12px;font-weight:700;color:var(--navy);">2,200 → 34M payers</span>
             </div>
             <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">Used for everyday payments</span>
-              <span style="font-size:12px;font-weight:700;color:#e67e22;">Only $122B</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--light);border-radius:8px;">
-              <span style="font-size:12px;color:var(--grey);">Commerce layer built?</span>
-              <span style="font-size:12px;font-weight:700;color:var(--green);">Not yet ←</span>
+              <span style="font-size:12px;color:var(--grey);">Rent + utilities of income</span>
+              <span style="font-size:12px;font-weight:700;color:var(--green);">~33%</span>
             </div>
           </div>
         </div>
       </div>
 
     </div>
-    <div style="font-size:10px;color:var(--grey);margin-top:8px;">Sources: Nilson Report 2024; Visa Q4 FY2025 earnings; Stablecoin Insider 2025; Merchants Payments Coalition 2024.</div>
+    <div style="font-size:10px;color:var(--grey);margin-top:8px;">Sources: NMHC 2024; EPA SDWIS (water systems); Paymentus investor materials; Bilt press; US Census / BLS rent &amp; utility spend.</div>
   </div>
 </div>
 
 <!-- ══ SLIDE 8: BENCHMARKS ══ -->
 <div class="slide" id="s8">
-  <div class="slide-inner" style="padding-bottom:75px;">
-    <div class="slide-label">Competitive Benchmarks</div>
-    <div class="slide-title">VaultaPay vs. <em>the market</em></div>
-    <div class="slide-body" style="flex-direction:column; gap:14px;">
-      <!-- Row 1: two tables side by side, full width -->
-      <div style="display:flex; gap:20px; width:100%;">
-        <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
-          <div class="bm-live">⚡ Live from model</div>
-          <div class="bm-label">Unit Economics</div>
-          <table class="bm-table" style="width:100%;">
-            <tr>
-              <th style="text-align:left;">Metric</th>
-              <th class="vp-h">VaultaPay</th>
-              <th>Chime</th><th>Revolut</th><th>Cash App</th><th>MoneyLion</th>
-            </tr>
-            <tr><td class="met">LTV : CAC</td><td class="vp" id="bm_ltvcac">—</td><td>2.1x</td><td>3.2x</td><td>4.1x</td><td>1.8x</td></tr>
-            <tr><td class="met">CAC</td><td class="vp" id="bm_cac">—</td><td>$50</td><td>$35</td><td>$45</td><td>$80</td></tr>
-            <tr><td class="met">Annual Net ARPU</td><td class="vp" id="bm_arpu">—</td><td>$42</td><td>$67</td><td>$58</td><td>$38</td></tr>
-            <tr><td class="met">CAC Payback</td><td class="vp" id="bm_payback">—</td><td>15 mo</td><td>8 mo</td><td>10 mo</td><td>25 mo</td></tr>
-          </table>
+  <div class="slide-inner">
+    <div class="slide-label">Business Model</div>
+    <div class="slide-title">Free to the renter. <em>$2 flat to the operator.</em></div>
+    <div class="slide-body">
+      <div class="biz-cols">
+
+        <!-- LEFT: how we make money -->
+        <div class="biz-left">
+          <div class="val-card">
+            <h3>How VaultaPay Makes Money</h3>
+            <ul>
+              <li><strong>Transaction fees</strong> — $2 flat per bill payment, paid by the operator/utility. ~50% of the $3.95 incumbents charge, and below Bilt's 0.6–0.9% on a typical rent.</li>
+              <li><strong>Net float</strong> — balances sit in T-bills; VaultaPay keeps a sleeve and pays the rest back as Vaulta Rewards to both sides.</li>
+              <li><strong>Free to the renter, free P2P</strong> — zero consumer fees drive adoption; the operator is the paying customer.</li>
+            </ul>
+          </div>
+          <div class="rev-card">
+            <h3>Net-Revenue P&amp;L (bank/fintech style)</h3>
+            <div class="rev-row"><span class="rl">Revenue</span><span class="rv">Transaction fees + net T-bill float</span></div>
+            <div class="rev-row"><span class="rl">COGS</span><span class="rv">Variable infra only (~7%)</span></div>
+            <div class="rev-row"><span class="rl">Gross margin</span><span class="rv" id="biz_gm">93%</span></div>
+            <div class="rev-row"><span class="rl">Gross T-bill income &amp; Vaulta Rewards</span><span class="rv">memo lines</span></div>
+          </div>
+          <div class="rev-card">
+            <h3>Pricing vs Incumbents</h3>
+            <div class="rev-row"><span class="rl">VaultaPay — operator pays</span><span class="rv" id="biz_mfee" style="color:var(--green)">$2 flat</span></div>
+            <div class="rev-row"><span class="rl">Incumbent convenience fee</span><span class="rv">$2 – $3.95</span></div>
+            <div class="rev-row"><span class="rl">Bilt — landlord pays</span><span class="rv">0.6–0.9% (~$12 on $1,750)</span></div>
+          </div>
         </div>
-        <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
-          <div class="bm-live" style="visibility:hidden;">⚡</div>
-          <div class="bm-label">Revenue Model</div>
-          <table class="bm-table" style="width:100%;">
-            <tr>
-              <th style="text-align:left;">Metric</th>
-              <th class="vp-h">VaultaPay</th>
-              <th>PayPal</th><th>Square</th><th>Stripe</th><th>Interchange</th>
-            </tr>
-            <tr><td class="met">Merchant Fee</td><td class="vp" id="bm_mfee">—</td><td>2.90%</td><td>2.60%</td><td>2.90%</td><td>1.80%</td></tr>
-            <tr><td class="met">Gross Margin (Yr 5)</td><td class="vp" id="bm_gm">—</td><td>45%</td><td>35%</td><td>38%</td><td>N/A</td></tr>
-            <tr><td class="met">EBITDA Margin (Yr 10)</td><td class="vp" id="bm_ebitda3">—</td><td>21%</td><td>4%</td><td>~2%</td><td>N/A</td></tr>
-          </table>
+
+        <!-- RIGHT: unit economics (live) -->
+        <div class="biz-right">
+          <div class="ue-panel">
+            <h3>Unit Economics <span style="font-size:9px;color:var(--green);font-weight:600;">⚡ LIVE FROM MODEL</span></h3>
+            <div class="ue-row"><span class="ue-lbl">LTV : CAC</span><span class="ue-val green" id="ue_ltvcac">3.8×</span></div>
+            <div class="ue-row"><span class="ue-lbl">CAC (blended)</span><span class="ue-val" id="ue_cac">$37</span></div>
+            <div class="ue-row"><span class="ue-lbl">3-yr LTV (churn-adj NPV)</span><span class="ue-val" id="ue_ltv">$140</span></div>
+            <div class="ue-row"><span class="ue-lbl">CAC payback</span><span class="ue-val" id="ue_payback">5.6 mo</span></div>
+            <div class="ue-row"><span class="ue-lbl">Net ARPU / yr</span><span class="ue-val" id="ue_arpu">$80</span></div>
+            <div class="ue-row"><span class="ue-lbl">Gross margin</span><span class="ue-val green" id="ue_gm">93%</span></div>
+            <div class="ue-row"><span class="ue-lbl">One enterprise win</span><span class="ue-val green" id="ue_onedeal">≈$2.0M / yr</span></div>
+          </div>
         </div>
-      </div>
-      <!-- Row 2: Funding Rounds full width -->
-      <div style="width:100%;">
-        <div class="bm-label">Funding Rounds</div>
-        <table class="bm-table" style="width:100%;">
-          <tr>
-            <th style="text-align:left;">Round</th>
-            <th class="vp-h">VaultaPay</th>
-            <th>Stripe</th><th>Chime</th><th>Revolut</th><th>Cash App (Square)</th>
-          </tr>
-          <tr><td class="met">Seed</td><td class="vp">$2M</td><td>$2M</td><td>$3.8M</td><td>$2M</td><td>$10M</td></tr>
-          <tr><td class="met">Series A</td><td class="vp" id="fund_serA">—</td><td>$18M</td><td>$9.9M</td><td>$66M</td><td>$28M</td></tr>
-          <tr><td class="met">Series B</td><td class="vp" style="color:var(--grey);font-style:italic;">TBD</td><td>$80M</td><td>$18M</td><td>$250M</td><td>$100M</td></tr>
-        </table>
-      </div>
-      <!-- Sources at bottom -->
-      <div class="bm-note" style="margin-top:auto;">Sources: Company 10-Ks, Stripe investor letters, J.D. Power 2024. Funding: Crunchbase & public filings. VaultaPay figures are model projections.</div>
-      <!-- hidden dynamic IDs for postMessage (used by other slides) -->
-      <div style="display:none;">
-        <span id="ue_cac"></span><span id="ue_ltv"></span><span id="ue_ltvcac"></span>
-        <span id="ue_payback"></span><span id="ue_mfee_mo"></span><span id="ue_tbill_mo"></span>
-        <span id="ue_contrib"></span>
+
       </div>
     </div>
   </div>
@@ -841,65 +817,70 @@ body {
 <div class="slide" id="s10">
   <div class="slide-inner">
     <div class="slide-label">Competitive Landscape</div>
-    <div class="slide-title">No one else does <em>all of this</em></div>
+    <div class="slide-title">No one is free-to-renter <em>and</em> cheaper-to-operator <em>and</em> rewards both</div>
     <div class="slide-body" style="flex-direction:column;gap:12px;">
       <div class="comp-wrap">
         <table class="comp-tbl">
           <tr>
-            <th style="text-align:left;width:28%;">Feature</th>
-            <th class="vp-h">VaultaPay</th>
-            <th>Venmo / PayPal</th>
-            <th>Cash App</th>
-            <th>Zelle</th>
-            <th>Chime</th>
-            <th>Apple Pay</th>
+            <th style="text-align:left;width:24%;">Player</th>
+            <th>Renter pays</th>
+            <th>Operator / biller pays</th>
+            <th>Rewards?</th>
+            <th>On-chain?</th>
           </tr>
           <tr>
-            <td class="feat">No Bank Account Required</td>
-            <td class="vp-c"><span class="cy">✓</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td class="feat" style="color:var(--green);font-weight:800;">VaultaPay</td>
+            <td class="vp-c"><strong style="color:var(--green)">$0</strong></td>
+            <td class="vp-c"><strong style="color:var(--green)" id="comp_mfee">$2 flat / payment</strong></td>
+            <td class="vp-c"><span class="cy">✓ Both sides</span></td>
+            <td class="vp-c"><span class="cy">✓ Solana</span></td>
           </tr>
           <tr>
-            <td class="feat">Consumer Rewards on Balance</td>
-            <td class="vp-c"><span class="cy">✓</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td><td><span class="cn">✗</span></td>
+            <td class="feat">Bilt</td>
+            <td>$0 (in-network)</td>
+            <td>landlord <strong>0.6–0.9%</strong> (~$12)</td>
+            <td><span class="cp">~ Renter only</span></td>
+            <td><span class="cn">✗</span></td>
           </tr>
           <tr>
-            <td class="feat">Merchant Fee &lt; 1%</td>
-            <td class="vp-c"><span class="cy">✓</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
-            <td><span class="cy">✓</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td class="feat">Doxo</td>
+            <td>$3–4 or $5.99/mo</td>
+            <td>—</td>
+            <td><span class="cn">✗</span></td>
+            <td><span class="cn">✗</span></td>
           </tr>
           <tr>
-            <td class="feat">Blockchain Settlement</td>
-            <td class="vp-c"><span class="cy">✓</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td class="feat">Zego / RentPayment</td>
+            <td>$2–3.95 ACH / 2.5–3.5% card</td>
+            <td>~$0/txn + SaaS $1.40–5/unit/mo</td>
+            <td><span class="cn">✗</span></td>
+            <td><span class="cn">✗</span></td>
           </tr>
           <tr>
-            <td class="feat">T-Bill Float Passed to Users</td>
-            <td class="vp-c"><span class="cy">✓</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td class="feat">Paymentus (utilities)</td>
+            <td>$1.95–$2.95</td>
+            <td>varies</td>
+            <td><span class="cn">✗</span></td>
+            <td><span class="cn">✗</span></td>
           </tr>
           <tr>
-            <td class="feat">Merchant Rewards Program</td>
-            <td class="vp-c"><span class="cy">✓</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td class="feat">Plastiq</td>
+            <td>2.9–2.99% card</td>
+            <td>—</td>
+            <td><span class="cp">~ Card points</span></td>
+            <td><span class="cn">✗</span></td>
           </tr>
           <tr>
-            <td class="feat">GENIUS Act Compliant Model</td>
-            <td class="vp-c"><span class="cy">✓</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cp">~</span></td>
-            <td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td>
+            <td class="feat">Bank bill-pay</td>
+            <td>usually free</td>
+            <td>—</td>
+            <td><span class="cn">✗</span></td>
+            <td><span class="cn">✗</span></td>
           </tr>
         </table>
-        <div style="font-size:10px;color:var(--grey);margin-top:6px;">✓ Yes &nbsp; ~ Partial / in progress &nbsp; ✗ No. &nbsp; *Zelle is fee-free consumer-to-consumer only; merchants use bank-side card processing at standard rates.</div>
+        <div style="font-size:10px;color:var(--grey);margin-top:6px;">True ACH rail cost is only <strong>$0.26–$0.50</strong> per payment — the rest is margin incumbents extract. ✓ Yes &nbsp; ~ Partial &nbsp; ✗ No.</div>
         <div class="comp-callout">
-          🎯 VaultaPay is the only platform combining <strong>no-bank onboarding</strong>, <strong>consumer + merchant rewards funded by T-bill float</strong>, and <strong>sub-1% merchant fees</strong> — made possible exclusively by blockchain settlement on Solana.
+          🎯 VaultaPay is the only option that is <strong>free to the renter</strong> AND <strong>cheaper to the operator</strong> AND <strong>rewards both sides</strong> — and beats Bilt's percentage on a typical rent (<strong>$2 flat vs ~$12</strong>).
         </div>
       </div>
     </div>
@@ -909,13 +890,44 @@ body {
 <!-- ══ SLIDE 11: GO-TO-MARKET (PLACEHOLDER) ══ -->
 <div class="slide" id="s11">
   <div class="slide-inner">
-    <div class="slide-label">Go-to-Market</div>
-    <div class="slide-title">How we <em>acquire and grow</em></div>
-    <div class="ph-content">
-      <div class="ph-icon">🗺️</div>
-      <div class="ph-badge">In Development</div>
-      <div class="ph-title">Go-to-Market Strategy</div>
-      <div class="ph-sub">This slide will detail our merchant acquisition funnel, consumer onboarding playbook, geographic launch sequence, referral mechanics, and partnership channel plan.</div>
+    <div class="slide-label">Financial Projections</div>
+    <div class="slide-title">Break-even <em>Year 4</em> — then it compounds</div>
+    <div class="slide-body" style="flex-direction:column; gap:16px;">
+      <div class="problem-cards">
+        <div class="pcard">
+          <div><div class="icon">⚖️</div><h3>Break-even</h3>
+          <p>EBITDA-positive in the Series B phase — and Series B is not needed for operations.</p></div>
+          <div class="stat"><span id="fp_be">Year 4</span></div>
+        </div>
+        <div class="pcard">
+          <div><div class="icon">📈</div><h3>Revenue — Year 10</h3>
+          <p>Net revenue: transaction fees + net T-bill float at scale.</p></div>
+          <div class="stat">$<span id="fp_rev">53M</span></div>
+        </div>
+        <div class="pcard">
+          <div><div class="icon">💰</div><h3>EBITDA — Year 10</h3>
+          <p>~<span id="fp_gm">93%</span> gross margin; variable infra is the only COGS.</p></div>
+          <div class="stat">$<span id="fp_ebitda">28M</span></div>
+        </div>
+      </div>
+      <div class="problem-cards">
+        <div class="pcard">
+          <div><div class="icon">👥</div><h3>Customers — Year 10</h3>
+          <p>Driven by enterprise wins funneling residents at 50% adoption.</p></div>
+          <div class="stat"><span id="fp_cust">617k</span></div>
+        </div>
+        <div class="pcard">
+          <div><div class="icon">🏢</div><h3>Operators / Utilities</h3>
+          <p>Merchant-led B2B2C — a small, high-value enterprise base.</p></div>
+          <div class="stat"><span id="fp_merch">171</span></div>
+        </div>
+        <div class="pcard">
+          <div><div class="icon">🏷️</div><h3>Enterprise Value</h3>
+          <p>10× exit on Year-10 EBITDA, NPV at 20% WACC (risk-adj <span id="fp_raev">$12M</span>).</p></div>
+          <div class="stat">$<span id="fp_ev">53M</span></div>
+        </div>
+      </div>
+      <div class="comp-callout">📒 The full line-item P&amp;L, headcount-by-function, and seed use-of-funds live in the model's <strong>Financials tab</strong>. Figures here update live from the model.</div>
     </div>
   </div>
 </div>
@@ -923,13 +935,29 @@ body {
 <!-- ══ SLIDE 12: TEAM (PLACEHOLDER) ══ -->
 <div class="slide" id="s12">
   <div class="slide-inner">
-    <div class="slide-label">Team</div>
-    <div class="slide-title">The people <em>building it</em></div>
-    <div class="ph-content">
-      <div class="ph-icon">👥</div>
-      <div class="ph-badge">In Development</div>
-      <div class="ph-title">Founding Team</div>
-      <div class="ph-sub">This slide will feature founder bios, domain expertise across fintech, blockchain, and payments, key advisors, and relevant prior experience that de-risks execution.</div>
+    <div class="slide-label">Go-to-Market</div>
+    <div class="slide-title">Merchant-led <em>B2B2C</em> — the operator is the channel</div>
+    <div class="slide-body" style="flex-direction:column; gap:14px;">
+      <div class="sol-flows">
+        <div class="sol-flow-row new">
+          <span class="sol-flow-lbl">Funnel</span>
+          <div class="fnode new">Sign operator / utility (1 deal)</div>
+          <span class="farr new">———→</span>
+          <div class="fnode new">Building funnels its residents</div>
+          <span class="farr new">———→</span>
+          <div class="fnode new">25k+ active payers per win</div>
+          <span class="farr new">———→</span>
+          <div class="fnode new">Low CAC, $0 to renter</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px;">
+        <div class="mpoint" style="flex:1;"><div class="micon">🎯</div><div><h4>Enterprise sales, not consumer ads</h4><p>Target apartment operators &amp; utilities with 50k+ units/accounts. One signature delivers tens of thousands of payers — the Bilt playbook.</p></div></div>
+        <div class="mpoint" style="flex:1;"><div class="micon">💸</div><div><h4>The merchant is the channel</h4><p>The operator promotes free bill-pay to its own residents, so customer-acquisition cost stays low — CAC <strong id="gtm_cac">$37</strong>, payback <strong id="gtm_payback">5.6 mo</strong>.</p></div></div>
+      </div>
+      <div style="display:flex; gap:16px;">
+        <div class="mpoint" style="flex:1;"><div class="micon">🤝</div><div><h4>Aligned incentives</h4><p>Operator pays less than today AND earns Vaulta Rewards on float; renter pays nothing AND earns rewards. Both sides win, so both sides promote it.</p></div></div>
+        <div class="mpoint" style="flex:1;"><div class="micon">🚀</div><div><h4>Land &amp; expand</h4><p>Start with a flagship operator + utility in one metro, prove adoption (Zego sees 60%+, Lincoln 72%), then expand operator-by-operator.</p></div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -954,31 +982,32 @@ body {
           </div>
         </div>
         <div class="seed-right">
-          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px;">$2M Seed — Three Goals</div>
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px;">$2.1M Seed — Milestones to Series A</div>
           <div class="seed-goal">
             <div class="g-num">1</div>
             <div>
-              <h4>Launch Production App</h4>
-              <p>Ship production iOS + Android apps with full consumer and merchant flows. Move from Solana devnet to mainnet with MSB licensing and AML/KYC compliance infrastructure in place.</p>
-              <div class="g-badge">40% of Seed → Product &amp; Engineering</div>
+              <h4>Launch Production Bill-Pay App</h4>
+              <p>Ship production iOS + Android with full renter + operator flows. Move from Solana devnet to mainnet with MSB licensing and AML/KYC compliance in place.</p>
+              <div class="g-badge">~$0.75M → Product &amp; Engineering (4 FTE)</div>
             </div>
           </div>
           <div class="seed-goal">
             <div class="g-num">2</div>
             <div>
-              <h4>Execute Merchant LOI — 500 Stores</h4>
-              <p>Execute on existing merchant Letter of Intent to launch with a partner network of 500 store locations. First major real-world closed-loop merchant network, generating transaction volume and fee revenue.</p>
-              <div class="g-badge">30% of Seed → Merchant &amp; Consumer Growth</div>
+              <h4>Sign First Enterprise Operators</h4>
+              <p>Close a flagship apartment operator and a utility biller, funneling their residents onto free bill-pay — the first real bill-pay volume and fee revenue (one win ≈ 25k active payers).</p>
+              <div class="g-badge">Sales/BD + activation → first enterprise wins</div>
             </div>
           </div>
           <div class="seed-goal">
             <div class="g-num">3</div>
             <div>
-              <h4>Acquire 1,000 Active Consumers</h4>
-              <p>Onboard 1,000 verified, transacting consumers by end of Seed period — proving unit economics, CAC, and the Vaulta Rewards flywheel ahead of a Series A raise.</p>
-              <div class="g-badge">20% → Compliance · 10% → Ops &amp; Reserve</div>
+              <h4>Prove Adoption &amp; Unit Economics</h4>
+              <p>Hit 50%+ resident adoption on launched buildings and validate live CAC, LTV:CAC, and the Vaulta Rewards flywheel ahead of a Series A raise.</p>
+              <div class="g-badge">+ Compliance · Ops · 20% buffer</div>
             </div>
           </div>
+          <div style="font-size:10px;color:var(--grey);font-style:italic;padding-left:2px;">Team: founder bios &amp; advisors — placeholder, to be added.</div>
         </div>
       </div>
     </div>
@@ -993,22 +1022,23 @@ body {
     <div class="ask-grid">
 
       <div class="ask-left">
-        <div class="ask-amount">$<span>2M</span></div>
+        <div class="ask-amount">$<span>2.1M</span></div>
         <div class="ask-sub">Seed Round · 2026</div>
         <div class="ask-terms">
           <div class="ask-term"><div class="val">$<span>8M</span></div><div class="lbl">Pre-Money</div></div>
-          <div class="ask-term"><div class="val">$<span>10M</span></div><div class="lbl">Post-Money</div></div>
-          <div class="ask-term"><div class="val"><span>20%</span></div><div class="lbl">Equity Offered</div></div>
+          <div class="ask-term"><div class="val">$<span>10.1M</span></div><div class="lbl">Post-Money</div></div>
+          <div class="ask-term"><div class="val"><span>~21%</span></div><div class="lbl">Equity Offered</div></div>
         </div>
         <div class="cap-panel">
-          <h4>Cap Table — Dilution Path</h4>
-          <div class="cap-row"><div class="cr-l">Seed investors — $2M @ $8M pre</div><div class="cr-v">20.0%</div></div>
-          <div class="cap-row"><div class="cr-l">After Series A (comp avg ~20% dilution)</div><div class="cr-v">16.0%</div></div>
-          <div class="cap-row"><div class="cr-l">After Series B (comp avg ~16% dilution)</div><div class="cr-v">13.4%</div></div>
+          <h4>Series A adds the regulatory reserve</h4>
+          <div class="cap-row"><div class="cr-l">Seed — operating capital</div><div class="cr-v">$2.1M</div></div>
+          <div class="cap-row"><div class="cr-l">Series A — operations</div><div class="cr-v" id="ask_serA">$2.7M</div></div>
+          <div class="cap-row"><div class="cr-l">Series A — GENIUS Act reserve (balance sheet)</div><div class="cr-v">$6.0M</div></div>
+          <div class="cap-row"><div class="cr-l">Series B — for operations</div><div class="cr-v">Not needed</div></div>
         </div>
         <div class="be-row">
           <div style="font-size:18px;">📈</div>
-          <div class="be-txt">Model break-even</div>
+          <div class="be-txt">Model break-even — self-funding thereafter</div>
           <div class="be-val" id="be_year">Year 4</div>
         </div>
         <div class="contact-line">
@@ -1020,52 +1050,56 @@ body {
 
       <div class="ask-right">
         <div class="ret-panel">
-          <h4>Investor Return Scenarios (at 13.4% post full dilution)</h4>
+          <h4>Investor Return Scenarios (≈17% stake after Series A dilution)</h4>
           <table class="ret-tbl">
             <tr>
-              <th>Exit Valuation</th><th>Seed Value</th><th>Return on $2M</th>
+              <th>Exit Valuation</th><th>Seed Value</th><th>Return on $2.1M</th>
             </tr>
-            <tr><td>$50M</td><td>$6.7M</td><td class="hl">3.4x</td></tr>
-            <tr><td>$100M</td><td>$13.4M</td><td class="hl">6.7x</td></tr>
-            <tr><td>$250M</td><td>$33.5M</td><td class="hl">16.8x</td></tr>
-            <tr><td>$500M</td><td>$67.0M</td><td class="hl">33.5x</td></tr>
+            <tr><td>$53M <span style="font-size:9px;opacity:.6">(model EV)</span></td><td>$9.0M</td><td class="hl">4.3x</td></tr>
+            <tr><td>$100M</td><td>$17.0M</td><td class="hl">8.1x</td></tr>
+            <tr><td>$250M</td><td>$42.5M</td><td class="hl">20.2x</td></tr>
+            <tr><td>$500M</td><td>$85.0M</td><td class="hl">40.5x</td></tr>
           </table>
-          <div class="ret-note">Assumes Seed → Series A (~20% dilution) → Series B (~16% dilution), based on comp averages (Stripe, Revolut, Square). Illustrative only; not a guarantee of returns.</div>
+          <div class="ret-note">Model EV ≈ $53M (10× Year-10 EBITDA, NPV at 20% WACC). Assumes Series A dilution only — Series B not needed for operations. Illustrative; not a guarantee of returns.</div>
         </div>
 
         <div class="uof-panel">
-          <h4>Use of $2M Seed</h4>
+          <h4>Use of $2.1M Seed</h4>
           <div class="uof-row">
-            <div class="uof-pct">40%</div>
+            <div class="uof-pct">36%</div>
             <div class="uof-text">
-              <h5>Product &amp; Engineering</h5>
-              <p>Production iOS + Android, Solana mainnet, MSB licensing</p>
-              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:40%"></div></div>
+              <h5>Product &amp; Engineering — $0.75M</h5>
+              <p>4 FTE; production iOS + Android, Solana mainnet, MSB licensing</p>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:36%"></div></div>
             </div>
           </div>
           <div class="uof-row">
-            <div class="uof-pct">30%</div>
+            <div class="uof-pct">19%</div>
             <div class="uof-text">
-              <h5>Merchant &amp; Consumer Growth</h5>
-              <p>500-store merchant LOI execution, 1,000 consumer target</p>
-              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:30%"></div></div>
+              <h5>G&amp;A &amp; Compliance — $0.4M</h5>
+              <p>AML/KYC program, legal, audit, regulatory groundwork</p>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:19%"></div></div>
             </div>
           </div>
           <div class="uof-row">
-            <div class="uof-pct">20%</div>
+            <div class="uof-pct">17%</div>
             <div class="uof-text">
-              <h5>Compliance &amp; Licensing</h5>
-              <p>MSB registration, AML/KYC program, legal infrastructure</p>
-              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:20%"></div></div>
+              <h5>People &amp; Support — ~$0.34M</h5>
+              <p>Customer support, leadership, legal &amp; cyber payroll</p>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:17%"></div></div>
             </div>
           </div>
           <div class="uof-row">
-            <div class="uof-pct">10%</div>
+            <div class="uof-pct">12%</div>
             <div class="uof-text">
-              <h5>Operations &amp; Reserve</h5>
-              <p>Infrastructure, customer support, working capital buffer</p>
-              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:10%"></div></div>
+              <h5>Sales/BD, Infra &amp; Activation — ~$0.25M</h5>
+              <p>Enterprise sales, customer activation, infrastructure</p>
+              <div class="uof-bar-track"><div class="uof-bar-fill" style="width:12%"></div></div>
             </div>
+          </div>
+          <div class="uof-row" style="margin-top:2px;">
+            <div class="uof-pct" style="color:rgba(255,255,255,0.45)">+16%</div>
+            <div class="uof-text"><h5 style="color:rgba(255,255,255,0.6)">Buffer, net of Year-1 revenue</h5></div>
           </div>
         </div>
       </div>
@@ -1081,7 +1115,7 @@ body {
   <button onclick="go(-1)">‹</button>
   <div class="dots" id="dots"></div>
   <button onclick="go(1)">›</button>
-  <div class="slide-counter" id="counter">1 / 14</div>
+  <div class="slide-counter" id="counter">1 / 13</div>
 </div>
 
 <script>
@@ -1117,63 +1151,77 @@ document.addEventListener('keydown', e => {
 // Tell parent we're ready to receive model data
 window.parent.postMessage({ type: 'pitchReady' }, '*');
 
-// ── Dynamic updates from parent financial model ──
+// ── Dynamic updates from parent financial model (bill-pay metrics) ──
 window.addEventListener('message', e => {
   if (!e.data || e.data.type !== 'vaultaModelUpdate') return;
   const d = e.data.data;
 
   const set = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.textContent = val; };
+  const m$ = v => v == null ? null : '$' + (v/1e6).toFixed(v >= 1e7 ? 0 : 1) + 'M';  // $53M / $2.7M
 
-  const ltvCacFmt  = d.ltvCac  != null ? d.ltvCac.toFixed(1)  + 'x'  : null;
+  const ltvCacFmt  = d.ltvCac  != null ? d.ltvCac.toFixed(1)  + '×'  : null;
   const cacFmt     = d.cac     != null ? '$' + Math.round(d.cac)      : null;
-  const arpuFmt    = d.arpu    != null ? '$' + Math.round(d.arpu) + '/yr' : null;
+  const arpuFmt    = d.arpu    != null ? '$' + Math.round(d.arpu)     : null;
+  const ltvFmt     = d.ltv3    != null ? '$' + Math.round(d.ltv3)     : null;
   const paybackFmt = d.payback != null ? d.payback.toFixed(1)   + ' mo' : null;
-  const mfeeFmt    = d.mfee    != null ? d.mfee.toFixed(2)      + '%'  : null;
-  const gmFmt      = d.gm      != null ? Math.round(d.gm)       + '%'  : null;
-  const eb3Fmt     = d.ebitda3 != null ? Math.round(d.ebitda3)  + '%'  : null;
-  const ltv3Fmt    = d.ltv3    != null ? '$' + Math.round(d.ltv3)      : null;
-  const mfeMoFmt   = d.mfee_mo != null ? '$' + d.mfee_mo.toFixed(2)   : null;
-  const tbMoFmt    = d.tbill_mo!= null ? '$' + d.tbill_mo.toFixed(2)  : null;
-  const contFmt    = d.contrib != null ? '$' + d.contrib.toFixed(2)   : null;
+  const mfeeFlat   = d.mfee    != null ? '$' + d.mfee.toFixed(0)      : null;          // "$2"
+  const mfeePay    = d.mfee    != null ? '$' + d.mfee.toFixed(0) + ' flat / payment' : null;
+  const gmFmt      = d.gm      != null ? Math.round(d.gm)       + '%'  : null;          // d.gm is a percent
   const beYrFmt    = d.beYear  != null ? 'Year ' + d.beYear           : null;
-  const effYldFmt  = d.effYield!= null ? d.effYield.toFixed(2)        + '%'  : null;
-  const serAFmt    = d.serARaise != null ? '$' + (d.serARaise/1e6).toFixed(1) + 'M' : null;
+  const effYldFmt  = d.effYield!= null ? d.effYield.toFixed(2)  + '%'  : null;          // d.effYield is a percent
+  const serAFmt    = m$(d.serARaise);
+  const revFmt     = d.revYr10    != null ? '$' + Math.round(d.revYr10/1e6)    + 'M' : null;
+  const ebitdaFmt  = d.ebitdaYr10 != null ? '$' + Math.round(d.ebitdaYr10/1e6) + 'M' : null;
+  const evFmt      = d.EV   != null ? '$' + Math.round(d.EV/1e6)   + 'M' : null;
+  const raevFmt    = d.raEV != null ? '$' + Math.round(d.raEV/1e6) + 'M' : null;
+  const custFmt    = d.custYr10  != null ? Math.round(d.custYr10/1000) + 'k' : null;
+  const merchFmt   = d.merchYr10 != null ? String(Math.round(d.merchYr10))   : null;
+  const oneDealFull= d.oneDeal != null ? '≈$' + (d.oneDeal/1e6).toFixed(1) + 'M / yr' : null;
+  const oneDealS   = d.oneDeal != null ? '$'  + (d.oneDeal/1e6).toFixed(1) + 'M' : null;
 
-  // Benchmarks tab
-  set('bm_ltvcac',  ltvCacFmt);
-  set('bm_cac',     cacFmt);
-  set('bm_arpu',    arpuFmt);
-  set('bm_payback', paybackFmt);
-  set('bm_mfee',    mfeeFmt);
-  set('bm_gm',      gmFmt);
-  set('bm_ebitda3', eb3Fmt);
+  // Cover
+  set('cv_be',     beYrFmt);
+  set('cv_ltvcac', ltvCacFmt);
 
-  // Unit economics panel
-  set('ue_cac',      cacFmt);
-  set('ue_ltv',      ltv3Fmt);
-  set('ue_ltvcac',   ltvCacFmt);
-  set('ue_payback',  paybackFmt);
-  set('ue_mfee_mo',  mfeMoFmt);
-  set('ue_tbill_mo', tbMoFmt);
-  set('ue_contrib',  contFmt);
+  // Why Now — Vaulta Rewards rate
+  set('s4_eff_yield', effYldFmt);
 
-  // Inline merchant fee mentions on slides 3, 6 & 7
-  set('s3_mfee',  mfeeFmt);
-  set('s3_mfee2', mfeeFmt);
-  set('s6_mfee',  mfeeFmt);
-  set('s7_mfee',  mfeeFmt);
-  set('s7_mfee2', mfeeFmt);
-  // Slide 7 — revenue potential: 1% of $11T US card volume × fee rate
-  const revPotential = d.mfee != null ? '$' + (110 * d.mfee / 100).toFixed(0) + 'M' : null;
-  set('s7_rev_potential', revPotential);
+  // Solution / Merchant / Competition — merchant fee
+  set('s3_mfee',   mfeePay);
+  set('s6_mfee',   mfeeFlat);
+  set('comp_mfee', mfeePay);
 
-  // Slide 4 — dynamic yield rate
-  set('s4_eff_yield',      effYldFmt);
-  set('s4_eff_yield_stat', effYldFmt);
+  // Business Model + Unit Economics (live)
+  set('biz_gm',     gmFmt);
+  set('biz_mfee',   mfeeFlat + ' flat');
+  set('ue_ltvcac',  ltvCacFmt);
+  set('ue_cac',     cacFmt);
+  set('ue_ltv',     ltvFmt);
+  set('ue_payback', paybackFmt);
+  set('ue_arpu',    arpuFmt);
+  set('ue_gm',      gmFmt);
+  set('ue_onedeal', oneDealFull);
 
-  // Ask slide break-even
-  set('be_year', beYrFmt);
-  set('fund_serA', serAFmt);
+  // Market — one enterprise win
+  set('s7_onedeal', oneDealS);
+
+  // Financial Projections
+  set('fp_be',     beYrFmt);
+  set('fp_rev',    revFmt ? revFmt.slice(1) : null);     // strip leading $ (template has its own)
+  set('fp_ebitda', ebitdaFmt ? ebitdaFmt.slice(1) : null);
+  set('fp_gm',     gmFmt);
+  set('fp_cust',   custFmt);
+  set('fp_merch',  merchFmt);
+  set('fp_ev',     evFmt ? evFmt.slice(1) : null);
+  set('fp_raev',   raevFmt);
+
+  // Go-to-Market
+  set('gtm_cac',     cacFmt);
+  set('gtm_payback', paybackFmt);
+
+  // Ask slide
+  set('be_year',  beYrFmt);
+  set('ask_serA', serAFmt);
 });
 </script>
 </body>
