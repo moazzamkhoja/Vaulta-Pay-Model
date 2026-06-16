@@ -3,6 +3,11 @@
 
 ---
 
+## ▶ NEXT TASK: Build the investor pitch
+The model engine + Financials tab are DONE and live (commit `afca2dc`). The next job is the **pitch**: rework `pitch-embed.html` (13 old debit-era slides) and the **Benchmarks tab** to the bill-pay narrative. **Follow `PITCH_BRIEF.md`** — it has the slide-by-slide arc, the new competitor/fee table (Bilt/Doxo/Zego/Paymentus — drop Chime/PayPal), TAM, headline numbers, and the technical rebuild notes (incl. the stale `postMessage` data bridge to update). Pull live numbers from the model where possible. Start by reading `PITCH_BRIEF.md`, then `pitch-embed.html`.
+
+---
+
 ## What VaultaPay is
 A standalone interactive HTML financial model for **VaultaPay** — a **blockchain bill-pay portal** (vUSD on Solana, 1 vUSD = $1). Consumers pay **rent + utilities** (and P2P) through the app; **merchants are apartment operators and utilities**. Free to the consumer; the **merchant pays a flat fee**. Revenue = transaction fees + float (T-bill income on balances, net of Vaulta Rewards). P2P is free.
 
