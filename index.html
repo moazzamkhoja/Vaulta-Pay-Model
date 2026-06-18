@@ -214,7 +214,21 @@
   <button class="tab-btn active" onclick="switchTab('model')">📊 Model</button>
   <button class="tab-btn" onclick="switchTab('financials')">📒 Financials</button>
   <button class="tab-btn" onclick="switchTab('benchmarks')">📐 Benchmarks</button>
+  <button class="tab-btn" onclick="switchTab('portal')">🏢 Operator Portal</button>
   <button class="tab-btn pitch-btn" onclick="switchTab('pitch')">🎯 Investor Pitch</button>
+</div>
+
+<!-- ══ OPERATOR PORTAL TAB (live onboarding demo) ══ -->
+<div id="tab-portal" class="tab-panel">
+  <div class="bench-main">
+    <h2>Operator Portal — Live Onboarding</h2>
+    <p class="bench-sub">The real Firebase-backed web portal. Sign in, add a property and units, assign a tenant by email, then <strong>Generate this month's rent</strong> (or <strong>Seed sample data</strong>) — the tenant's bills then surface automatically in the mobile app.</p>
+    <div style="border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.25);">
+      <iframe id="portal-iframe" src="https://vaulta-d892f.web.app" title="Vaulta Operator Portal" loading="lazy" allow="clipboard-write"
+        style="width:100%;height:82vh;border:0;background:#fff;display:block;"></iframe>
+    </div>
+    <p class="source-note">Live at <a href="https://vaulta-d892f.web.app" target="_blank" rel="noopener">vaulta-d892f.web.app</a> — opens in a new tab if your browser blocks the embed.</p>
+  </div>
 </div>
 
 <!-- ══ FINANCIALS TAB (line-item P&L) ══ -->
