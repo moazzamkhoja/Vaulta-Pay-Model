@@ -3,8 +3,21 @@
 
 ---
 
-## ▶ NEXT TASK: Build the investor pitch
-The model engine + Financials tab are DONE and live (commit `afca2dc`). The next job is the **pitch**: rework `pitch-embed.html` (13 old debit-era slides) and the **Benchmarks tab** to the bill-pay narrative. **Follow `PITCH_BRIEF.md`** — it has the slide-by-slide arc, the new competitor/fee table (Bilt/Doxo/Zego/Paymentus — drop Chime/PayPal), TAM, headline numbers, and the technical rebuild notes (incl. the stale `postMessage` data bridge to update). Pull live numbers from the model where possible. Start by reading `PITCH_BRIEF.md`, then `pitch-embed.html`.
+## ▶ NEXT TASK: Update the pitch deck with the live bill-pay demo proof
+The pitch was already reworked to the bill-pay narrative (12 slides in `pitch-embed.html`). The app
+is now **deployed and demoed end-to-end on live infra** (Firebase `vaulta-d892f`, iOS Build 9 on
+TestFlight, operator portal embedded as the 🏢 Operator Portal tab here). **The deck's traction
+slide (`#s13`) is now stale** — it still says "Build 8 / two-phone payment / 172 tests / 6 functions"
+(the two-phone QR flow was deleted).
+
+**Do this:** follow **`PITCH_DEMO_UPDATE.md`** (in this repo) step by step — (1) save the 4 demo
+screenshots with the exact filenames it lists, (2) refresh the stale `#s13` "Where We Are Today"
+checklist, (3) add the new "Live Demo" proof slide (`#s13b`) using the provided HTML, (4) commit +
+push (GitHub Pages redeploys from `main`). Start by reading `PITCH_DEMO_UPDATE.md`, then
+`pitch-embed.html`.
+
+*Still-open after that (lower priority):* the **Benchmarks tab** (`index.html`) is still the old
+competitor narrative (Chime/Revolut/PayPal) — rework to bill-pay comps per `PITCH_BRIEF.md`.
 
 ---
 
