@@ -219,6 +219,9 @@ body {
 }
 .hiw-step h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
 .hiw-step p  { font-size: 11px; color: var(--grey); line-height: 1.5; }
+/* #s6 is now a web-portal showcase (screenshots above, captions below) — the
+   phone-flow connector arrow would float over the caption text, so hide it. */
+#s6 .hiw-step:not(:last-child)::after { display: none; }
 .step-detail {
   margin-top: 8px; padding: 7px 9px; border-radius: 8px;
   background: white; border: 1px solid var(--border); width: 100%;
@@ -633,17 +636,23 @@ body {
           <div class="hiw-phone"><img src="screen-load.png" alt="Add Funds"></div>
           <div class="step-num">2</div>
           <h4>Load Funds</h4>
-          <p>Deposit via ACH or cash at a partner location. vUSD minted 1:1 on Solana instantly.</p>
+          <p>Deposit via ACH / bank. vUSD minted 1:1 on Solana instantly.</p>
         </div>
         <div class="hiw-step">
-          <div class="hiw-phone"><img src="screen-pay.png" alt="Pay"></div>
+          <div class="hiw-phone"><img src="demo-pay-review.png" alt="Pay"></div>
           <div class="step-num">3</div>
           <h4>Pay Rent &amp; Utilities</h4>
-          <p>Pay your apartment operator or utility in one tap — <strong>$0 fee</strong>. P2P transfers are free too.</p>
+          <p>Bills auto-surface — pay your operator or utility in one tap, <strong>$0 fee</strong>.</p>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-phone"><img src="demo-bill-paid.png" alt="Bill Paid"></div>
+          <div class="step-num">4</div>
+          <h4>Settles On-Chain</h4>
+          <p>Instant vUSD settlement on Solana with a Solana Explorer receipt — done in one tap.</p>
         </div>
         <div class="hiw-step">
           <div class="hiw-phone"><img src="screen-rewards.png" alt="Rewards"></div>
-          <div class="step-num">4</div>
+          <div class="step-num">5</div>
           <h4>Earn Vaulta Rewards</h4>
           <p>Idle balances earn Vaulta Rewards each 90-day cycle, funded by T-bill float — checking pays ~0%.</p>
         </div>
@@ -655,30 +664,38 @@ body {
 <!-- ══ SLIDE 6: HOW IT WORKS — MERCHANT ══ -->
 <div class="slide" id="s6">
   <div class="slide-inner">
-    <div class="slide-label">Product · Merchant</div>
-    <div class="slide-title">Operator experience —<br><em>collect rent &amp; utilities for less</em></div>
-    <div class="slide-body" style="flex-direction:column; gap:10px; justify-content:flex-start;">
-      <div class="hiw-flow">
-        <div class="hiw-step">
-          <div class="hiw-phone"><img src="screen-m-kyb.png" alt="KYB"></div>
-          <div class="step-num">1</div>
-          <h4>Register + KYB</h4>
-          <p>Apartment operator or utility onboards — EIN + ID verification. Approved in under 24 hours.</p>
+    <div class="slide-label">Product · Operator (Live Web Portal)</div>
+    <div class="slide-title">Operator experience —<br><em>collect rent &amp; utilities from the browser</em></div>
+    <div class="slide-body" style="flex-direction:column; gap:12px; justify-content:flex-start;">
+      <!-- Real screenshots from the live operator portal (vaulta-d892f.web.app) -->
+      <div style="display:flex; gap:12px; align-items:stretch;">
+        <div style="flex:1; background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.10);">
+          <img src="demo-operator-setup.png" alt="Onboard in the browser — add properties, units, assign tenants by email/phone" style="width:100%; height:auto; display:block;">
         </div>
-        <div class="hiw-step">
-          <div class="hiw-phone"><img src="screen-m-accept.png" alt="Accept Payments"></div>
+        <div style="flex:1; background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.10);">
+          <img src="demo-operator-dashboard.png" alt="Operator dashboard — collected, outstanding, fees, tenants linked" style="width:100%; height:auto; display:block;">
+        </div>
+        <div style="flex:1; background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.10);">
+          <img src="demo-portal-status.png" alt="Per-unit status — 205 paid, 204 pending" style="width:100%; height:auto; display:block;">
+        </div>
+      </div>
+      <div class="hiw-flow" style="margin-top:2px;">
+        <div class="hiw-step" style="padding-top:0;">
+          <div class="step-num">1</div>
+          <h4>Onboard in the browser</h4>
+          <p>Operator or utility signs in via the web portal — adds properties &amp; units and assigns tenants by email/phone. EIN + ID verified; no app to install.</p>
+        </div>
+        <div class="hiw-step" style="padding-top:0;">
           <div class="step-num">2</div>
           <h4>Collect Payments</h4>
-          <p>Residents pay rent &amp; utilities in-app. Just <strong><span id="s6_mfee">$2</span> flat</strong> per payment — ~half the $3.95 incumbents charge, and below Bilt's % on a typical rent.</p>
+          <p>Bills auto-surface in each resident's app. Just <strong><span id="s6_mfee">$2</span> flat</strong> per payment — ~half the $3.95 incumbents charge, and below Bilt's % on a typical rent.</p>
         </div>
-        <div class="hiw-step">
-          <div class="hiw-phone"><img src="screen-m-settle.png" alt="Instant Settlement"></div>
+        <div class="hiw-step" style="padding-top:0;">
           <div class="step-num">3</div>
           <h4>Instant Settlement</h4>
-          <p>Funds hit the operator wallet in &lt;1 second on Solana. ACH withdrawal to bank anytime.</p>
+          <p>Funds hit the operator wallet in &lt;1 second on Solana, and the portal flips each unit to <strong>Paid</strong> in real time. ACH to bank anytime.</p>
         </div>
-        <div class="hiw-step">
-          <div class="hiw-phone"><img src="screen-m-rewards.png" alt="Earn Rewards"></div>
+        <div class="hiw-step" style="padding-top:0;">
           <div class="step-num">4</div>
           <h4>Earn Rewards Too</h4>
           <p>Vaulta Rewards on parked balances between cycles — float that earned nothing now works for the operator.</p>
@@ -973,13 +990,14 @@ body {
         <div class="seed-left">
           <div class="curr-state">
             <h3>Where We Are Today</h3>
-            <div class="cs-item"><div class="ck">✅</div><div>iOS app live on TestFlight (Build 8) — full end-to-end payment flow</div></div>
-            <div class="cs-item"><div class="ck">✅</div><div>Consumer KYC + Merchant KYB on Solana devnet</div></div>
-            <div class="cs-item"><div class="ck">✅</div><div>Two-phone live payment: consumer signs on own device, vUSD transferred on-chain</div></div>
-            <div class="cs-item"><div class="ck">✅</div><div>On-chain merchant withdrawal — burns vUSD, settles to bank</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>iOS Build 9 live on TestFlight — full bill-pay flow (rent + utilities)</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>Operator web portal live (vaulta-d892f.web.app) — onboard tenants by email, issue bills</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>Renter bills auto-surface in-app and settle one-tap in vUSD on Solana devnet</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>Consumer KYC + Merchant KYB; on-chain merchant withdrawal (burns vUSD, settles to bank)</div></div>
             <div class="cs-item"><div class="ck">✅</div><div>Vaulta Rewards cycle engine (90-day) deployed and tested</div></div>
-            <div class="cs-item"><div class="ck">✅</div><div>172 automated tests passing; Firestore security rules deployed</div></div>
-            <div class="cs-item"><div class="ck">✅</div><div>6 Cloud Functions live on Firebase; Solana SPL token in production</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>~292 automated tests passing (271 mobile + 21 web); Firestore rules + indexes deployed</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>12 Cloud Functions live on Firebase; Solana SPL token (vUSD) in production</div></div>
+            <div class="cs-item"><div class="ck">✅</div><div>End-to-end proven on live infra — operator onboards → renter pays → portal shows Paid</div></div>
           </div>
         </div>
         <div class="seed-right">
