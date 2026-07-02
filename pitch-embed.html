@@ -342,6 +342,9 @@ body {
   background: rgba(0,200,150,0.08); border: 1px solid rgba(0,200,150,0.25);
   border-radius: 10px; padding: 11px 15px; font-size: 12px; color: var(--navy); font-weight: 500;
 }
+/* #s10b funding table has denser rows — compact font/padding so it fits like #s10 */
+#s10b .comp-tbl th, #s10b .comp-tbl td { padding: 4px 7px; font-size: 10.5px; }
+#s10b .comp-tbl td.feat { font-size: 10.5px; }
 
 /* ══ SLIDES 11 & 12: PLACEHOLDERS ══ */
 .ph-content {
@@ -902,6 +905,81 @@ body {
         <div class="comp-callout">
           🎯 VaultaPay is the only option that is <strong>free to the renter</strong> AND <strong>cheaper to the operator</strong> AND <strong>rewards both sides</strong> — and beats Bilt's percentage on a typical rent (<strong>$2 flat vs ~$12</strong>).<br>
           <span style="font-size:11px;color:var(--grey);">And it's more durable: Bilt's "free rent" is subsidized by <strong>credit-card interchange</strong> — the model that cost its issuer ~$10M/mo and ended the Wells Fargo deal. VaultaPay's margin comes from <strong>T-bill float</strong>, not card economics.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 10b: COMPETITOR FUNDING ══ -->
+<div class="slide" id="s10b">
+  <div class="slide-inner">
+    <div class="slide-label">Market Validation · Competitor Funding</div>
+    <div class="slide-title">Investors have poured <em>billions</em> into bill-pay &amp; rent-tech</div>
+    <div class="slide-body" style="flex-direction:column;gap:12px;">
+      <div class="comp-wrap">
+        <table class="comp-tbl">
+          <tr>
+            <th style="text-align:left;width:17%;">Company</th>
+            <th style="width:19%;">Category</th>
+            <th style="width:33%;">Funding by stage</th>
+            <th>Total raised</th>
+            <th>Latest valuation / exit</th>
+          </tr>
+          <tr>
+            <td class="feat" style="color:var(--green);font-weight:800;">VaultaPay</td>
+            <td class="vp-c">Stablecoin bill-pay</td>
+            <td class="vp-c"><strong style="color:var(--green)">Seed $2.1M — now</strong></td>
+            <td class="vp-c"><strong style="color:var(--green)">$2.1M</strong></td>
+            <td class="vp-c">Pre-rev · live demo</td>
+          </tr>
+          <tr>
+            <td class="feat">Bilt Rewards</td>
+            <td>Rent rewards + card</td>
+            <td>Seed $60M · A $150M · B/C ~$350M · D $250M</td>
+            <td><strong>~$958M</strong></td>
+            <td>$10.75B <span style="color:var(--grey);">(’25)</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Melio</td>
+            <td>B2B bill pay</td>
+            <td>C $110M · D $250M · E $150M</td>
+            <td>~$654M</td>
+            <td>Acq. Xero ’25 <span style="color:var(--grey);">(~$2.5B)</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Paymentus</td>
+            <td>Biller bill pay</td>
+            <td>Growth · $210M IPO (’21)</td>
+            <td>$210M IPO</td>
+            <td>$2.6B <span style="color:var(--grey);">· NYSE: PAY</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Zego / RentPayment</td>
+            <td>Property payments</td>
+            <td>PE-backed (Vista)</td>
+            <td>—</td>
+            <td>Acq. $925M <span style="color:var(--grey);">(GPN, ’21)</span></td>
+          </tr>
+          <tr>
+            <td class="feat">Papaya</td>
+            <td>Consumer bill-pay</td>
+            <td>Seed ~$15M · B $50M (’21)</td>
+            <td>~$65M</td>
+            <td>Private</td>
+          </tr>
+          <tr>
+            <td class="feat">Doxo</td>
+            <td>Consumer bill pay</td>
+            <td>B $10M · C $18.5M (’22)</td>
+            <td>~$37M</td>
+            <td>Private</td>
+          </tr>
+        </table>
+        <div style="font-size:10px;color:var(--grey);margin-top:4px;">Sources: company press · TechCrunch · PitchBook/Tracxn/CB Insights · SEC filings (2011–2025). Bilt 2024 round sizes approximate.</div>
+        <div class="comp-callout">
+          💰 Three billion-dollar-plus outcomes in this category — <strong>Bilt at a $10.75B valuation</strong>, <strong>Zego's $925M acquisition</strong>, and <strong>Paymentus's $2.6B IPO</strong>. Even consumer bill-pay apps raised $37–65M pre-scale.<br>
+          <span style="font-size:11px;color:var(--grey);">VaultaPay is raising a modest <strong>$2.1M seed</strong> to enter the same market as the only <strong>free-to-renter, cheaper-to-operator, on-chain</strong> model — with the product already live.</span>
         </div>
       </div>
     </div>
