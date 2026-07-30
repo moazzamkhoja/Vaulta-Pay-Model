@@ -446,6 +446,41 @@ body {
 .uof-bar-fill  { height: 3px; background: var(--green); border-radius: 2px; }
 .contact-line { text-align: center; padding-top: 6px; font-size: 13px; color: rgba(255,255,255,0.4); }
 .contact-line a { color: var(--green); font-weight: 600; text-decoration: none; }
+
+/* ══ PRINT / PDF ══ */
+@media print {
+  @page { size: landscape; margin: 0; }
+
+  html, body { overflow: visible !important; height: auto !important; background: white !important; }
+
+  .nav { display: none !important; }
+
+  .deck { position: static !important; width: 100% !important; height: auto !important; }
+
+  .slide {
+    display: flex !important;
+    opacity: 1 !important;
+    position: relative !important;
+    inset: auto !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    overflow: hidden !important;
+  }
+
+  .slide-inner {
+    overflow: visible !important;
+    padding-bottom: 32px !important;
+  }
+
+  .slide-body {
+    overflow: visible !important;
+  }
+
+  /* Ensure background colours print */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
 </style>
 </head>
 <body>
