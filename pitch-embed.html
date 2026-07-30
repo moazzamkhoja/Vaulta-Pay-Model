@@ -1251,6 +1251,7 @@ body {
   <div class="dots" id="dots"></div>
   <button onclick="go(1)">›</button>
   <div class="slide-counter" id="counter">1 / 13</div>
+  <button onclick="printDeck()" title="Save as PDF" style="font-size:14px;opacity:0.6;border-left:1px solid rgba(255,255,255,0.15);margin-left:4px;padding-left:12px;">⬇ PDF</button>
 </div>
 
 <script>
@@ -1282,6 +1283,38 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
 });
+
+function printDeck() {
+  // Flatten all slides into a visible stacked layout for printing
+  const deck = document.querySelector('.deck');
+  const nav  = document.querySelector('.nav');
+
+  // Save original styles
+  const origDeckStyle  = deck.getAttribute('style') || '';
+  const origBodyStyle  = document.body.getAttribute('style') || '';
+  const slideOriginals = [...slides].map(s => ({ display: s.style.display, opacity: s.style.opacity, position: s.style.position, inset: s.style.inset }));
+
+  // Apply print layout
+  document.body.style.cssText = 'overflow:visible;height:auto;background:#fff;';
+  deck.style.cssText = 'position:static;width:100%;height:auto;';
+  nav.style.display = 'none';
+  slides.forEach(s => {
+    s.style.cssText = 'display:flex;opacity:1;position:relative;inset:auto;width:100vw;height:100vh;page-break-after:always;break-after:page;';
+  });
+
+  window.print();
+
+  // Restore after print dialog closes
+  setTimeout(() => {
+    document.body.setAttribute('style', origBodyStyle);
+    deck.setAttribute('style', origDeckStyle);
+    nav.style.display = '';
+    slides.forEach((s, i) => {
+      s.style.cssText = '';
+      if (i === cur) s.classList.add('active');
+    });
+  }, 500);
+}
 
 // Tell parent we're ready to receive model data
 window.parent.postMessage({ type: 'pitchReady' }, '*');
